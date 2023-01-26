@@ -11,8 +11,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
 
 const LoginScreen = ({navigation}) => {
-  const [name, setName] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const {isLoading, login} = useContext(AuthContext);
 
   return (

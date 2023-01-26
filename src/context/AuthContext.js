@@ -14,7 +14,7 @@ export const AuthProvider = ({children}) => {
     setIsLoading(true);
 
     axios
-      .post(`${BASE_URL}/api/auth/signup`, {
+      .post(`${BASE_URL}api/auth/signup`, {
         username,
         password,
       })
@@ -22,6 +22,7 @@ export const AuthProvider = ({children}) => {
         let userInfo = res.data;
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        console.log("USER!!", userInfo)
         setIsLoading(false);
         console.log(userInfo);
       })
@@ -31,13 +32,16 @@ export const AuthProvider = ({children}) => {
       });
   };
 
+
+
+
   const login = (username, password) => {
     setIsLoading(true);
 
     axios
-      .post(`${BASE_URL}/api/auth/signin`, {
+      .post(`${BASE_URL}api/auth/signin`, {
         username,
-        password,
+        password
       })
       .then(res => {
         let userInfo = res.data;
@@ -57,7 +61,7 @@ export const AuthProvider = ({children}) => {
 
     axios
       .post(
-        `${BASE_URL}/api/auth/logout`,
+        `${BASE_URL}api/auth/logout`,
         {},
         {
           headers: {Authorization: `Bearer ${userInfo.accessToken}`},
