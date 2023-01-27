@@ -4,11 +4,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-  StyleSheet,
+  View
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
+import styles from '../styles/RegisterStyle';
+const signInStyles = styles.signInStyles;
 
 const RegisterScreen = ({navigation}) => {
   const [name, setName] = useState("");
@@ -17,11 +18,11 @@ const RegisterScreen = ({navigation}) => {
   const {isLoading, register} = useContext(AuthContext);
 
   return (
-    <View style={styles.container}>
+    <View style={signInStyles.container}>
       <Spinner visible={isLoading} />
-      <View style={styles.wrapper}>
+      <View style={signInStyles.wrapper}>
         <TextInput
-          style={styles.input}
+          style={signInStyles.input}
           value={name}
           placeholder="Enter name"
           onChangeText={text => setName(text)}
@@ -29,7 +30,7 @@ const RegisterScreen = ({navigation}) => {
 
 
         <TextInput
-          style={styles.input}
+          style={signInStyles.input}
           value={password}
           placeholder="Enter password"
           onChangeText={text => setPassword(text)}
@@ -46,33 +47,12 @@ const RegisterScreen = ({navigation}) => {
         <View style={{flexDirection: 'row', marginTop: 20}}>
           <Text>Že imate račun? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.link}>Prijava</Text>
+            <Text style={signInStyles.link}>Prijava</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  wrapper: {
-    width: '80%',
-  },
-  input: {
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#bbb',
-    borderRadius: 5,
-    paddingHorizontal: 14,
-  },
-  link: {
-    color: 'blue',
-  },
-});
 
 export default RegisterScreen;
