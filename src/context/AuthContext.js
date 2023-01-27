@@ -9,6 +9,7 @@ export const AuthProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
+  const [accessToken, SetAccessToken] = useState(null);
 
   const register = (username, password) => {
     setIsLoading(true);
@@ -48,6 +49,7 @@ export const AuthProvider = ({children}) => {
         console.log(userInfo);
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        SetAccessToken(userInfo.accessToken)
         setIsLoading(false);
       })
       .catch(e => {
@@ -58,8 +60,9 @@ export const AuthProvider = ({children}) => {
 
   const logout = () => {
     setIsLoading(true);
-
-    axios
+    SetAccessToken(null)
+    setIsLoading(false);
+   /* axios
       .post(
         `${BASE_URL}api/auth/logout`,
         {},
@@ -68,8 +71,8 @@ export const AuthProvider = ({children}) => {
         },
       )
       .then(res => {
-        console.log(res.data);
         AsyncStorage.removeItem('userInfo');
+        SetAccessToken(null)
         setUserInfo({});
         setIsLoading(false);
       })
@@ -77,6 +80,7 @@ export const AuthProvider = ({children}) => {
         console.log(`logout error ${e}`);
         setIsLoading(false);
       });
+      */
   };
 
   const isLoggedIn = async () => {
@@ -107,6 +111,7 @@ export const AuthProvider = ({children}) => {
         isLoading,
         userInfo,
         splashLoading,
+        accessToken,
         register,
         login,
         logout,

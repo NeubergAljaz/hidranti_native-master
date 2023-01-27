@@ -12,18 +12,18 @@ import SplashScreen from '../screens/SplashScreen';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const {userInfo, splashLoading} = useContext(AuthContext);
+  const {userInfo, splashLoading,accessToken} = useContext(AuthContext);
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {splashLoading ? (
+        {splashLoading ==! null ? (
           <Stack.Screen
             name="Splash Screen"
             component={SplashScreen}
             options={{headerShown: false}}
           />
-        ) : userInfo.access_token ? (
+        ) : accessToken ? (
           <Stack.Screen name="Home" component={HomeScreen} />
         ) : (
           <>
