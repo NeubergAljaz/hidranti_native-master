@@ -34,6 +34,9 @@ const signInStyles = StyleSheet.create({
         fontWeight: 'bold',
         textTransform: 'uppercase',
       },
+      whiteText: {
+        color: 'white',
+      },
       switchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -42,6 +45,14 @@ const signInStyles = StyleSheet.create({
       },
       link: {
         color: '#2980b9',
+      },
+      logoContainer: {
+        alignItems: 'center',
+        marginBottom: 20
+      },
+      logo: {
+        width: 150,
+        height: 150,
       },
   });
 

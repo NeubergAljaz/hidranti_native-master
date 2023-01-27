@@ -5,10 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  StyleSheet,
+  Image,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
+import styles from '../styles/LoginStyle';
+const signInStyles = styles.signInStyles;
 
 const LoginScreen = ({navigation}) => {
   const [name, setName] = useState("");
@@ -16,20 +18,26 @@ const LoginScreen = ({navigation}) => {
   const {isLoading, login} = useContext(AuthContext);
 
   return (
-    <View style={styles.container}>
+    <View style={signInStyles.container}>
+      <View style={signInStyles.logoContainer}>
+        <Image 
+          style={signInStyles.logo}
+          source={require('../../assets/img/pdg-lovrenc.png')} 
+        />
+      </View>
       <Spinner visible={isLoading} />
-      <View style={styles.wrapper}>
-      <TextInput
-          style={styles.input}
+      <View style={signInStyles.wrapper}>
+        <TextInput
+          style={signInStyles.input}
           value={name}
-          placeholder="Enter name"
+          placeholder="Uporabniško ime"
           onChangeText={text => setName(text)}
         />
 
         <TextInput
-          style={styles.input}
+          style={signInStyles.input}
           value={password}
-          placeholder="Enter password"
+          placeholder="Geslo"
           onChangeText={text => setPassword(text)}
           secureTextEntry
         />
@@ -42,35 +50,17 @@ const LoginScreen = ({navigation}) => {
         />
 
         <View style={{flexDirection: 'row', marginTop: 20}}>
-          <Text>Še nimate računa? </Text>
+          <Text style={[signInStyles.link, signInStyles.whiteText]}>Še nimate računa? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.link}>Registracija</Text>
+            <Text style={signInStyles.link}>Registracija</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
+  
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  wrapper: {
-    width: '80%',
-  },
-  input: {
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#bbb',
-    borderRadius: 5,
-    paddingHorizontal: 14,
-  },
-  link: {
-    color: 'blue',
-  },
-});
+
 
 export default LoginScreen;

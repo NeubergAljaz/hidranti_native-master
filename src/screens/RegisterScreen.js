@@ -4,7 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
@@ -20,31 +20,49 @@ const RegisterScreen = ({navigation}) => {
   return (
     <View style={signInStyles.container}>
       <Spinner visible={isLoading} />
-      <View style={signInStyles.wrapper}>
+      <View style={signInStyles.formContainer}>
         <TextInput
           style={signInStyles.input}
           value={name}
-          placeholder="Enter name"
+          placeholder="Uporabniško ime"
           onChangeText={text => setName(text)}
         />
-
 
         <TextInput
           style={signInStyles.input}
           value={password}
-          placeholder="Enter password"
+          placeholder="Geslo"
           onChangeText={text => setPassword(text)}
           secureTextEntry
         />
 
-        <Button
-          title="Registracija"
-          onPress={() => {
+        <TouchableOpacity style={signInStyles.buttonContainer} onPress={() => {
+            if(password.length<6 || password.length>50){
+              alert("Geslo mora vsebovati med 6 in 50 znakov");
+              return;
+            }
+            if (!/[A-Z]/.test(password)) {
+              alert("Geslo naj vsebuje vsaj eno veliko črko");
+              return;
+            }
+            if (!/[a-z]/.test(password)) {
+              alert("Geslo naj vsebuje vsaj eno majhno črko");
+              return;
+            }
+            if (!/[0-9]/.test(password)) {
+              alert("Geslo naj vsebuje vsaj eno številko");
+              return;
+            }
+            if (!/[!@#\$%^&*(),.?":{}|<>]/.test(password)) {
+              alert("Geslo naj vsebuje vsaj en poseben znak");
+              return;
+            }
             register(name, password);
-          }}
-        />
+          }}>
+            <Text style={signInStyles.buttonText}>Registracija</Text>
+        </TouchableOpacity>
 
-        <View style={{flexDirection: 'row', marginTop: 20}}>
+        <View style={signInStyles.switchContainer}>
           <Text>Že imate račun? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text style={signInStyles.link}>Prijava</Text>
