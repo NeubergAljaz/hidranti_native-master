@@ -5,6 +5,8 @@ import {useNavigation} from '@react-navigation/native';
 //import Permissions from 'react-native-permissions';
 import {AuthContext} from '../context/AuthContext';
 import styles from '../styles/HomeStyle';
+import Map from '../components/Map';
+
 const homeStyles = styles.homeStyles;
 
 const HomeScreen = () => {
@@ -51,7 +53,7 @@ const {userInfo, logout} = useContext(AuthContext);
         )}
       </View>
       <View style={homeStyles.mapContainer}>
-          
+          <Map />
         </View>
     </View>
   );
