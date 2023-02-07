@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
-import {BASE_URL} from '../config';
+import {BASE_URL_AUTH} from '../config';
 
 export const AuthContext = createContext();
 
@@ -15,7 +15,7 @@ export const AuthProvider = ({children}) => {
     setIsLoading(true);
 
     axios
-      .post(`${BASE_URL}api/auth/signup`, {
+      .post(`${BASE_URL_AUTH}signup`, {
         username,
         password,
       })
@@ -40,7 +40,7 @@ export const AuthProvider = ({children}) => {
     setIsLoading(true);
 
     axios
-      .post(`${BASE_URL}api/auth/signin`, {
+      .post(`${BASE_URL_AUTH}signin`, {
         username,
         password
       })

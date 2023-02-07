@@ -1,22 +1,23 @@
-import React, {useContext, useState} from 'react';
-import {View, TouchableOpacity, Image, Text} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, { useContext, useState } from 'react';
+import { View, TouchableOpacity, Image, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 //import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 //import Permissions from 'react-native-permissions';
-import {AuthContext} from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/HomeStyle';
 import Map from '../components/Map';
+import CreateHidrant from '../components/CreateHidrant';
 
 const homeStyles = styles.homeStyles;
 
 const HomeScreen = () => {
 
-const navigation = useNavigation();
-const [isNavOpen, setIsNavOpen] = useState(false);
-const {userInfo, logout} = useContext(AuthContext);
+  const navigation = useNavigation();
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const { userInfo, logout } = useContext(AuthContext);
 
   return (
-    <View style={[homeStyles.container, {isNavOpen}]}>
+    <View style={[homeStyles.container, { isNavOpen }]}>
       <View style={isNavOpen ? homeStyles.sideNavContainerOpen : homeStyles.sideNavContainer}>
         <TouchableOpacity
           style={homeStyles.sideNavOption}
@@ -53,8 +54,9 @@ const {userInfo, logout} = useContext(AuthContext);
         )}
       </View>
       <View style={homeStyles.mapContainer}>
-          <Map />
-        </View>
+        <Map />
+        <CreateHidrant />
+      </View>
     </View>
   );
 };
