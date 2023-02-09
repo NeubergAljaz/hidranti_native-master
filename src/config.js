@@ -1,5 +1,11 @@
-/*Če boš delal na webu nastavi za "menjaj" localhost drugače boš mel network error. Za emulatore, fon pa mej 10.0.2.2. Če boš delal na Webu nujno zakomentiraj v homescreen mapi komponento Map!! (knjiznica ni podrta za web)*/
-var menjaj = "10.0.2.2"
+/*
+-Če boš delal na webu nastavi za "menjaj" localhost drugače boš mel network error. Nujno zakomentiraj v homescreen mapi komponento Map!! (knjiznica ni podrta za web)
+
+//////IP dela načeloma za emulator in za fon ampak bom napisal za ziher//////
+-Za emulator mej 10.0.2.2
+-Če hoče met na fonu/emulatorju prilepi noter svoj IP. najdeš ga tako, da v cmd napišeš "ipconfig" in prilepiš IPv6 address
+*/
+var menjaj = "TVOJ_IPv6"
 
 export const BASE_URL = `http://${menjaj}:3001/api`;
 
