@@ -48,6 +48,7 @@ export const AuthProvider = ({children}) => {
         let userInfo = res.data;
         console.log(userInfo);
         setUserInfo(userInfo);
+        console.log(`USER LOGIN:`,userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         SetAccessToken(userInfo.accessToken)
         setIsLoading(false);
@@ -58,30 +59,23 @@ export const AuthProvider = ({children}) => {
       });
   };
 
-  const logout = () => {
+  const logout = async () => {
     setIsLoading(true);
-    SetAccessToken(null)
-    setIsLoading(false);
-   /* axios
-      .post(
-        `${BASE_URL}api/auth/logout`,
-        {},
-        {
-          headers: {Authorization: `Bearer ${userInfo.accessToken}`},
-        },
-      )
-      .then(res => {
-        AsyncStorage.removeItem('userInfo');
-        SetAccessToken(null)
-        setUserInfo({});
-        setIsLoading(false);
-      })
-      .catch(e => {
-        console.log(`logout error ${e}`);
-        setIsLoading(false);
-      });
-      */
+  
+    try {
+      AsyncStorage.removeItem('userInfo');
+      setUserInfo({});
+      SetAccessToken(null);
+    } catch (e) {
+      console.log(`logout error: ${e}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+
+
+
 
   const isLoggedIn = async () => {
     try {

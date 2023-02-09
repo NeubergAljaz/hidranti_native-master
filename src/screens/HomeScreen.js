@@ -5,9 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 //import Permissions from 'react-native-permissions';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/HomeStyle';
-import Map from '../components/Map';
 import CreateHidrant from '../components/CreateHidrant';
-
+import CreateDrustvo from '../components/CreateDrustvo';
+import Map from '../components/Map';
 const homeStyles = styles.homeStyles;
 
 const HomeScreen = () => {
@@ -54,8 +54,8 @@ const HomeScreen = () => {
         )}
       </View>
       <View style={homeStyles.mapContainer}>
-        <Map />
-        <CreateHidrant />
+      <Map />
+      <CreateDrustvo />
       </View>
     </View>
   );

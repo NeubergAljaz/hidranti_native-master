@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext,useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import HttpInterceptor from '../services/HttpInterceptor';
+import api from '../services/api';
+import {AuthContext} from '../context/AuthContext';
+import {BASE_URL_HIDRANT} from '../config';
 import axios from 'axios';
 
 const CreateHidranti = () => {
+  const {userInfo} = useContext(AuthContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -12,7 +16,10 @@ const CreateHidranti = () => {
   const [nadzemni, setNadzemni] = useState(false);
   const [status, setStatus] = useState('');
 
+
+
   const handleSubmit = () => {
+    HttpInterceptor(userInfo.accessToken);
     const data = {
       title,
       description,
@@ -23,7 +30,7 @@ const CreateHidranti = () => {
       status
     };
 
-    axios.post('http://10.0.2.2:3001/api/hidrant', data)
+    api.post(`${BASE_URL_HIDRANT}`, data)
       .then(response => {
         console.log(response.data);
       })

@@ -23,7 +23,7 @@ const Navigation = () => {
             component={SplashScreen}
             options={{headerShown: false}}
           />
-        ) : accessToken ? (
+        ) : userInfo.accessToken ? (
           <Stack.Screen name="Home" component={HomeScreen} />
         ) : (
           <>
