@@ -5,7 +5,6 @@ import GetDrustvo from '../../components/GetDrustvo';
 export default function DrustvoScreen() {
   return (
     <View>
-    <CreateDrustvo />
     <GetDrustvo />
     </View>
   );
