@@ -11,9 +11,22 @@ export default function Map() {
 
     const { userInfo } = useContext(AuthContext);
     const [data, setData] = useState(null);
+ 
 
-  
-    console.log("USER DATA", data)
+    useEffect(() => {
+        HttpInterceptor(userInfo.accessToken);
+        api.get(`${BASE_URL_HIDRANT}`)
+            .then(response => {
+                setData(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    },[]);
+
+    console.log("DATA DRUSTVO", data)
+
+
     return (
         <View style={styles.container}>
             <MapView style={styles.map}
@@ -24,14 +37,19 @@ export default function Map() {
                     longitudeDelta: 0.0421,
                 }}>
 
-
+{data && data.map((x) => (
                 <Marker
                     coordinate={{
-                        latitude: 15.64667,
-                        longitude: 15.64667
+                        latitude: x.lat,
+                        longitude: x.lng
                     }}
+                    title={x.title}
+                    description={x.location}
+                    image = { x.nadzemni == false?(require("../../assets/icons/hidrant64.png")):(require("../../assets/icons/podzemni64.png"))}
+                        
+                        
                 />
-         
+                ))}
             </MapView>
         </View>
     );

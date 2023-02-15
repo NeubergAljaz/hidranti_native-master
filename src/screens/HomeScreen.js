@@ -23,10 +23,12 @@ const Drawer = createDrawerNavigator();
 export default function HomeScreen() {
 
   const { userInfo } = useContext(AuthContext);
+  console.log(userInfo.user.user_info.id)
 
+  //najprej naredi neko random društvo in na mesto šestke prilepi njen ip sem not...lahko je bilakaj 
   useEffect(() => {
     HttpInterceptor(userInfo.accessToken);
-    api.put(`${BASE_URL}/user/setdrustvo/1/1`)
+    api.put(`${BASE_URL}/user/setdrustvo/${userInfo.user.user_info.id}/6`)
     
   }, []);
   
