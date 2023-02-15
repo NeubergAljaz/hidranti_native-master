@@ -23,7 +23,7 @@ const Drustvo = () => {
     const [visible, setVisible] = useState(false);
     const { userInfo } = useContext(AuthContext);
     const [data, setData] = useState(null);
-
+ 
 
     useEffect(() => {
         HttpInterceptor(userInfo.accessToken);
@@ -36,7 +36,7 @@ const Drustvo = () => {
             });
     }, [visible]);
 
-    console.log("DATA HIDRANTI", data)
+    console.log("DATA DRUSTVO", data)
 
     return (
         <>

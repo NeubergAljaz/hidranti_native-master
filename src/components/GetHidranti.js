@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text } from 'react-native';
 import axios from 'axios';
+
 import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
-
 import { BASE_URL_HIDRANT } from '../config';
+import { ListItem } from "@react-native-material/core";
 
 export default function GetHidranti() {
 
@@ -28,19 +29,12 @@ export default function GetHidranti() {
 
     return (
         <>
-            {data ? (
-                <>
-                    <Text>Title: {data.title}</Text>
-                    <Text>Description: {data.description}</Text>
-                    <Text>Location: {data.location}</Text>
-                    <Text>Latitude: {data.lat}</Text>
-                    <Text>Longitude: {data.lng}</Text>
-                    <Text>Is above ground: {data.nadzemni ? 'Yes' : 'No'}</Text>
-                    <Text>Status: {data.status}</Text>
-                </>
-            ) : (
-                <Text>Loading data...</Text>
-            )}
+            {data && data.map((x) => (
+                <ListItem
+                    title={x.location}
+                    secondaryText={x.description}
+                />
+            ))}
         </>
     );
 };

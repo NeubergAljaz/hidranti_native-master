@@ -5,12 +5,12 @@
 -Za emulator mej 10.0.2.2
 -Če hoče met na fonu/emulatorju prilepi noter svoj IP. najdeš ga tako, da v cmd napišeš "ipconfig" in prilepiš IPv6 address
 */
-var menjaj = "192.168.64.111"
+var menjaj = "10.0.2.2"
 
 export const BASE_URL = `http://${menjaj}:3001/api`;
 
 export const BASE_URL_AUTH = `http://${menjaj}:3001/api/auth/`;
 
-export const BASE_URL_HIDRANT = `http://${menjaj}:3001/api/hidrant/`;
+export const BASE_URL_HIDRANT = `http://${menjaj}:3001/api/hidrant`;
 
 export const BASE_URL_DRUSTVO = `http://${menjaj}:3001/api/drustvo`;

@@ -8,13 +8,13 @@ import axios from 'axios';
 
 const CreateHidranti = () => {
   const {userInfo} = useContext(AuthContext);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('Pri ovinku');
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
-  const [lat, setLat] = useState('');
-  const [lng, setLng] = useState('');
+  const [location, setLocation] = useState('Gasilski dom, Lovrenc 7');
+  const [lat, setLat] = useState(46.373915);
+  const [lng, setLng] = useState(15.776436);
   const [nadzemni, setNadzemni] = useState(false);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('IZPRAVEN');
 
 
 
