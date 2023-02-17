@@ -3,9 +3,9 @@
 
 //////IP dela načeloma za emulator in za fon ampak bom napisal za ziher//////
 -Za emulator mej 10.0.2.2
--Če hoče met na fonu/emulatorju prilepi noter svoj IP. najdeš ga tako, da v cmd napišeš "ipconfig" in prilepiš IPv6 address
+-Če hoče met na fonu/emulatorju prilepi noter svoj IP. najdeš ga tako, da v cmd napišeš "ipconfig" in prilepiš IPv4 address
 */
-var menjaj = "192.168.64.111"
+var menjaj = "192.168.1.105"
 
 export const BASE_URL = `http://${menjaj}:3001/api`;
 
