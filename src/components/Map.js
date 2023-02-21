@@ -6,13 +6,15 @@ import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL_HIDRANT } from '../config';
-import { Button, Dialog } from 'react-native-elements';
+import { Button, Dialog } from '@rneui/themed';
 import { lightTheme, darkTheme } from '../styles/ThemesStyle';
 import ThemeContext from '../context/ThemeContext';
+import { Divider } from '@rneui/themed';
+import {  Overlay, Icon } from '@rneui/themed';
+import DialogPregled from './MapComponents/DialogPregled';
+import { Image } from 'react-native';
 
-
-
-export default function Map() {
+export default function Map({navigation}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -24,15 +26,16 @@ export default function Map() {
   const { userInfo } = useContext(AuthContext);
   const [data, setData] = useState(null);
   const [toggleDialog, seToggleDialog] = useState(false);
-
+  const [visible, setVisible] = useState(false);
 
   const toggleDialogFunction = () => {
     seToggleDialog(!toggleDialog);
   };
 
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
 
-  console.log(lat, "MArker")
-  console.log(lng, "MArker22")
   useEffect(() => {
     HttpInterceptor(userInfo.accessToken);
     api.get(`${BASE_URL_HIDRANT}`)
@@ -42,7 +45,7 @@ export default function Map() {
       .catch(error => {
         console.error(error);
       });
-  }, [toggleDialog]);
+  },[toggleDialog]);
 
 
   const handleSubmit = () => {
@@ -64,6 +67,11 @@ export default function Map() {
       .catch(error => {
         console.error(error);
       });
+
+      setTitle("")
+      setDescription("")
+      setLocation("")
+      setDescription("")
   };
 
 
@@ -97,6 +105,7 @@ export default function Map() {
             latitude: lat,
             longitude: lng
           }}
+         
         />
         }
 
@@ -109,10 +118,35 @@ export default function Map() {
             }}
             title={x.title}
             description={x.location}
-            image={x.nadzemni == false ? (require("../../assets/icons/hidrant64.png")) : (require("../../assets/icons/podzemni64.png"))}
-
-
+          
+            
+          >
+              <View style={{
+            backgroundColor: x.status == "NEPREGLEDAN" ? ('rgba(255, 0, 0, 0.2)') : ('rgb(152,251,152, 0.2)'),
+            borderRadius: 15,
+            width: 30,
+            height: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <Image
+            source={x.nadzemni == false ? (require("../../assets/icons/hidrant32.png")) : (require("../../assets/icons/podzemni32.png"))}
+            style={{ width: 20, height: 20 }}
           />
+          </View>
+             <Callout onPress={toggleOverlay} tyle={{ width: 50, height: 20 }}>
+        <View >
+         <Text>Naziv: {x.title} </Text>
+         <Divider />
+         <Text>Loakcija: {x.location}</Text>
+         <Text>Opis: {x.description}</Text>
+         <Text>{x.status}</Text>
+       
+         
+        </View>
+       </Callout>
+
+          </Marker>
         ))}
 
 
@@ -164,6 +198,12 @@ export default function Map() {
         </View>
 
       </Dialog>
+
+
+
+     <DialogPregled visible = {visible} setVisible={setVisible}/>
+
+
     </View>
   );
 }
@@ -175,5 +215,20 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '92%',
+  },
+  marker: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(130,4,150, 0.9)',
+  },
+  ring: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    backgroundColor: 'rgba(130,4,150, 0.3)',
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: 'rgba(130,4,150, 0.5)',
   },
 });
