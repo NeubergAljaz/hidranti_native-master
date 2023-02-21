@@ -4,6 +4,7 @@ import axios from 'axios';
 import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+
 import { BASE_URL_DRUSTVO } from '../config';
 import { ListItem } from "@react-native-material/core";
 import CreateDrustvo from './CreateDrustvo';
@@ -37,6 +38,7 @@ const Drustvo = () => {
     }, [visible]);
 
     console.log("DATA DRUSTVO", data)
+
 
     return (
         <>
@@ -73,6 +75,7 @@ const Drustvo = () => {
                     secondaryText={x.naslov}
                 />
             ))}
+
         </>
     );
 };

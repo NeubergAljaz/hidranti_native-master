@@ -77,7 +77,7 @@ export default function Map({navigation}) {
 
   const { isDarkModeEnabled } = useContext(ThemeContext);
 
-
+  const theme = isDarkModeEnabled ? darkTheme : null;
 
 
   return (
@@ -149,21 +149,18 @@ export default function Map({navigation}) {
           </Marker>
         ))}
 
-
-
       </MapView>
       <Button
         title="Dodajte hidrant"
         onPress={toggleDialogFunction}
-
-
       />
+
       <Dialog
         isVisible={toggleDialog}
         onBackdropPress={toggleDialogFunction}
       >
         <Dialog.Title title="Dialog Title" />
-        <View style={{ paddingHorizontal: 16 }}>
+        <View style={[theme?.container, { paddingHorizontal: 16 }]}>
           <Text style={[isDarkModeEnabled ? darkTheme.optionText : lightTheme.optionText, { marginBottom: 8 }]}>Title:</Text>
           <TextInput
             value={title}
@@ -198,8 +195,6 @@ export default function Map({navigation}) {
         </View>
 
       </Dialog>
-
-
 
      <DialogPregled visible = {visible} setVisible={setVisible}/>
 

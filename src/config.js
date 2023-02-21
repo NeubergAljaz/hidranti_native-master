@@ -5,8 +5,9 @@
 -Za emulator mej 10.0.2.2
 -Če hoče met na fonu/emulatorju prilepi noter svoj IP. najdeš ga tako, da v cmd napišeš "ipconfig" in prilepiš IPv4 address
 */
-var menjaj = "192.168.1.105"
+var menjaj = "192.168.1.104"
 //var menjaj = "192.168.64.111"
+
 
 export const BASE_URL = `http://${menjaj}:3001/api`;
 

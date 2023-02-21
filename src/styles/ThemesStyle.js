@@ -35,6 +35,7 @@ export const darkTheme = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1e1e1e',
+    borderColor: 'white',
     padding: 20,
   },
   option: {
