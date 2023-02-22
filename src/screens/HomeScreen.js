@@ -15,7 +15,7 @@ import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { BASE_URL } from '../config';
 
-
+import { Button } from 'react-native-elements';
 
 
 
@@ -51,6 +51,6 @@ export default function HomeScreen() {
       <Drawer.Screen name="Drustva" component={DrustvoScreen} />
       <Drawer.Screen name="Hidranti" component={HidrantiScreen} />
       <Drawer.Screen name="Nastavitve" component={NastavitveScreen} />
-    </Drawer.Navigator>
+    </Drawer.Navigator> 
   );
 }

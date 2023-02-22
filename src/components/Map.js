@@ -11,7 +11,7 @@ import { lightTheme, darkTheme } from '../styles/ThemesStyle';
 import ThemeContext from '../context/ThemeContext';
 import { Divider } from '@rneui/themed';
 import {  Overlay, Icon } from '@rneui/themed';
-import DialogPregled from './MapComponents/DialogPregled';
+import DialogPregled from './Dialogues/DialogPregled';
 import { Image } from 'react-native';
 
 export default function Map({navigation}) {
@@ -122,7 +122,7 @@ export default function Map({navigation}) {
             
           >
               <View style={{
-            backgroundColor: x.status == "NEPREGLEDAN" ? ('rgba(255, 0, 0, 0.2)') : ('rgb(152,251,152, 0.2)'),
+               backgroundColor: x.status == "NEPREGLEDAN" ? ('rgba(255, 0, 0, 0.2)') : ('rgba(152,251,152, 0.2)'),
             borderRadius: 15,
             width: 30,
             height: 30,
