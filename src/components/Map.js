@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Marker, Callout } from 'react-native-maps';
 import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
@@ -9,7 +9,7 @@ import { BASE_URL_HIDRANT } from '../config';
 import { Button, Dialog } from '@rneui/themed';
 import { Divider } from '@rneui/themed';
 import DialogPregled from './Dialogues/DialogPregled';
-import { Image } from 'react-native';
+
 
 export default function Map({navigation}) {
   const [title, setTitle] = useState('');
@@ -70,11 +70,6 @@ export default function Map({navigation}) {
       setLocation("")
       setDescription("")
   };
-
-
-  const { isDarkModeEnabled } = useContext(ThemeContext);
-
-  const theme = isDarkModeEnabled ? darkTheme : null;
 
 
   return (

@@ -1,14 +1,16 @@
-// view component
-import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 // component state management
-import { useEffect, useState } from 'react';
+//import { useEffect, useState } from 'react';
 // view component
-import { StyleSheet, Text, View, Button } from 'react-native'; 
+import {View} from 'react-native'; 
+import {
+  List, Switch, MD3Colors 
+} from 'react-native-paper';
 // redux hooks
 import { useSelector, useDispatch } from 'react-redux'; 
 // actions
 import { switchMode } from '../../redux_store/actions';
-
+// themes
 import {lightTheme, darkTheme} from '../../styles/ThemesStyle';
 
 export default function NastavitveScreen() {
@@ -17,65 +19,43 @@ export default function NastavitveScreen() {
   // initialize action dispatcher
   const dispatch = useDispatch();
   // define a component mode state
-  const [mode, setMode] = useState(theme.mode);
+  //const [mode, setMode] = useState(theme.mode);
+
+  const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
   const handleThemeChange = () => { 
     
     dispatch(switchMode(theme.mode === 'light' ? {
       mode: 'dark',
       style: darkTheme
-  } : {
-    mode: 'light',
-    style: lightTheme
-}));
+      } : {
+        mode: 'light',
+        style: lightTheme
+    }));
+
+    onToggleSwitch();
 }
-
-// Update the app Incase the theme mode changes
-/*useEffect(() => { 
-    setMode(theme.mode);
-}, [theme]);*/
-
-// Render a view with different style classes depending on the theme mode
 
 return (
     <View style={theme.style.container}>
-        <Text style={theme.style.container}></Text>
-        <Button title="Switch Mode" onPress={handleThemeChange} />
-        <StatusBar style="auto" />
+        <List.Item
+          key="Dark Mode"
+          title="Dark Mode"
+          titleStyle={theme.style.listTitle}
+          left={() => <List.Icon color={theme.style.listIcon.color} icon="brightness-4"/>}
+          right={() => (
+            <Switch
+              value={isSwitchOn}
+              onValueChange={handleThemeChange}
+              color={theme.style.switch.color}
+            />
+          )}
+        />
     </View>
 );
 }
 
-const styles = StyleSheet.create({
-  container_light: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-  }
-
-  ,
-  container_dark: {
-      flex: 1,
-      backgroundColor: '#121212',
-      alignItems: 'center',
-      justifyContent: 'center',
-  }
-
-  ,
-  text_light: {
-      marginBottom: 20,
-      color: '#000'
-  }
-
-  ,
-  text_dark: {
-      marginBottom: 20,
-      color: "#fff"
-  }
-}
-
-);
 
 
 

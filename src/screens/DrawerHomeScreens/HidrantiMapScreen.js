@@ -4,7 +4,7 @@ import Map from '../../components/Map';
 
 export default function HidrantiMapScreen() {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
     <Map />
     </View>
   );

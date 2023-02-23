@@ -11,8 +11,6 @@ export default function GetHidranti() {
     const { userInfo } = useContext(AuthContext);
     const [data, setData] = useState(null);
 
-    const { isDarkModeEnabled} = useContext(ThemeContext);
-
     useEffect(() => {
         HttpInterceptor(userInfo.accessToken);
         api.get(`${BASE_URL_HIDRANT}`)
@@ -25,8 +23,6 @@ export default function GetHidranti() {
     }, []);
 
     console.log("DATA HIDRANTI", data)
-
-    const listItemStyle = isDarkModeEnabled ? darkListItemStyle : {};
 
     return (
         <>
@@ -45,8 +41,4 @@ export default function GetHidranti() {
     );
 };
 
-const darkListItemStyle = {
-    backgroundColor: darkTheme.container,
-    color: darkTheme.text,
-  };
 

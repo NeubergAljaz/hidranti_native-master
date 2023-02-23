@@ -1,31 +1,54 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View } from 'react-native';
-import axios from 'axios';
 import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
-
 import { BASE_URL_DRUSTVO } from '../config';
-import { ListItem } from "@react-native-material/core";
-import CreateDrustvo from './CreateDrustvo';
+//import CreateDrustvo from './CreateDrustvo';
 import {
     Provider,
-    Text,
-    Stack,
+    Portal,
+    List,
     Button,
     Dialog,
-    DialogHeader,
-    DialogContent,
-    DialogActions,
-    TextInput,
-} from "@react-native-material/core";
+    TextInput
+} from 'react-native-paper';
+// redux hooks
+import { useSelector} from 'react-redux'; 
 
-const Drustvo = () => {
-    const [visible, setVisible] = useState(false);
+const GetDrustvo = () => {
+    const [visible, setVisible] = React.useState(false);
+    const showDialog = () => setVisible(true);
+    const hideDialog = () => setVisible(false);
+
     const { userInfo } = useContext(AuthContext);
     const [data, setData] = useState(null);
- 
 
+    const [naziv, setNaziv] = useState('');
+    const [email, setEmail] = useState('');
+    const [naslov, setNaslov] = useState('');
+
+    const theme = useSelector(state => state.theme);
+
+    const handleSubmit = () => {
+        HttpInterceptor(userInfo.accessToken);
+        const data = {
+            naziv,
+            email,
+            naslov
+        }
+
+        api.post(`${BASE_URL_DRUSTVO}`, data)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        hideDialog();
+    };
+ 
     useEffect(() => {
         HttpInterceptor(userInfo.accessToken);
         api.get(`${BASE_URL_DRUSTVO}`)
@@ -37,53 +60,43 @@ const Drustvo = () => {
             });
     }, [visible]);
 
-    console.log("DATA DRUSTVO", data)
-
-
     return (
-        <>
-            <Button
-                title="Dodajte društvo"
-                style={{ margin: 16 }}
-                onPress={() => setVisible(true)}
-            />
-            <Dialog visible={visible} onDismiss={() => setVisible(false)}>
-                <DialogHeader title="Dialog Header" />
-                <DialogContent>
+        <Provider>
+            <View style={theme.style.container}>
+                <Button mode="contained" onPress={showDialog}>Dodaj društvo</Button>
+                <Portal>
+                    <Dialog visible={visible} onDismiss={hideDialog}>
+                        <Dialog.Title>Novo društvo</Dialog.Title>
+                        <Dialog.Content>
+                            <TextInput label="Naziv" value={naziv} mode='flat'
+                                    onChangeText={text => setNaziv(text)}/>
 
-                    <CreateDrustvo />
+                            <TextInput label="Email" value={email}
+                                onChangeText={text => setEmail(text)} />
 
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        title="Cancel"
-                        compact
-                        variant="text"
-                        onPress={() => setVisible(false)}
-                    />
-                    <Button
-                        title="Ok"
-                        compact
-                        variant="text"
-                        onPress={() => setVisible(false)}
-                    />
-                </DialogActions>
-            </Dialog>
-            {data && data.map((x) => (
-                <ListItem
-                    title={x.naziv}
-                    secondaryText={x.naslov}
-                />
-            ))}
+                            <TextInput label="Naslov" value={naslov}
+                                onChangeText={text => setNaslov(text)} />
 
-        </>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button compact variant="text" onPress={hideDialog}>Cancel</Button>
+                            <Button compact variant="text" onPress={handleSubmit}>Submit</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+                    {data && data.map((x) => (
+                        <List.Item
+                            key={x.naziv}
+                            title={x.naziv}
+                            description={x.naslov}
+                            titleStyle={theme.style.listTitle}
+                            descriptionStyle={theme.style.listDescription}
+                        />
+                    ))}
+                
+            </View>
+        </Provider>
     );
 };
-
-const GetDrustvo = () => (
-    <Provider>
-        <Drustvo />
-    </Provider>
-);
 
 export default GetDrustvo;
