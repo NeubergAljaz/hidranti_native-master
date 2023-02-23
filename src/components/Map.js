@@ -7,10 +7,7 @@ import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL_HIDRANT } from '../config';
 import { Button, Dialog } from '@rneui/themed';
-import { lightTheme, darkTheme } from '../styles/ThemesStyle';
-import ThemeContext from '../context/ThemeContext';
 import { Divider } from '@rneui/themed';
-import {  Overlay, Icon } from '@rneui/themed';
 import DialogPregled from './Dialogues/DialogPregled';
 import { Image } from 'react-native';
 
@@ -160,37 +157,37 @@ export default function Map({navigation}) {
         onBackdropPress={toggleDialogFunction}
       >
         <Dialog.Title title="Dialog Title" />
-        <View style={[theme?.container, { paddingHorizontal: 16 }]}>
-          <Text style={[isDarkModeEnabled ? darkTheme.optionText : lightTheme.optionText, { marginBottom: 8 }]}>Title:</Text>
+        <View style={{ paddingHorizontal: 16 }}>
+          <Text style={{ marginBottom: 8 }}>Title:</Text>
           <TextInput
             value={title}
             onChangeText={text => setTitle(text)}
-            style={[isDarkModeEnabled ? darkTheme.textInputDark : lightTheme.textInputLight, { marginBottom: 16 }]}
+            style={{ marginBottom: 16 }}
           />
-          <Text style={[isDarkModeEnabled ? darkTheme.optionText : lightTheme.optionText, { marginBottom: 8 }]}>Description:</Text>
+          <Text style={{ marginBottom: 8 }}>Description:</Text>
           <TextInput
             value={description}
             onChangeText={text => setDescription(text)}
-            style={[isDarkModeEnabled ? darkTheme.textInputDark : lightTheme.textInputLight, { marginBottom: 16 }]}
+            style={{ marginBottom: 16 }}
           />
-          <Text style={[isDarkModeEnabled ? darkTheme.optionText : lightTheme.optionText, { marginBottom: 8 }]}>Location:</Text>
+          <Text style={{ marginBottom: 8 }}>Location:</Text>
           <TextInput
             value={location}
             onChangeText={text => setLocation(text)}
-            style={[isDarkModeEnabled ? darkTheme.textInputDark : lightTheme.textInputLight, { marginBottom: 16 }]}
+            style={{ marginBottom: 16 }}
           />
 
-          <Text style={[isDarkModeEnabled ? darkTheme.optionText : lightTheme.optionText, { marginBottom: 8 }]}>Status:</Text>
+          <Text style={{ marginBottom: 8 }}>Status:</Text>
           <TextInput
             value={status}
             onChangeText={text => setStatus(text)}
-            style={[isDarkModeEnabled ? darkTheme.textInputDark : lightTheme.textInputLight, { marginBottom: 16 }]}
+            style={{ marginBottom: 16 }}
           />
           <TouchableOpacity onPress={() => {
             handleSubmit();
             toggleDialogFunction();
           }} style={{ borderWidth: 2, borderColor: 'blue', padding: 12, borderRadius: 8, marginTop: 24 }}>
-            <Text style={isDarkModeEnabled ? darkTheme.optionText : lightTheme.optionText}>Submit</Text>
+            <Text>Submit</Text>
           </TouchableOpacity>
         </View>
 

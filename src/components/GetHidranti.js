@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text } from 'react-native';
 import axios from 'axios';
-import { lightTheme, darkTheme } from '../styles/ThemesStyle';
-import ThemeContext from '../context/ThemeContext';
 import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
