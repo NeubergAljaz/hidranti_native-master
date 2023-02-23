@@ -4,7 +4,7 @@ import React from 'react';
 // view component
 import {View} from 'react-native'; 
 import {
-  List, Switch, MD3Colors 
+  List, Switch
 } from 'react-native-paper';
 // redux hooks
 import { useSelector, useDispatch } from 'react-redux'; 

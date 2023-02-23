@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import DrustvoScreen from './DrawerHomeScreens/DrustvoScreen';
 import HidrantiScreen from './DrawerHomeScreens/HidrantiScreen';
 import HidrantiMapScreen from './DrawerHomeScreens/HidrantiMapScreen';
@@ -14,10 +14,6 @@ import {
 import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { BASE_URL } from '../config';
-
-import { Button } from 'react-native-elements';
-
-
 
 const Drawer = createDrawerNavigator();
 
