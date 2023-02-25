@@ -11,7 +11,6 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 
-import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { BASE_URL } from '../config';
 
@@ -24,7 +23,7 @@ export default function HomeScreen() {
 
   //najprej naredi neko random društvo in na mesto šestke prilepi njen id sem not...lahko je bilakaj 
   useEffect(() => {
-    HttpInterceptor(userInfo.accessToken);
+  
     api.put(`${BASE_URL}/user/setdrustvo/${userInfo.user.user_info.id}/6`)
     
   }, []);

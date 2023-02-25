@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { Button, Dialog, Input, ButtonGroup } from '@rneui/themed';
 import api from '../../services/api';
-import HttpInterceptor from '../../services/HttpInterceptor';
 import { BASE_URL_HIDRANT_PREGLED } from '../../config';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -18,7 +17,7 @@ export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
   };
 
   const handleSubmit = () => {
-    HttpInterceptor(userInfo.accessToken);
+    
     const data = {
       opis,
       status

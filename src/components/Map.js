@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import MapView from 'react-native-maps';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Marker, Callout } from 'react-native-maps';
-import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL_HIDRANT } from '../config';
@@ -34,7 +33,6 @@ export default function Map({navigation}) {
   };
 
   useEffect(() => {
-    HttpInterceptor(userInfo.accessToken);
     api.get(`${BASE_URL_HIDRANT}`)
       .then(response => {
         setData(response.data);
@@ -42,11 +40,10 @@ export default function Map({navigation}) {
       .catch(error => {
         console.error(error);
       });
-  },[toggleDialog]);
+  });
 
 
   const handleSubmit = () => {
-    HttpInterceptor(userInfo.accessToken);
     const data = {
       title,
       description,

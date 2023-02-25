@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text } from 'react-native';
-import axios from 'axios';
-import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL_HIDRANT } from '../config';
@@ -12,7 +10,7 @@ export default function GetHidranti() {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        HttpInterceptor(userInfo.accessToken);
+       
         api.get(`${BASE_URL_HIDRANT}`)
             .then(response => {
                 setData(response.data);
