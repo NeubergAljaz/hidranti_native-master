@@ -1,31 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
-import MapView from 'react-native-maps';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
-import { Marker, Callout } from 'react-native-maps';
-import api from '../services/api';
-import { AuthContext } from '../context/AuthContext';
-import { BASE_URL_HIDRANT } from '../config';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import MapView, { Callout, Marker } from 'react-native-maps';
 import { Button, Dialog } from '@rneui/themed';
 import { Divider } from '@rneui/themed';
+import { AuthContext } from '../context/AuthContext';
+import api from '../services/api';
 import DialogPregled from './Dialogues/DialogPregled';
+import { BASE_URL_HIDRANT } from '../config';
 
+export default function Map() {
 
-export default function Map({navigation}) {
-  const [title, setTitle] = useState('');
+  const [data, setData] = useState([]);
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
   const [lat, setLat] = useState(null);
+  const [location, setLocation] = useState('');
   const [lng, setLng] = useState(null);
   const [nadzemni, setNadzemni] = useState(false);
   const [status, setStatus] = useState('');
-
-  const { userInfo } = useContext(AuthContext);
-  const [data, setData] = useState(null);
-  const [toggleDialog, seToggleDialog] = useState(false);
+  const [title, setTitle] = useState('');
+  const [toggleDialog, setToggleDialog] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const toggleDialogFunction = () => {
-    seToggleDialog(!toggleDialog);
+    setToggleDialog(!toggleDialog);
   };
 
   const toggleOverlay = () => {
@@ -40,10 +37,10 @@ export default function Map({navigation}) {
       .catch(error => {
         console.error(error);
       });
-  });
+  },[toggleDialog]);
 
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const data = {
       title,
       description,
@@ -53,21 +50,20 @@ export default function Map({navigation}) {
       nadzemni,
       status
     };
-
-    api.post(`${BASE_URL_HIDRANT}`, data)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
-      setTitle("")
-      setDescription("")
-      setLocation("")
-      setDescription("")
+  
+    try {
+      const response = await api.post(BASE_URL_HIDRANT, data);
+      console.log("Map.js--> add hidrant", response.data);
+      setTitle("");
+      setDescription("");
+      setLocation("");
+      setDescription("");
+    } catch (error) {
+      console.error(error);
+    }
   };
-
+ 
+  
 
   return (
     <View style={styles.container}>
@@ -123,18 +119,17 @@ export default function Map({navigation}) {
             style={{ width: 20, height: 20 }}
           />
           </View>
-             <Callout onPress={toggleOverlay} tyle={{ width: 50, height: 20 }}>
-        <View >
-         <Text>Naziv: {x.title} </Text>
-         <Divider />
-         <Text>Loakcija: {x.location}</Text>
-         <Text>Opis: {x.description}</Text>
-         <Text>{x.status}</Text>
-       
-         
+             <Callout style={{ width: 250, height: 200 }} onPress={toggleOverlay}>
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>Naziv: {x.title}</Text>
+        <Divider />
+        <View style={{ marginTop: 10 }}>
+          <Text style={{ fontSize: 14, marginBottom: 5 }}>Lokacija: {x.location}</Text>
+          <Text style={{ fontSize: 14, marginBottom: 5 }}>Opis: {x.description}</Text>
+          <Text style={{ fontSize: 14 }}>Status: {x.status}</Text>
         </View>
-       </Callout>
-
+      </View>
+    </Callout>
           </Marker>
         ))}
 
