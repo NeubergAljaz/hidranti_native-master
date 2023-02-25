@@ -107,7 +107,7 @@ export default function Map() {
             
           >
               <View style={{
-               backgroundColor: x.status == "NEPREGLEDAN" ? ('rgba(255, 0, 0, 0.2)') : ('rgba(152,251,152, 0.2)'),
+               backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.2)') :  x.status == "NEIZPRAVEN" ?('rgba(255, 0, 0, 0.2)'):("rgba(255, 255, 0, 0.2)"),
             borderRadius: 15,
             width: 30,
             height: 30,
