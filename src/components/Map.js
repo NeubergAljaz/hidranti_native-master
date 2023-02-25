@@ -7,6 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import DialogPregled from './Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../config';
+import { FAB } from 'react-native-paper';
 
 export default function Map() {
 
@@ -134,11 +135,7 @@ export default function Map() {
         ))}
 
       </MapView>
-      <Button
-        title="Dodajte hidrant"
-        onPress={toggleDialogFunction}
-      />
-
+ 
       <Dialog
         isVisible={toggleDialog}
         onBackdropPress={toggleDialogFunction}
@@ -177,12 +174,15 @@ export default function Map() {
             <Text>Submit</Text>
           </TouchableOpacity>
         </View>
-
       </Dialog>
 
+      <FAB
+    icon="plus"
+    style={styles.fab}
+    onPress={toggleDialogFunction}
+  />
+
      <DialogPregled visible = {visible} setVisible={setVisible}/>
-
-
     </View>
   );
 }
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '92%',
+    height: '100%',
   },
   marker: {
     width: 8,
@@ -210,4 +210,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(130,4,150, 0.5)',
   },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  }
 });
