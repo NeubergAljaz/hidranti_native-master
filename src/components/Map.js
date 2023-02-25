@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     margin: 16,
-    right: 0,
+    alignSelf: 'center',
     bottom: 0,
+    
   }
 });
