@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text} from 'react-native';
 import { Button, Dialog, Input, ButtonGroup } from '@rneui/themed';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT_PREGLED } from '../../config';

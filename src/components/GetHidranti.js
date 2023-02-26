@@ -2,8 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import api from '../services/api';
 import { BASE_URL_HIDRANT } from '../config';
-import { List, MD3Colors } from 'react-native-paper';
-import Divider from 'react-native-paper';
+import { List } from 'react-native-paper';
 
 export default function GetHidranti() {
 

@@ -96,12 +96,13 @@ export default function Map() {
         }
 
 
-        {data && data.map((x) => (
+        {data && data.map((x, index) => (
           <Marker
             coordinate={{
               latitude: x.lat,
               longitude: x.lng
             }}
+            key={index}
             title={x.title}
             description={x.location}
           
