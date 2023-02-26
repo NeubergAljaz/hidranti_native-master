@@ -29,7 +29,7 @@ export default function GetHidranti() {
             
         {data && data.map((x) => (
 
-        <ListItem style={listItemStyle}>
+        <ListItem>
         <ListItem.Content>
             <ListItem.Title>{x.title}</ListItem.Title>
             <ListItem.Subtitle>{x.description}</ListItem.Subtitle>

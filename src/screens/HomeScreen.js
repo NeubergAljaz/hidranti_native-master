@@ -25,7 +25,7 @@ export default function HomeScreen() {
   //najprej naredi neko random društvo in na mesto šestke prilepi njen id sem not...lahko je bilakaj 
   useEffect(() => {
     HttpInterceptor(userInfo.accessToken);
-    api.put(`${BASE_URL}/user/setdrustvo/${userInfo.user.user_info.id}/6`)
+    api.put(`${BASE_URL}/user/setdrustvo/${userInfo.user.user_info.id}/4`)
     
   }, []);
   
