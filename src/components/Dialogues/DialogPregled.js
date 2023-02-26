@@ -37,7 +37,6 @@ export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
 
 
-  
   const handleButtonPress = (value) => {
     setSelectedIndex(value);
     console.log(`Selected button: ${buttons[value]}`);

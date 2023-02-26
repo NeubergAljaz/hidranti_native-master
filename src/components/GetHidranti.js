@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, ScrollView, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {ScrollView } from 'react-native';
 import api from '../services/api';
 import { BASE_URL_HIDRANT } from '../config';
 import { List } from 'react-native-paper';
+// redux hooks
+import { useSelector} from 'react-redux'; 
 
 export default function GetHidranti() {
+    const theme = useSelector(state => state.theme);
 
     const [data, setData] = useState(null);
 
@@ -30,7 +33,7 @@ export default function GetHidranti() {
     };
 
     return (
-        <ScrollView>
+        <ScrollView style={theme.style.container}>
         <List.Section>
             {data && data.map((x, index) => (
                 <List.Accordion
