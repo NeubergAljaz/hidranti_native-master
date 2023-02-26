@@ -2,12 +2,11 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import { Button, Dialog } from '@rneui/themed';
-import { Divider } from '@rneui/themed';
-import { AuthContext } from '../context/AuthContext';
+import { Divider, ButtonGroup } from '@rneui/themed';
 import api from '../services/api';
 import DialogPregled from './Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../config';
-import { FAB } from 'react-native-paper';
+import { FAB, Checkbox } from 'react-native-paper';
 
 export default function Map() {
 
@@ -21,6 +20,15 @@ export default function Map() {
   const [title, setTitle] = useState('');
   const [toggleDialog, setToggleDialog] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
+ 
+
+  const handleButtonPress = (value) => {
+    setSelectedIndex(value);
+    console.log(`Selected button: ${buttons[value]}`);
+    setStatus(buttons[value])
+  };
 
   const toggleDialogFunction = () => {
     setToggleDialog(!toggleDialog);
@@ -163,9 +171,17 @@ export default function Map() {
           />
 
           <Text style={{ marginBottom: 8 }}>Status:</Text>
-          <TextInput
+          <ButtonGroup
+            buttons={buttons}
+            selectedIndex={selectedIndex}
+            onPress={handleButtonPress}
+            style={{ marginBottom: 16 }}
+          />
+          <Text style={{ marginBottom: 8 }}>Nadzmeni:</Text>
+          <Checkbox.Android
+            status={'checked'}
             value={status}
-            onChangeText={text => setStatus(text)}
+            onPress={text => setNadzemni(false)}
             style={{ marginBottom: 16 }}
           />
           <TouchableOpacity onPress={() => {
