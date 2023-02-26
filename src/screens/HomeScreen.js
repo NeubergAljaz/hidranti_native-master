@@ -11,7 +11,6 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 
-import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { BASE_URL } from '../config';
 
@@ -20,13 +19,20 @@ const Drawer = createDrawerNavigator();
 export default function HomeScreen() {
 
   const { userInfo } = useContext(AuthContext);
-  console.log(userInfo.user.user_info.id)
+ 
 
   //najprej naredi neko random društvo in na mesto šestke prilepi njen id sem not...lahko je bilakaj 
   useEffect(() => {
-    HttpInterceptor(userInfo.accessToken);
-    api.put(`${BASE_URL}/user/setdrustvo/${userInfo.user.user_info.id}/4`)
-    
+    const updateUserDrustvo = async () => {
+      try {
+        await api.put(`${BASE_URL}/user/setdrustvo/${userInfo.user.user_info.id}/6`);
+        console.log("Drustvo updated successfully!");
+      } catch (error) {
+        console.error("Error updating user drustvo: ", error, "ignoriraj zaenkrat, ne vem zakaj je ta error ampak vseeno dela");
+      }
+    };
+  
+    updateUserDrustvo();
   }, []);
   
 

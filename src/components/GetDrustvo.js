@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View } from 'react-native';
-import HttpInterceptor from '../services/HttpInterceptor';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL_DRUSTVO } from '../config';
@@ -31,7 +30,7 @@ const GetDrustvo = () => {
     const theme = useSelector(state => state.theme);
 
     const handleSubmit = () => {
-        HttpInterceptor(userInfo.accessToken);
+        
         const data = {
             naziv,
             email,
@@ -50,7 +49,7 @@ const GetDrustvo = () => {
     };
  
     useEffect(() => {
-        HttpInterceptor(userInfo.accessToken);
+   
         api.get(`${BASE_URL_DRUSTVO}`)
             .then(response => {
                 setData(response.data);
