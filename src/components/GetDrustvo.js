@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, FC} from 'react';
 import { View } from 'react-native';
 import api from '../services/api';
-import { AuthContext } from '../context/AuthContext';
 import { BASE_URL_DRUSTVO } from '../config';
 //import CreateDrustvo from './CreateDrustvo';
 import {
-    Provider,
-    Portal,
     List,
     Button,
-    Dialog,
-    TextInput
 } from 'react-native-paper';
+import { Dialog, Input } from '@rneui/themed';
 // redux hooks
 import { useSelector} from 'react-redux'; 
 
@@ -20,7 +16,7 @@ const GetDrustvo = () => {
     const showDialog = () => setVisible(true);
     const hideDialog = () => setVisible(false);
 
-    const { userInfo } = useContext(AuthContext);
+    
     const [data, setData] = useState(null);
 
     const [naziv, setNaziv] = useState('');
@@ -59,31 +55,13 @@ const GetDrustvo = () => {
             });
     }, [visible]);
 
+    
+
     return (
-        <Provider>
+        
             <View style={theme.style.container}>
                 <Button mode="contained" onPress={showDialog}>Dodaj društvo</Button>
-                <Portal>
-                    <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title>Novo društvo</Dialog.Title>
-                        <Dialog.Content>
-                            <TextInput label="Naziv" value={naziv} mode='flat'
-                                    onChangeText={text => setNaziv(text)}/>
-
-                            <TextInput label="Email" value={email}
-                                onChangeText={text => setEmail(text)} />
-
-                            <TextInput label="Naslov" value={naslov}
-                                onChangeText={text => setNaslov(text)} />
-
-                        </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button compact variant="text" onPress={hideDialog}>Cancel</Button>
-                            <Button compact variant="text" onPress={handleSubmit}>Submit</Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal>
-                    {data && data.map((x) => (
+                {data && data.map((x) => (
                         <List.Item
                             key={x.naziv}
                             title={x.naziv}
@@ -93,8 +71,26 @@ const GetDrustvo = () => {
                         />
                     ))}
                 
+                        <Dialog visible={visible} onDismiss={hideDialog}>
+                            <Dialog.Title title="Dodajanje društva"/>
+                            
+                                <Input label="Naziv" value={naziv} mode='flat'
+                                        onChangeText={text => setNaziv(text)}/>
+
+                                <Input label="Email" value={email}
+                                    onChangeText={text => setEmail(text)} />
+
+                                <Input label="Naslov" value={naslov}
+                                    onChangeText={text => setNaslov(text)} />
+
+                            <Dialog.Actions>
+                                <Button compact variant="text" onPress={hideDialog}>Cancel</Button>
+                                <Button compact variant="text" onPress={handleSubmit}>Submit</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+    
             </View>
-        </Provider>
+        
     );
 };
 

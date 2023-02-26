@@ -46,8 +46,7 @@ export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
   return (
     <Dialog
       isVisible={visible}
-      onBackdropPress={toggleOverlay}
-    >
+      onBackdropPress={toggleOverlay}>
       <Text> Pregled hidranta:</Text>
       <View >
         <Input
@@ -55,12 +54,12 @@ export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
           value={opis}
           onChangeText={text => setOpis(text)}
         />
-   <ButtonGroup
-    buttons={buttons}
-    selectedIndex={selectedIndex}
-    onPress={handleButtonPress}
-    containerStyle={{ marginBottom: 20 }}
-  />
+      <ButtonGroup
+        buttons={buttons}
+        selectedIndex={selectedIndex}
+        onPress={handleButtonPress}
+        containerStyle={{ marginBottom: 20 }}
+      />
         <Button title="Submit" onPress={handleSubmit} />
       </View>
     </Dialog>

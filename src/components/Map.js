@@ -1,12 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';Button
+import { Image, StyleSheet, Text, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
-import { Dialog } from '@rneui/themed';
-import { Divider } from '@rneui/themed';
 import api from '../services/api';
 import DialogPregled from './Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../config';
-import { FAB, Checkbox, SegmentedButtons } from 'react-native-paper';
+import { FAB, Divider, Button} from 'react-native-paper';
+import { Dialog, Input, ButtonGroup, CheckBox} from '@rneui/themed';
+
 
 export default function Map() {
 
@@ -16,17 +16,18 @@ export default function Map() {
   const [location, setLocation] = useState('');
   const [lng, setLng] = useState(null);
   const [nadzemni, setNadzemni] = React.useState(false);
-  const [status, setStatus] = React.useState('');
+  const [status, setStatus] = useState(0);
   const [title, setTitle] = useState('');
-  const [toggleDialog, setToggleDialog] = useState(false);
-  const [visible, setVisible] = useState(false);
-  
-  const toggleDialogFunction = () => {
-    setToggleDialog(!toggleDialog);
-  };
+  const [visible, setVisible] = React.useState(false);
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
 
+  const [visible2, setVisible2] = React.useState(false);
+
+  const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
+  
   const toggleOverlay = () => {
-    setVisible(!visible);
+    setVisible2(!visible2);
   };
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function Map() {
       .catch(error => {
         console.error(error);
       });
-  },[toggleDialog]);
+  },[]);
 
 
   const handleSubmit = async () => {
@@ -57,7 +58,6 @@ export default function Map() {
       setTitle("");
       setDescription("");
       setLocation("");
-      setDescription("");
     } catch (error) {
       console.error(error);
     }
@@ -66,6 +66,7 @@ export default function Map() {
   
 
   return (
+  
     <View style={styles.container}>
       <MapView style={styles.map}
         onPress={(event) => {
@@ -104,103 +105,94 @@ export default function Map() {
             key={index}
             title={x.title}
             description={x.location}
-          
-            
           >
               <View style={{
-               backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.2)') :  x.status == "NEIZPRAVEN" ?('rgba(255, 0, 0, 0.2)'):("rgba(255, 255, 0, 0.2)"),
-            borderRadius: 15,
-            width: 30,
-            height: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-            <Image
-            source={x.nadzemni == false ? (require("../../assets/icons/hidrant32.png")) : (require("../../assets/icons/podzemni32.png"))}
-            style={{ width: 20, height: 20 }}
-          />
-          </View>
-             <Callout style={{ width: 250, height: 200 }} onPress={toggleOverlay}>
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>Naziv: {x.title}</Text>
-        <Divider />
-        <View style={{ marginTop: 10 }}>
-          <Text style={{ fontSize: 14, marginBottom: 5 }}>Lokacija: {x.location}</Text>
-          <Text style={{ fontSize: 14, marginBottom: 5 }}>Opis: {x.description}</Text>
-          <Text style={{ fontSize: 14 }}>Status: {x.status}</Text>
-        </View>
-      </View>
-    </Callout>
+                backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.2)') :  x.status == "NEIZPRAVEN" ?('rgba(255, 0, 0, 0.2)'):("rgba(255, 255, 0, 0.2)"),
+                borderRadius: 15,
+                width: 30,
+                height: 30,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                <Image
+                source={x.nadzemni == true ? (require("../../assets/icons/hidrant32.png")) : (require("../../assets/icons/podzemni32.png"))}
+                style={{ width: 20, height: 20 }}
+              />
+              </View>
+              <Callout style={{ width: 250, height: 200 }} onPress={toggleOverlay}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>Naziv: {x.title}</Text>
+                  <Divider />
+                  <View style={{ marginTop: 10 }}>
+                    <Text style={{ fontSize: 14, marginBottom: 5 }}>Lokacija: {x.location}</Text>
+                    <Text style={{ fontSize: 14, marginBottom: 5 }}>Opis: {x.description}</Text>
+                    <Text style={{ fontSize: 14 }}>Status: {x.status}</Text>
+                  </View>
+                </View>
+              </Callout>
           </Marker>
         ))}
 
       </MapView>
- 
-      <Dialog
-        isVisible={toggleDialog}
-        onBackdropPress={toggleDialogFunction}
-      >
-        <Dialog.Title title="Dialog Title" />
-        <View style={{ paddingHorizontal: 16 }}>
-          <Text style={{ marginBottom: 8 }}>Title:</Text>
-          <TextInput
-            value={title}
-            onChangeText={text => setTitle(text)}
-            style={{ marginBottom: 16 }}
-          />
-          <Text style={{ marginBottom: 8 }}>Description:</Text>
-          <TextInput
-            value={description}
-            onChangeText={text => setDescription(text)}
-            style={{ marginBottom: 16 }}
-          />
-          <Text style={{ marginBottom: 8 }}>Location:</Text>
-          <TextInput
-            value={location}
-            onChangeText={text => setLocation(text)}
-            style={{ marginBottom: 16 }}
-          />
+      
+        <Dialog
+            visible={visible} 
+            onDismiss={hideDialog}
+            onBackdropPress={hideDialog}
+          >
+          <Dialog.Title title="Dodajanje hidranta"/>
 
-          <Text style={{ marginBottom: 8 }}>Status:</Text>
-          <SegmentedButtons
-            value={status}
-            onValueChange={setStatus}
-            buttons={[
-              {
-                value: 'IZPRAVEN',
-                label: 'IZPRAVEN',
-              },
-              {
-                value: 'NEIZPRAVEN',
-                label: 'NEIZPRAVEN',
-              },
-              { value: 'NEPREGLEDAN', label: 'NEPREGLEDAN' },
-            ]}
-            style={{ marginBottom: 16 }}
-          />
-          <Text style={{ marginBottom: 8 }}>Podzemni:</Text>
-          <Checkbox.Android
-            status={nadzemni ? 'checked' : 'unchecked'}
-            onPress={() => setNadzemni(!nadzemni)}
-            style={{ marginBottom: 16 }}
-          />
-          <TouchableOpacity onPress={() => {
-            handleSubmit();
-            toggleDialogFunction();
-          }} style={{ borderWidth: 2, borderColor: 'blue', padding: 12, borderRadius: 8, marginTop: 24 }}>
-            <Text>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </Dialog>
+              <Input
+                label="Naziv"
+                value={title}
+                onChangeText={text => setTitle(text)}
+                style={{ marginBottom: 16 }}
+              />
+              <Input
+                label="Opis"
+                value={description}
+                onChangeText={text => setDescription(text)}
+                style={{ marginBottom: 16 }}
+              />
+              <Input
+                label="Lokacija"
+                value={location}
+                onChangeText={text => setLocation(text)}
+                style={{ marginBottom: 16 }}
+              />
 
+              <ButtonGroup
+                  buttons={buttons}
+                  selectedIndex={status}
+                  onPress={(value) => {
+                    setStatus(value);
+                  }}
+                  vertical={true}
+                  containerStyle={{ marginBottom: 20 }}
+                />
+              <Text style={{ marginBottom: 8 }}>Nadzemni:</Text>
+              <CheckBox
+                checked={nadzemni}
+                onPress={() => setNadzemni(!nadzemni)}
+                style={{ marginBottom: 16 }}
+              />
+            
+            <Dialog.Actions>
+                <Button onPress={() => {
+                  handleSubmit();
+                  hideDialog();}}>Submit</Button>
+              </Dialog.Actions>
+        </Dialog>
+               
       <FAB
-    icon="plus"
-    style={styles.fab}
-    onPress={toggleDialogFunction}
-  />
+        icon="plus"
+        style={styles.fab}
+        onPress={showDialog}
+      />
 
-     <DialogPregled visible = {visible} setVisible={setVisible}/>
+     <DialogPregled visible = {visible2} setVisible={setVisible2}/>
     </View>
+    
   );
 }
 
