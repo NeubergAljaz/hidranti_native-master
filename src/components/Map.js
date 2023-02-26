@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
-import { Button, Dialog } from '@rneui/themed';
-import { Divider, ButtonGroup } from '@rneui/themed';
+import { Dialog } from '@rneui/themed';
+import { Divider } from '@rneui/themed';
 import api from '../services/api';
 import DialogPregled from './Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../config';
-import { FAB, Checkbox } from 'react-native-paper';
+import { FAB, Checkbox, SegmentedButtons } from 'react-native-paper';
 
 export default function Map() {
 
@@ -15,21 +15,12 @@ export default function Map() {
   const [lat, setLat] = useState(null);
   const [location, setLocation] = useState('');
   const [lng, setLng] = useState(null);
-  const [nadzemni, setNadzemni] = useState(false);
-  const [status, setStatus] = useState('');
+  const [nadzemni, setNadzemni] = React.useState(false);
+  const [status, setStatus] = React.useState('');
   const [title, setTitle] = useState('');
   const [toggleDialog, setToggleDialog] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
- 
-
-  const handleButtonPress = (value) => {
-    setSelectedIndex(value);
-    console.log(`Selected button: ${buttons[value]}`);
-    setStatus(buttons[value])
-  };
-
+  
   const toggleDialogFunction = () => {
     setToggleDialog(!toggleDialog);
   };
@@ -171,17 +162,26 @@ export default function Map() {
           />
 
           <Text style={{ marginBottom: 8 }}>Status:</Text>
-          <ButtonGroup
-            buttons={buttons}
-            selectedIndex={selectedIndex}
-            onPress={handleButtonPress}
+          <SegmentedButtons
+            value={status}
+            onValueChange={setStatus}
+            buttons={[
+              {
+                value: 'IZPRAVEN',
+                label: 'IZPRAVEN',
+              },
+              {
+                value: 'NEIZPRAVEN',
+                label: 'NEIZPRAVEN',
+              },
+              { value: 'NEPREGLEDAN', label: 'NEPREGLEDAN' },
+            ]}
             style={{ marginBottom: 16 }}
           />
-          <Text style={{ marginBottom: 8 }}>Nadzmeni:</Text>
+          <Text style={{ marginBottom: 8 }}>Podzemni:</Text>
           <Checkbox.Android
-            status={'checked'}
-            value={status}
-            onPress={text => setNadzemni(false)}
+            status={nadzemni ? 'checked' : 'unchecked'}
+            onPress={() => setNadzemni(!nadzemni)}
             style={{ marginBottom: 16 }}
           />
           <TouchableOpacity onPress={() => {
