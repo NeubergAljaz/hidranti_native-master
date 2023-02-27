@@ -1,6 +1,4 @@
 import React, {useContext} from 'react';
-import {Text, View} from 'react-native';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
@@ -8,11 +6,13 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import {AuthContext} from '../context/AuthContext';
 import SplashScreen from '../screens/SplashScreen';
+import { useSelector} from 'react-redux'; 
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   const {userInfo, splashLoading,accessToken} = useContext(AuthContext);
+  const theme = useSelector(state => state.theme);
 
   return (
     <NavigationContainer>

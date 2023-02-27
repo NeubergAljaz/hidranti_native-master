@@ -34,16 +34,17 @@ export default function GetHidranti() {
 
     return (
         <ScrollView style={theme.style.container}>
-        <List.Section>
+        <List.Section style={theme.style.container}>
             {data && data.map((x, index) => (
                 <List.Accordion
-                style={{borderRadius: 8,marginTop: 10, borderWidth: 5, borderColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.2)') :  x.status == "NEIZPRAVEN" ?('rgba(255, 0, 0, 0.2)'):("rgba(255, 255, 0, 0.2)") }} 
+                    style={[theme.style.listAccordion, {borderColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.2)') :  x.status == "NEIZPRAVEN" ?('rgba(255, 0, 0, 0.2)'):("rgba(255, 255, 0, 0.2)")} ]} 
                     key={index}
                     title={x.title}
+                    titleStyle={theme.style.listTitle}
                     left={props => <List.Icon {...props} icon={x.nadzemni?(require('../../assets/icons/hidrant32.png')):(require('../../assets/icons/podzemni32.png'))} />}
                     expanded={x.expanded}
                     onPress={() => handlePress(index)}>
-                    <List.Item title={x.description} />
+                    <List.Item titleStyle={theme.style.listTitle} title={x.description} />
                 </List.Accordion>
                 
             ))}

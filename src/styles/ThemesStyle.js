@@ -1,36 +1,17 @@
 import { StyleSheet } from 'react-native';
 
 export const lightTheme = StyleSheet.create({
-  container: {
+  containerOptions: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: 'white',
     padding: 20,
   },
-  option: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomColor: '#dcdcdc',
-    borderBottomWidth: 1,
-  },
-  optionText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   text: {
     fontSize: 16,
-  },
-  textInputLight: {
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 8,
-    color: '#000',
-    fontSize: 16,
-  },
-  button: {
-    buttonColor: 'blue'
   },
   listTitle: {
     color: 'black',
@@ -47,25 +28,26 @@ export const lightTheme = StyleSheet.create({
   switch: {
     color: 'red',
   },
+  listAccordion:{
+    borderRadius: 8,
+    borderWidth: 5,
+    backgroundColor: 'white'
+  }
 });
 
 export const darkTheme = StyleSheet.create({
+  containerOptions: {
+    flex: 1,
+    backgroundColor: 'black',
+    padding: 20,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#1e1e1e',
-    padding: 20,
+    backgroundColor: 'black',
   },
   text: {
     fontSize: 16,
     color: 'white',
-  },
-  textInputDark: {
-    color: '#fff',
-    backgroundColor: '#333',
-    padding: 8,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#ccc',
   },
   listTitle: {
     color: 'white',
@@ -82,6 +64,11 @@ export const darkTheme = StyleSheet.create({
   switch: {
     color: 'white',
   },
+  listAccordion:{
+    borderRadius: 8,
+    borderWidth: 5,
+    backgroundColor: 'black',
+  }
 });
 
 export default {

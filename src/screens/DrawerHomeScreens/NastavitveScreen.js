@@ -38,7 +38,7 @@ export default function NastavitveScreen() {
 }
 
 return (
-    <View style={theme.style.container}>
+    <View style={theme.style.containerOptions}>
         <List.Item
           key="Dark Mode"
           title="Dark Mode"

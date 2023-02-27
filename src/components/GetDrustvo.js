@@ -3,11 +3,8 @@ import { View } from 'react-native';
 import api from '../services/api';
 import { BASE_URL_DRUSTVO } from '../config';
 //import CreateDrustvo from './CreateDrustvo';
-import {
-    List,
-    Button,
-} from 'react-native-paper';
-import { Dialog, Input } from '@rneui/themed';
+import { Dialog, Input, Button } from '@rneui/themed';
+import { List } from 'react-native-paper';
 // redux hooks
 import { useSelector} from 'react-redux'; 
 
@@ -59,8 +56,16 @@ const GetDrustvo = () => {
 
     return (
         
-            <View style={theme.style.container}>
-                <Button mode="contained" onPress={showDialog}>Dodaj društvo</Button>
+            <View style={theme.style.containerOptions}>
+                <Button 
+                    buttonStyle={{
+                    backgroundColor: 'rgba(90, 154, 230, 1)',
+                    borderColor: 'transparent',
+                    borderWidth: 0,
+                    borderRadius: 30,
+                    }} 
+                    onPress={showDialog}>Dodaj društvo</Button>
+
                 {data && data.map((x) => (
                         <List.Item
                             key={x.naziv}
@@ -69,7 +74,7 @@ const GetDrustvo = () => {
                             titleStyle={theme.style.listTitle}
                             descriptionStyle={theme.style.listDescription}
                         />
-                    ))}
+                ))}
                 
                         <Dialog visible={visible} onDismiss={hideDialog}>
                             <Dialog.Title title="Dodajanje društva"/>
@@ -84,8 +89,10 @@ const GetDrustvo = () => {
                                     onChangeText={text => setNaslov(text)} />
 
                             <Dialog.Actions>
-                                <Button compact variant="text" onPress={hideDialog}>Cancel</Button>
-                                <Button compact variant="text" onPress={handleSubmit}>Submit</Button>
+                                <Dialog.Button 
+                                    compact variant="text" onPress={handleSubmit}>Potrdi</Dialog.Button>
+                                <Dialog.Button 
+                                    compact variant="text" onPress={hideDialog}>Prekliči</Dialog.Button>
                             </Dialog.Actions>
                         </Dialog>
     
