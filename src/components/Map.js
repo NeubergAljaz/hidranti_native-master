@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';Button
+import React, { useState, useEffect } from 'react';Button
 import { Image, StyleSheet, Text, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import api from '../services/api';
@@ -25,6 +25,12 @@ export default function Map() {
   const [visible2, setVisible2] = React.useState(false);
 
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
+
+  const handleButtonPress = (value) => {
+    setSelectedIndex(value);
+    console.log(`Selected button: ${buttons[value]}`);
+    setStatus(buttons[value])
+  };
   
   const toggleOverlay = () => {
     setVisible2(!visible2);
@@ -164,9 +170,7 @@ export default function Map() {
               <ButtonGroup
                   buttons={buttons}
                   selectedIndex={status}
-                  onPress={(value) => {
-                    setStatus(value);
-                  }}
+                  onPress={handleButtonPress}
                   vertical={true}
                   containerStyle={{ marginBottom: 20 }}
                 />
@@ -190,7 +194,7 @@ export default function Map() {
         onPress={showDialog}
       />
 
-     <DialogPregled visible = {visible2} setVisible={setVisible2}/>
+     <DialogPregled visible = {visible2} setVisible={setVisible2} selectedMarkerId={13}/>
     </View>
     
   );
