@@ -19,6 +19,7 @@ export default function Map() {
   const [status, setStatus] = useState(0);
   const [title, setTitle] = useState('');
   const [visible, setVisible] = React.useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
@@ -29,7 +30,7 @@ export default function Map() {
   const handleButtonPress = (value) => {
     setSelectedIndex(value);
     console.log(`Selected button: ${buttons[value]}`);
-    setStatus(buttons[value])
+    setStatus(()=>buttons[value])
   };
   
   const toggleOverlay = () => {
@@ -54,10 +55,9 @@ export default function Map() {
       location,
       lat,
       lng,
+      status,
       nadzemni,
-      status
     };
-  
     try {
       const response = await api.post(BASE_URL_HIDRANT, data);
       console.log("Map.js--> add hidrant", response.data);
@@ -169,7 +169,7 @@ export default function Map() {
 
               <ButtonGroup
                   buttons={buttons}
-                  selectedIndex={status}
+                  selectedIndex={selectedIndex}
                   onPress={handleButtonPress}
                   vertical={true}
                   containerStyle={{ marginBottom: 20 }}

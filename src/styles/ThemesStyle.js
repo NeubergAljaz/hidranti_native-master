@@ -45,6 +45,9 @@ export const darkTheme = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
   },
+  containerNoFlex: {
+    backgroundColor: 'black',
+  },
   text: {
     fontSize: 16,
     color: 'white',
@@ -68,6 +71,15 @@ export const darkTheme = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 5,
     backgroundColor: 'black',
+  },
+  containerStyle:{
+    backgroundColor: 'black',
+  },
+  screenOptions:{
+    drawerInactiveTintColor: 'white',
+    drawerActiveTintColor: 'white',
+    drawerActiveBackgroundColor: '#4682B4',
+    drawerInactiveBackgroundColor: 'black'
   }
 });
 

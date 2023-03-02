@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import CustomDrawer from '../components/CustomDrawer';
 import DrustvoScreen from './DrawerHomeScreens/DrustvoScreen';
 import HidrantiScreen from './DrawerHomeScreens/HidrantiScreen';
 import HidrantiMapScreen from './DrawerHomeScreens/HidrantiMapScreen';
@@ -6,18 +7,17 @@ import NastavitveScreen from './DrawerHomeScreens/NastavitveScreen';
 import { AuthContext } from '../context/AuthContext';
 import {
   createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
 } from '@react-navigation/drawer';
 
 import api from '../services/api';
 import { BASE_URL } from '../config';
+import { useSelector} from 'react-redux'; 
+
 
 const Drawer = createDrawerNavigator();
 
 export default function HomeScreen() {
-
+  const theme = useSelector(state => state.theme);
   const { userInfo } = useContext(AuthContext);
  
 
@@ -36,19 +36,8 @@ export default function HomeScreen() {
   }, []);
   
 
-  const {logout} = useContext(AuthContext);
-
-  function CustomDrawerContent(props){
-    return (
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
-        <DrawerItem label="Odjava" onPress={logout} />
-      </DrawerContentScrollView>
-    );
-  }
-
   return (
-    <Drawer.Navigator initialRouteName='DrustvoList' drawerContent={props => <CustomDrawerContent {...props}/>}>
+    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props}/>} screenOptions={theme.style.screenOptions} initialRouteName='DrustvoList'>
       <Drawer.Screen name="Mapa" component={HidrantiMapScreen} />
       <Drawer.Screen name="Drustva" component={DrustvoScreen} />
       <Drawer.Screen name="Hidranti" component={HidrantiScreen} />
