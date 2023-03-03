@@ -4,6 +4,7 @@ import DrustvoScreen from './DrawerHomeScreens/DrustvoScreen';
 import HidrantiScreen from './DrawerHomeScreens/HidrantiScreen';
 import HidrantiMapScreen from './DrawerHomeScreens/HidrantiMapScreen';
 import NastavitveScreen from './DrawerHomeScreens/NastavitveScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { AuthContext } from '../context/AuthContext';
 import {
   createDrawerNavigator,
@@ -38,10 +39,26 @@ export default function HomeScreen() {
 
   return (
     <Drawer.Navigator drawerContent={props => <CustomDrawer {...props}/>} screenOptions={theme.style.screenOptions} initialRouteName='DrustvoList'>
-      <Drawer.Screen name="Mapa" component={HidrantiMapScreen} />
-      <Drawer.Screen name="Drustva" component={DrustvoScreen} />
-      <Drawer.Screen name="Hidranti" component={HidrantiScreen} />
-      <Drawer.Screen name="Nastavitve" component={NastavitveScreen} />
+      <Drawer.Screen name="Mapa" component={HidrantiMapScreen} options={{
+        drawerIcon: () => (
+          <Ionicons name='map-outline' size={22} style={theme.style.listIcon}/>
+        )
+      }}/>
+      <Drawer.Screen name="Drustva" component={DrustvoScreen} options={{
+        drawerIcon: () => (
+          <Ionicons name='home-outline' size={22} style={theme.style.listIcon}/>
+        )
+      }}/>
+      <Drawer.Screen name="Hidranti" component={HidrantiScreen} options={{
+        drawerIcon: () => (
+          <Ionicons name='flame-outline' size={22} style={theme.style.listIcon}/>
+        )
+      }}/>
+      <Drawer.Screen name="Nastavitve" component={NastavitveScreen} options={{
+        drawerIcon: () => (
+          <Ionicons name='settings-outline' size={22} style={theme.style.listIcon}/>
+        )
+      }}/>
     </Drawer.Navigator> 
   );
 }

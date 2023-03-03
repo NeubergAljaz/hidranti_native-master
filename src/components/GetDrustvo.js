@@ -59,12 +59,12 @@ const GetDrustvo = () => {
             <View style={theme.style.containerOptions}>
                 <Button 
                     buttonStyle={{
-                    backgroundColor: 'rgba(90, 154, 230, 1)',
+                    backgroundColor: '#4682B4',
                     borderColor: 'transparent',
                     borderWidth: 0,
                     borderRadius: 30,
                     }} 
-                    onPress={showDialog}>Dodaj društvo</Button>
+                    onPress={showDialog}>DODAJ DRUŠTVO</Button>
 
                 {data && data.map((x) => (
                         <List.Item

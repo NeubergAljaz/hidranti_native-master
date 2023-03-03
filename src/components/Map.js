@@ -171,6 +171,9 @@ export default function Map() {
                   buttons={buttons}
                   selectedIndex={selectedIndex}
                   onPress={handleButtonPress}
+                  selectedButtonStyle={{
+                    backgroundColor: '#4682B4',
+                    }} 
                   vertical={true}
                   containerStyle={{ marginBottom: 20 }}
                 />
@@ -182,9 +185,9 @@ export default function Map() {
               />
             
             <Dialog.Actions>
-                <Button onPress={() => {
+            <Dialog.Button compact variant="text" onPress={() => {
                   handleSubmit();
-                  hideDialog();}}>Submit</Button>
+                  hideDialog();}}>Potrdi</Dialog.Button>
               </Dialog.Actions>
         </Dialog>
                
