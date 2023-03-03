@@ -36,27 +36,25 @@ export const AuthProvider = ({children}) => {
 
 
 
-  const login = (username, password) => {
+  const login = async (username, password) => {
     setIsLoading(true);
-
-    axios
-      .post(`${BASE_URL_AUTH}signin`, {
+    try {
+      const response = await axios.post(`${BASE_URL_AUTH}signin`, {
         username,
-        password
-      })
-      .then(res => {
-        let userInfo = res.data;
-        console.log(userInfo);
-        setUserInfo(userInfo);
-        console.log(`USER LOGIN:`,userInfo);
-        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        SetAccessToken(userInfo.accessToken)
-        setIsLoading(false);
-      })
-      .catch(e => {
-        console.log(`login error ${e}`);
-        setIsLoading(false);
+        password,
       });
+      const userInfo = response.data;
+      setUserInfo(userInfo);
+      AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+      SetAccessToken(userInfo.accessToken);
+      setIsLoading(false);
+      return true;
+    } catch (error) {
+      console.log(`login error: ${error}`);
+      setIsLoading(false);
+      alert('Napačno uporabniško ime ali geslo');
+      return false;
+    }
   };
 
   const logout = async () => {

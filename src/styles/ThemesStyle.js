@@ -36,6 +36,12 @@ export const lightTheme = StyleSheet.create({
   screenOptions:{
     fontSize: 15,
     color: 'white'
+  },
+  buttonStyle:{
+    backgroundColor: '#4682B4',
+    borderColor: 'transparent',
+    borderWidth: 0,
+    borderRadius: 30,
   }
 });
 
@@ -86,6 +92,12 @@ export const darkTheme = StyleSheet.create({
     drawerInactiveBackgroundColor: 'black',
     fontSize: 15,
     color: 'white'
+  },
+  buttonStyle:{
+    backgroundColor: '#4682B4',
+    borderColor: 'transparent',
+    borderWidth: 0,
+    borderRadius: 30,
   }
 });
 
