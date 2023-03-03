@@ -52,7 +52,7 @@ export const AuthProvider = ({children}) => {
     } catch (error) {
       console.log(`login error: ${error}`);
       setIsLoading(false);
-      alert('Napačno uporabniško ime ali geslo');
+      alert('Napačno uporabniško ime ali geslo!');
       return false;
     }
   };
