@@ -5,6 +5,7 @@ import HidrantiScreen from './DrawerHomeScreens/HidrantiScreen';
 import HidrantiMapScreen from './DrawerHomeScreens/HidrantiMapScreen';
 import NastavitveScreen from './DrawerHomeScreens/NastavitveScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AuthContext } from '../context/AuthContext';
 import {
   createDrawerNavigator,
@@ -51,7 +52,7 @@ export default function HomeScreen() {
       }}/>
       <Drawer.Screen name="Hidranti" component={HidrantiScreen} options={{
         drawerIcon: () => (
-          <Ionicons name='flame-outline' size={22} style={theme.style.listIcon}/>
+          <MaterialCommunityIcons name='fire-hydrant' size={22} style={theme.style.listIcon}/>
         )
       }}/>
       <Drawer.Screen name="Nastavitve" component={NastavitveScreen} options={{
