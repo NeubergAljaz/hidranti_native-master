@@ -119,6 +119,8 @@ export default function Map() {
                 height: 30,
                 justifyContent: 'center',
                 alignItems: 'center',
+                borderColor:'rgb(119,136,153)',
+                borderWidth: 1,
               }}>
                 <Image
                 source={x.nadzemni == true ? (require("../../assets/icons/hidrant32.png")) : (require("../../assets/icons/podzemni32.png"))}

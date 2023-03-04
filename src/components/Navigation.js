@@ -6,6 +6,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import {AuthContext} from '../context/AuthContext';
 import SplashScreen from '../screens/SplashScreen';
+import ModalScreenHidranti from '../screens/ModalScreenHidranti';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,10 +24,19 @@ const Navigation = () => {
             options={{headerShown: false}}
           />
         ) : userInfo.accessToken ? (
-          <Stack.Screen name="Home" 
-          component={HomeScreen} 
-          options={{headerShown: false}}
-          />
+          <>
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Hidrant"
+              component={ModalScreenHidranti}
+              options={{title: 'Hidrant'}}
+            />
+
+          </>
 
         ) : (
           <>
@@ -48,3 +58,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
