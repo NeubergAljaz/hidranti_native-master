@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreenNavigation from './HomeScreenNavigation';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import {AuthContext} from '../context/AuthContext';
@@ -27,7 +27,7 @@ const Navigation = () => {
           <>
             <Stack.Screen
               name="Home"
-              component={HomeScreen}
+              component={HomeScreenNavigation}
               options={{headerShown: false}}
             />
             <Stack.Screen

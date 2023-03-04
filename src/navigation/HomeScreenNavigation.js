@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import CustomDrawer from '../components/CustomDrawer';
-import DrustvoScreen from './DrawerHomeScreens/DrustvoScreen';
-import HidrantiScreen from './DrawerHomeScreens/HidrantiScreen';
-import HidrantiMapScreen from './DrawerHomeScreens/HidrantiMapScreen';
-import NastavitveScreen from './DrawerHomeScreens/NastavitveScreen';
+import DrustvoScreen from '../screens/DrawerHomeScreens/DrustvoScreen';
+import HidrantiScreen from '../screens/DrawerHomeScreens/HidrantiScreen';
+import HidrantiMapScreen from '../screens/DrawerHomeScreens/HidrantiMapScreen';
+import NastavitveScreen from '../screens/DrawerHomeScreens/NastavitveScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AuthContext } from '../context/AuthContext';
@@ -18,7 +18,7 @@ import { useSelector} from 'react-redux';
 
 const Drawer = createDrawerNavigator();
 
-export default function HomeScreen() {
+export default function HomeScreenNavigation() {
   const theme = useSelector(state => state.theme);
   const { userInfo } = useContext(AuthContext);
  
