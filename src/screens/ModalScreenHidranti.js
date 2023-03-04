@@ -60,24 +60,28 @@ export default function ModalScreenHidranti({ route, navigation }) {
 
 
       <Text variant="titleLarge" >Seznam pregledov:</Text>
-      {dataPregledi && dataPregledi.length > 0 ? (
-        <>
-          {dataPregledi.map((x, index) => (
-            <ScrollView>
-              <List.Section>
-                <List.Item
-                  key={index}
-                  title={x.opis}
-                  description={<>{x.status}, Datum:{x.createdDate}</>}
-                  left={props => <List.Icon {...props} icon="folder" />}
-                />
+    
+     
+  {dataPregledi === undefined ? (
+    <Text>Loading</Text>
+  ) : dataPregledi.length === 0 ? (
+    <Text>Hidrant nima pregleda <Icon name="squared-cross" size={30} color="red" /></Text>
+  ) : (
+    <>
+      {dataPregledi.map((x, index) => (
+        <ScrollView key={index}>
+          <List.Section>
+            <List.Item
+              title={x.opis}
+              description={<>{x.status}, Datum:{x.createdDate}</>}
+              left={props => <List.Icon {...props} icon="folder" />}
+            />
+          </List.Section>
+        </ScrollView>
+      ))}
+    </>
+  )}
 
-              </List.Section>
-            </ScrollView>
-          ))}
-        </>
-      ) : (<Text>Hidrant nima pregleda <Icon name="squared-cross" size={30} color="red" /></Text>)
-      }
     </View>
   );
 }
