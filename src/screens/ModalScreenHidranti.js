@@ -6,9 +6,9 @@ import { ScrollView } from 'react-native';
 import { BASE_URL_PREGLED } from '../config.js'
 import { BASE_URL_HIDRANT } from '../config.js'
 import api from '../services/api';
+import Icon from 'react-native-vector-icons/Entypo';
 
-
-export default function ModalScreenHidranti({ route }) {
+export default function ModalScreenHidranti({ route, navigation }) {
 
   const { hidrantId } = route.params;
   console.log(hidrantId)
@@ -21,6 +21,7 @@ export default function ModalScreenHidranti({ route }) {
     api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
       .then(response => {
         setDataHidrant(response.data);
+        navigation.setOptions({ title: response.data.title });
       })
       .catch(error => {
         console.error(error);
@@ -30,7 +31,7 @@ export default function ModalScreenHidranti({ route }) {
 
 
   useEffect(() => {
-    if (dataPHidrant.id) { 
+    if (dataPHidrant.id) {
       api.get(`${BASE_URL_PREGLED}`)
         .then(response => {
           setDataPregledi(response.data.filter((item) => item.hidrantId == dataPHidrant.id));
@@ -43,25 +44,29 @@ export default function ModalScreenHidranti({ route }) {
 
   return (
     <View >
-      <Card>
+      <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 0, borderBottomLeftRadius: 0, borderBottomStartRadius: 10, borderTopStartRadius: 0 }}>
         <Card.Content>
-          <Text variant="titleLarge">{dataPHidrant.location}</Text>
-          <Text variant="bodyMedium">{dataPHidrant.title}</Text>
-          <Text variant="bodyMedium"> ostali info...(se je treba dokoncat)</Text>
+          <Text variant="titleLarge" style={{ color: 'white' }}>{dataPHidrant.location}</Text>
+          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.title}</Text>
+          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.status} </Text>
+          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.createdDate} </Text>
+          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.zadnjiPregled} </Text>
         </Card.Content>
 
         <Card.Actions>
-          <Button>Uredi</Button>
-          <Button>Izbriši</Button>
+
         </Card.Actions>
       </Card>
 
+
+      <Text variant="titleLarge" >Seznam pregledov:</Text>
       {dataPregledi && dataPregledi.length > 0 ? (
         <>
           {dataPregledi.map((x, index) => (
             <ScrollView>
               <List.Section>
                 <List.Item
+                  key={index}
                   title={x.opis}
                   description={<>{x.status}, Datum:{x.createdDate}</>}
                   left={props => <List.Icon {...props} icon="folder" />}
@@ -71,7 +76,7 @@ export default function ModalScreenHidranti({ route }) {
             </ScrollView>
           ))}
         </>
-      ) : (<Text>Hidrant nima pregleda</Text>)
+      ) : (<Text>Hidrant nima pregleda <Icon name="squared-cross" size={30} color="red" /></Text>)
       }
     </View>
   );
