@@ -58,12 +58,7 @@ const GetDrustvo = () => {
         
             <View style={theme.style.containerOptions}>
                 <Button 
-                    buttonStyle={{
-                    backgroundColor: '#4682B4',
-                    borderColor: 'transparent',
-                    borderWidth: 0,
-                    borderRadius: 30,
-                    }} 
+                    buttonStyle={theme.style.buttonStyle} 
                     onPress={showDialog}>DODAJ DRUŠTVO</Button>
 
                 {data && data.map((x) => (

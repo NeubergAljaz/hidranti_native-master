@@ -129,7 +129,8 @@ export default function Map() {
               </View>
               <Callout style={{ width: 250, height: 200 }} onPress={toggleOverlay}>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>Naziv: {x.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+                    Naziv: {x.title}</Text>
                   <Divider />
                   <View style={{ marginTop: 10 }}>
                     <Text style={{ fontSize: 14, marginBottom: 5 }}>Lokacija: {x.location}</Text>

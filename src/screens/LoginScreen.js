@@ -13,9 +13,9 @@ import styles from '../styles/LoginStyle';
 const signInStyles = styles.signInStyles;
 
 const LoginScreen = ({navigation}) => {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const {isLoading, login} = useContext(AuthContext);
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const { isLoading, login } = useContext(AuthContext);
 
   return (
     <View style={signInStyles.container}>
@@ -60,7 +60,6 @@ const LoginScreen = ({navigation}) => {
   );
   
 };
-
 
 
 export default LoginScreen;
