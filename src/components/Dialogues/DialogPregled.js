@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text} from 'react-native';
 import { Button, Dialog, Input, ButtonGroup } from '@rneui/themed';
 import api from '../../services/api';
-import { BASE_URL_HIDRANT_PREGLED } from '../../config';
+import { BASE_URL_PREGLED } from '../../config';
 
 export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
   const [opis, setOpis] = useState('');
@@ -13,25 +13,24 @@ export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
     setVisible(!visible);
   };
 
-  const handleSubmit = () => {
-    
-    const data = {
-      opis,
-      status
+  const handleSubmit = async () => {
+    try {
+      const data = {
+        opis,
+        status
+      }
+
+      await api.post(`${BASE_URL_PREGLED}/${selectedMarkerId}`, data);
+      console.log("Data submitted successfully!");
+      setOpis('');
+      setStatus('');
+      setSelectedIndex(null);
+      setVisible(false);
+    } catch (error) {
+      console.error(error);
     }
-
-    api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data)
-      .then(response => {
-        console.log(data);
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.log(selectedMarkerId);
-        console.error(error);
-      });
-
-      setOpis("")
   };
+
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
 
   const handleButtonPress = (value) => {

@@ -20,6 +20,7 @@ export default function HidrantiMapScreen() {
   const [title, setTitle] = useState('');
   const [visible, setVisible] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
@@ -69,7 +70,10 @@ export default function HidrantiMapScreen() {
     }
   };
  
-  
+  const handleMarkerPress = (markerId) => {
+    setSelectedMarkerId(markerId);
+  };
+
 
   return (
   
@@ -104,6 +108,7 @@ export default function HidrantiMapScreen() {
 
         {data && data.map((x, index) => (
           <Marker
+          onPress={() => handleMarkerPress(x.id)}
             coordinate={{
               latitude: x.lat,
               longitude: x.lng
@@ -200,7 +205,7 @@ export default function HidrantiMapScreen() {
         onPress={showDialog}
       />
 
-     <DialogPregled visible = {visible2} setVisible={setVisible2} selectedMarkerId={13}/>
+     <DialogPregled visible = {visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId}/>
     </View>
     
   );
