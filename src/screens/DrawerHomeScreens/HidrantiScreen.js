@@ -34,7 +34,7 @@ const a ="aaaa"
                 {data && data.map((x, index) => (
 
                     <List.Item
-                    onPress={() => {navigation.navigate('Hidrant', {hidrant: x}); console.log(x)}}
+                    onPress={() => {navigation.navigate('Hidrant', {hidrantId: x.id}); console.log(x)}}
                         style={{
                             borderColor: 'rgb(119,136,153)', marginBottom: 5, marginLeft: 10, marginRight: 10,
                             borderWidth: 1, borderRadius: 10
