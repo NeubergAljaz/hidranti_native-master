@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import api from '../../services/api';
 import { BASE_URL_DRUSTVO } from '../../config';
 //import CreateDrustvo from './CreateDrustvo';
-import { Dialog, Input, Button } from '@rneui/themed';
+import { Dialog, Input, Button, Divider } from '@rneui/themed';
 import { List } from 'react-native-paper';
 // redux hooks
 import { useSelector} from 'react-redux'; 
@@ -59,8 +59,9 @@ export default function DrustvoScreen()  {
             <View style={theme.style.containerOptions}>
                 <Button 
                     buttonStyle={theme.style.buttonStyle} 
-                    onPress={showDialog}>DODAJ DRUŠTVO</Button>
-
+                    onPress={showDialog}>DODAJ DRUŠTVO
+                </Button>
+                <Divider style={{padding: 10}}/>
                 {data && data.map((x) => (
                         <List.Item
                             key={x.naziv}
@@ -68,7 +69,9 @@ export default function DrustvoScreen()  {
                             description={x.naslov}
                             titleStyle={theme.style.listTitle}
                             descriptionStyle={theme.style.listDescription}
+                           
                         />
+                        
                 ))}
                 
                         <Dialog visible={visible} onDismiss={hideDialog}>

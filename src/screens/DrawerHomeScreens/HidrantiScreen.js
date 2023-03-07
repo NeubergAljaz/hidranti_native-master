@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView } from 'react-native';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT } from '../../config';
-import { Button, List, MD3Colors, Surface } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { View } from 'react-native';
 import { Image } from 'react-native-elements';
 // redux hooks
@@ -41,6 +41,7 @@ const a ="aaaa"
                         }}
                         key={index}
                         title={x.title}
+                        titleStyle={theme.style.listTitle}
                         left={() => (
                             <View
                                 style={{

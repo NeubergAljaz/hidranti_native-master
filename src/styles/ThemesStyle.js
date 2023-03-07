@@ -16,7 +16,6 @@ export const lightTheme = StyleSheet.create({
   listTitle: {
     color: 'black',
     fontSize: 18,
-    fontWeight: 'bold',
   },
   listDescription: {
     color: 'black',
@@ -65,7 +64,6 @@ export const darkTheme = StyleSheet.create({
   listTitle: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
   },
   listDescription: {
     color: 'white',

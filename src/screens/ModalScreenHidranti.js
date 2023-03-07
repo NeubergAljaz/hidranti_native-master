@@ -1,14 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View } from "react-native";
-import { Avatar, Button, Card, Text } from 'react-native-paper';
+import React, {useEffect, useState } from 'react';
+import { View, ScrollView  } from "react-native";
+import {Card, Text } from 'react-native-paper';
 import { List } from 'react-native-paper';
-import { ScrollView } from 'react-native';
 import { BASE_URL_PREGLED } from '../config.js'
 import { BASE_URL_HIDRANT } from '../config.js'
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
+// redux hooks
+import { useSelector } from 'react-redux';
 
 export default function ModalScreenHidranti({ route, navigation }) {
+
+  const theme = useSelector(state => state.theme);
 
   const { hidrantId } = route.params;
   console.log(hidrantId)
@@ -43,8 +46,8 @@ export default function ModalScreenHidranti({ route, navigation }) {
   }, [dataPHidrant]);
 
   return (
-    <View >
-      <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 0, borderBottomLeftRadius: 0, borderBottomStartRadius: 10, borderTopStartRadius: 0 }}>
+    <View style={theme.style.containerOptions}>
+      <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding:10, marginTop: 15 }}>
         <Card.Content>
           <Text variant="titleLarge" style={{ color: 'white' }}>{dataPHidrant.location}</Text>
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.title}</Text>
@@ -52,35 +55,34 @@ export default function ModalScreenHidranti({ route, navigation }) {
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.createdDate} </Text>
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.zadnjiPregled} </Text>
         </Card.Content>
-
-        <Card.Actions>
-
-        </Card.Actions>
       </Card>
-
-
-      <Text variant="titleLarge" >Seznam pregledov:</Text>
+      <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding:10, marginTop: 15 }}>
+        <Card.Content>
+          <Text variant="titleLarge" style={{ color: 'white' }}>Seznam pregledov:</Text>
     
-     
-  {dataPregledi === undefined ? (
-    <Text>Loading</Text>
-  ) : dataPregledi.length === 0 ? (
-    <Text>Hidrant nima pregleda <Icon name="squared-cross" size={30} color="red" /></Text>
-  ) : (
-    <>
-      {dataPregledi.map((x, index) => (
-        <ScrollView key={index}>
-          <List.Section>
-            <List.Item
-              title={x.opis}
-              description={<>{x.status}, Datum:{x.createdDate}</>}
-              left={props => <List.Icon {...props} icon="folder" />}
-            />
-          </List.Section>
-        </ScrollView>
-      ))}
-    </>
-  )}
+            {dataPregledi === undefined ? (
+              <Text>Loading</Text>
+            ) : dataPregledi.length === 0 ? (
+              <Text style={{ color: 'white' }}>Hidrant nima pregleda <Icon name="squared-cross" size={20} color="black" /></Text>
+            ) : (
+              <>
+                {dataPregledi.map((x, index) => (
+                  <ScrollView key={index}>
+                    <List.Section>
+                      <List.Item
+                        title={x.opis}
+                        titleStyle={{color: 'white'}}
+                        description={<>{x.status}, Datum:{x.createdDate}</>}
+                        left={props => <List.Icon {...props} icon="folder" />}
+                      />
+                    </List.Section>
+                  </ScrollView>
+                ))}
+              </>
+            )}
+
+        </Card.Content>
+      </Card>           
 
     </View>
   );

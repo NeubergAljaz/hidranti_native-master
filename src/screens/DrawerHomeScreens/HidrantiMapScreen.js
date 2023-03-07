@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';Button
+import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import api from '../../services/api';
 import DialogPregled from '../../components/Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../../config';
-import { FAB, Divider, Button} from 'react-native-paper';
-import { Dialog, Input, ButtonGroup, CheckBox} from '@rneui/themed';
+import { FAB} from 'react-native-paper';
+import { Dialog, Input, ButtonGroup, CheckBox, Divider} from '@rneui/themed';
 
 
 export default function HidrantiMapScreen() {
