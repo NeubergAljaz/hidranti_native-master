@@ -49,11 +49,16 @@ export default function ModalScreenHidranti({ route, navigation }) {
     <View style={theme.style.containerOptions}>
       <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding:10, marginTop: 15 }}>
         <Card.Content>
-          <Text variant="titleLarge" style={{ color: 'white' }}>{dataPHidrant.location}</Text>
+          <Text variant="titleMedium" style={{ color: 'white' }}>Lokacija:</Text>
+          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.location}</Text>
+          <Text variant="titleMedium" style={{ color: 'white' }}>Naziv:</Text>
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.title}</Text>
+          <Text variant="titleMedium" style={{ color: 'white' }}>Status:</Text>
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.status} </Text>
+          <Text variant="titleMedium" style={{ color: 'white' }}>Datum vnosa:</Text>
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.createdDate} </Text>
-          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.zadnjiPregled} </Text>
+          <Text variant="titleMedium" style={{ color: 'white' }}>Datum zadnjega pregleda:</Text>
+          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.zadnjiPregled}</Text>
         </Card.Content>
       </Card>
       <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding:10, marginTop: 15 }}>

@@ -24,9 +24,7 @@ export default function HidrantiScreen({navigation}) {
             });
     }, []);
 
-    console.log("DATA HIDRANTI", data)
-
-const a ="aaaa"
+    //console.log("DATA HIDRANTI", data)
 
     return (
         <ScrollView style={theme.style.container}>
