@@ -17,7 +17,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {splashLoading ==! null ? (
+        {splashLoading !== null ? (
           <Stack.Screen
             name="Splash Screen"
             component={SplashScreen}

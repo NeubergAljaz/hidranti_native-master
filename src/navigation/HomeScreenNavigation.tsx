@@ -19,7 +19,7 @@ import { useSelector} from 'react-redux';
 const Drawer = createDrawerNavigator();
 
 export default function HomeScreenNavigation() {
-  const theme = useSelector(state => state.theme);
+  const theme = useSelector((state : any) => state.theme);
   const { userInfo } = useContext(AuthContext);
  
 

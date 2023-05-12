@@ -15,7 +15,7 @@ import {lightTheme, darkTheme} from '../../styles/ThemesStyle';
 
 export default function NastavitveScreen() {
   // get the current theme
-  const theme = useSelector(state => state.theme);
+  const theme = useSelector((state : any) => state.theme);
   // initialize action dispatcher
   const dispatch = useDispatch();
   // define a component mode state

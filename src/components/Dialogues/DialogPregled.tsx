@@ -2,12 +2,22 @@ import React, { useState } from 'react';
 import { View, Text} from 'react-native';
 import { Button, Dialog, Input, ButtonGroup } from '@rneui/themed';
 import api from '../../services/api';
-import { BASE_URL_PREGLED } from '../../config';
+//import { BASE_URL_PREGLED } from '../../config';
 
-export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
+interface DialogPregledProps {
+  visible: boolean;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedMarkerId: string | null;
+}
+
+const DialogPregled: React.FC<DialogPregledProps> = ({
+  visible,
+  setVisible,
+  selectedMarkerId,
+}) => {
   const [opis, setOpis] = useState('');
   const [status, setStatus] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
   
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -20,12 +30,12 @@ export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
         status
       }
 
-      await api.post(`${BASE_URL_PREGLED}/${selectedMarkerId}`, data);
+      /*await api.post(`${BASE_URL_PREGLED}/${selectedMarkerId}`, data);
       console.log("Data submitted successfully!");
       setOpis('');
       setStatus('');
-      setSelectedIndex(null);
-      setVisible(false);
+      setSelectedIndex(0);
+      setVisible(false);*/
     } catch (error) {
       console.error(error);
     }
@@ -33,7 +43,7 @@ export default function DialogPregled({visible, setVisible, selectedMarkerId}) {
 
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
 
-  const handleButtonPress = (value) => {
+  const handleButtonPress = (value:number) => {
     setSelectedIndex(value);
     console.log(`Selected button: ${buttons[value]}`);
     setStatus(buttons[value])

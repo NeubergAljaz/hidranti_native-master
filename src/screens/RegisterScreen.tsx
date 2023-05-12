@@ -10,7 +10,8 @@ import {AuthContext} from '../context/AuthContext';
 import styles from '../styles/RegisterStyle';
 const signInStyles = styles.signInStyles;
 
-const RegisterScreen = ({navigation}) => {
+
+const RegisterScreen = ({ navigation }: { navigation: any }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 

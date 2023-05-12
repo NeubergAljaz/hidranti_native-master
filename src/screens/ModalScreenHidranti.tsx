@@ -2,21 +2,38 @@ import React, {useEffect, useState } from 'react';
 import { View, ScrollView  } from "react-native";
 import {Card, Text } from 'react-native-paper';
 import { List } from 'react-native-paper';
-import { BASE_URL_PREGLED } from '../config.js'
-import { BASE_URL_HIDRANT } from '../config.js'
+import { BASE_URL_HIDRANT } from '../config';
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
 // redux hooks
 import { useSelector } from 'react-redux';
 
-export default function ModalScreenHidranti({ route, navigation }) {
+interface ModalScreenHidrantiProps {
+  route: {
+    params: {
+      hidrantId: number;
+    };
+  };
+  navigation: any; // Update with actual type of navigation prop
+}
 
-  const theme = useSelector(state => state.theme);
+interface Hidrant {
+  id?: number;
+  location: string;
+  title: string;
+  status: string;
+  createdDate: string;
+  zadnjiPregled: string;
+}
+
+export default function ModalScreenHidranti({ route, navigation }: ModalScreenHidrantiProps) {
+
+  const theme = useSelector((state: any) => state.theme);
 
   const { hidrantId } = route.params;
   console.log(hidrantId)
 
-  const [dataPHidrant, setDataHidrant] = useState("");
+  const [dataPHidrant, setDataHidrant] = useState<Hidrant>({ location: "", title: "", status: "", createdDate: "", zadnjiPregled: "" });
   const [dataPregledi, setDataPregledi] = useState([]);
 
 
@@ -35,9 +52,9 @@ export default function ModalScreenHidranti({ route, navigation }) {
 
   useEffect(() => {
     if (dataPHidrant.id) {
-      api.get(`${BASE_URL_PREGLED}`)
+      api.get(`${BASE_URL_HIDRANT}`)
         .then(response => {
-          setDataPregledi(response.data.filter((item) => item.hidrantId == dataPHidrant.id));
+          setDataPregledi(response.data.filter((item: any) => item.hidrantId === dataPHidrant.id));
         })
         .catch(error => {
           console.error(error);
@@ -71,7 +88,7 @@ export default function ModalScreenHidranti({ route, navigation }) {
               <Text style={{ color: 'white' }}>Hidrant nima pregleda <Icon name="squared-cross" size={20} color="black" /></Text>
             ) : (
               <>
-                {dataPregledi.map((x, index) => (
+                {dataPregledi.map((x:any, index:number) => (
                   <ScrollView key={index}>
                     <List.Section>
                       <List.Item

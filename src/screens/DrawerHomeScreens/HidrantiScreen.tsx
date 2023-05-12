@@ -8,11 +8,10 @@ import { Image } from 'react-native-elements';
 // redux hooks
 import { useSelector } from 'react-redux';
 
-export default function HidrantiScreen({navigation}) {
-    const theme = useSelector(state => state.theme);
+export default function HidrantiScreen({ navigation }: { navigation: any }) {
+    const theme = useSelector((state : any) => state.theme);
 
-    const [data, setData] = useState(null);
-
+    const [data, setData] = useState<any[]>([]);
     useEffect(() => {
 
         api.get(`${BASE_URL_HIDRANT}`)
@@ -29,7 +28,7 @@ export default function HidrantiScreen({navigation}) {
     return (
         <ScrollView style={theme.style.container}>
             <List.Section style={theme.style.container}>
-                {data && data.map((x, index) => (
+                {data && data.map((x: any, index:number) => (
 
                     <List.Item
                     onPress={() => {navigation.navigate('Hidrant', {hidrantId: x.id}); console.log(x)}}
@@ -47,7 +46,6 @@ export default function HidrantiScreen({navigation}) {
                                     borderWidth: 2,
                                     backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.2)') : x.status == "NEIZPRAVEN" ? ('rgba(255, 0, 0, 0.2)') : ("rgba(255, 255, 0, 0.2)"),
                                     padding: 4,
-                                    borderWidth: 1,
                                     marginBottom: 2,
                                     marginLeft: 10
 

@@ -12,26 +12,27 @@ export default function HidrantiMapScreen() {
 
   const [data, setData] = useState([]);
   const [description, setDescription] = useState('');
-  const [lat, setLat] = useState(null);
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
   const [location, setLocation] = useState('');
-  const [lng, setLng] = useState(null);
   const [nadzemni, setNadzemni] = React.useState(false);
-  const [status, setStatus] = useState(0);
+  const [status, setStatus] = useState<string>('');
   const [title, setTitle] = useState('');
   const [visible, setVisible] = React.useState(false);
+  const [visible2, setVisible2] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+  const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  const [visible2, setVisible2] = React.useState(false);
+
 
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
 
-  const handleButtonPress = (value) => {
+  const handleButtonPress = (value:number) => {
     setSelectedIndex(value);
     console.log(`Selected button: ${buttons[value]}`);
-    setStatus(()=>buttons[value])
+    setStatus(buttons[value])
   };
   
   const toggleOverlay = () => {
@@ -70,7 +71,7 @@ export default function HidrantiMapScreen() {
     }
   };
  
-  const handleMarkerPress = (markerId) => {
+  const handleMarkerPress = (markerId:number) => {
     setSelectedMarkerId(markerId);
   };
 
@@ -80,15 +81,9 @@ export default function HidrantiMapScreen() {
     <View style={styles.container}>
       <MapView style={styles.map}
         onPress={(event) => {
-          setLat(
-            event.nativeEvent.coordinate.latitude
-          )
-          setLng(
-            event.nativeEvent.coordinate.longitude
-          )
-        }
-
-        }
+          setLat(event.nativeEvent.coordinate.latitude);
+          setLng(event.nativeEvent.coordinate.longitude);
+        }}
         initialRegion={{
           latitude: 46.55472,
           longitude: 15.64667,
@@ -106,7 +101,7 @@ export default function HidrantiMapScreen() {
         }
 
 
-        {data && data.map((x, index) => (
+        {data && data.map((x:any, index:number) => (
           <Marker
           onPress={() => handleMarkerPress(x.id)}
             coordinate={{
@@ -150,7 +145,7 @@ export default function HidrantiMapScreen() {
       </MapView>
       
         <Dialog
-            visible={visible} 
+            isVisible={visible} 
             onDismiss={hideDialog}
             onBackdropPress={hideDialog}
           >
@@ -193,10 +188,10 @@ export default function HidrantiMapScreen() {
               />
             
             <Dialog.Actions>
-            <Dialog.Button compact variant="text" onPress={() => {
+            <Dialog.Button onPress={() => {
                   handleSubmit();
                   hideDialog();}}>Potrdi</Dialog.Button>
-              </Dialog.Actions>
+            </Dialog.Actions>
         </Dialog>
                
       <FAB

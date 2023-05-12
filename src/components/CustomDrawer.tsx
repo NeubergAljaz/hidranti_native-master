@@ -5,9 +5,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../context/AuthContext';
 
-export default function CustomDrawer(props) {
+export default function CustomDrawer(props:any) {
 
-    const theme = useSelector(state => state.theme);
+    const theme = useSelector((state : any) => state.theme);
     const { logout, userInfo } = useContext(AuthContext);
 
     return (

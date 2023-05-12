@@ -14,13 +14,13 @@ export default function DrustvoScreen()  {
     const hideDialog = () => setVisible(false);
 
     
-    const [data, setData] = useState(null);
+    const [data, setData] = useState<any[]>([]);
 
     const [naziv, setNaziv] = useState('');
     const [email, setEmail] = useState('');
     const [naslov, setNaslov] = useState('');
 
-    const theme = useSelector(state => state.theme);
+    const theme = useSelector((state : any) => state.theme);
 
     const handleSubmit = () => {
         
@@ -62,7 +62,7 @@ export default function DrustvoScreen()  {
                     onPress={showDialog}>DODAJ DRUŠTVO
                 </Button>
                 <Divider style={{padding: 10}}/>
-                {data && data.map((x) => (
+                {data && data.map((x:any) => (
                         <List.Item
                             key={x.naziv}
                             title={x.naziv}
@@ -74,10 +74,10 @@ export default function DrustvoScreen()  {
                         
                 ))}
                 
-                        <Dialog visible={visible} onDismiss={hideDialog}>
+                        <Dialog isVisible={visible} onDismiss={hideDialog}>
                             <Dialog.Title title="Dodajanje društva"/>
                             
-                                <Input label="Naziv" value={naziv} mode='flat'
+                                <Input label="Naziv" value={naziv}
                                         onChangeText={text => setNaziv(text)}/>
 
                                 <Input label="Email" value={email}
@@ -88,9 +88,9 @@ export default function DrustvoScreen()  {
 
                             <Dialog.Actions>
                                 <Dialog.Button 
-                                    compact variant="text" onPress={handleSubmit}>Potrdi</Dialog.Button>
+                                    onPress={handleSubmit}>Potrdi</Dialog.Button>
                                 <Dialog.Button 
-                                    compact variant="text" onPress={hideDialog}>Prekliči</Dialog.Button>
+                                    onPress={hideDialog}>Prekliči</Dialog.Button>
                             </Dialog.Actions>
                         </Dialog>
     
