@@ -1,54 +1,51 @@
-import React, {useContext} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, { useContext } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreenNavigation from './HomeScreenNavigation';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import {AuthContext} from '../context/AuthContext';
+import { AuthContext, ContextProps } from '../context/AuthContext';
 import SplashScreen from '../screens/SplashScreen';
 import ModalScreenHidranti from '../screens/ModalScreenHidranti';
 
 const Stack = createNativeStackNavigator();
 
-const Navigation = () => {
-  const {userInfo, splashLoading,accessToken} = useContext(AuthContext);
+const Navigation: React.FC = () => {
+  const { userInfo, splashLoading, accessToken } = useContext(AuthContext) as ContextProps;
   
-
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {splashLoading !== null ? (
+        {splashLoading == null ? (
           <Stack.Screen
             name="Splash Screen"
             component={SplashScreen}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
-        ) : userInfo.accessToken ? (
+        ) : userInfo?.accessToken ? (
           <>
             <Stack.Screen
               name="Home"
               component={HomeScreenNavigation}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Hidrant"
               component={ModalScreenHidranti}
-              options={{title: 'Hidrant'}}
+              options={{ title: 'Hidrant' }}
             />
-
           </>
-
         ) : (
           <>
             <Stack.Screen
               name="Login"
               component={LoginScreen}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Register"
               component={RegisterScreen}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
           </>
         )}
@@ -58,4 +55,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-

@@ -3,24 +3,55 @@ import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
 import {BASE_URL_AUTH} from '../config';
 
-export const AuthContext = createContext();
+interface UserInfo {
+  id: number;
+  address: string | null;
+}
 
-export const AuthProvider = ({children}) => {
-  const [userInfo, setUserInfo] = useState({});
+interface User {
+  [x: string]: any;
+  user: any;
+  username: string;
+  user_info: UserInfo;
+}
+
+interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+
+export interface ContextProps {
+  isLoading: boolean;
+  userInfo: User | null;
+  splashLoading: boolean;
+  accessToken: string | null;
+  register: (username: string, password: string) => void;
+  login: (username: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+}
+
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+export const AuthContext = createContext<ContextProps | undefined>(undefined);
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
+  const [userInfo, setUserInfo] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
-  const [accessToken, SetAccessToken] = useState(null);
+  const [accessToken, SetAccessToken] = useState<string | null>(null);
 
-  const register = (username, password) => {
+  const register = (username: string, password: string) => {
     setIsLoading(true);
 
     axios
-      .post(`${BASE_URL_AUTH}signup`, {
+      .post<AuthResponse>(`${BASE_URL_AUTH}signup`, {
         username,
         password,
       })
       .then(res => {
-        let userInfo = res.data;
+        const userInfo = res.data.user;
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         console.log("USER!!", userInfo)
@@ -33,20 +64,17 @@ export const AuthProvider = ({children}) => {
       });
   };
 
-
-
-
-  const login = async (username, password) => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${BASE_URL_AUTH}signin`, {
+      const response = await axios.post<AuthResponse>(`${BASE_URL_AUTH}signin`, {
         username,
         password,
       });
-      const userInfo = response.data;
+      const userInfo = response.data.user;
       setUserInfo(userInfo);
       AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-      SetAccessToken(userInfo.accessToken);
+      SetAccessToken(response.data.accessToken);
       setIsLoading(false);
       return true;
     } catch (error) {
@@ -57,12 +85,12 @@ export const AuthProvider = ({children}) => {
     }
   };
 
-  const logout = async () => {
+  const logout = async (): Promise<void> => {
     setIsLoading(true);
   
     try {
       AsyncStorage.removeItem('userInfo');
-      setUserInfo({});
+      setUserInfo(null);
       SetAccessToken(null);
     } catch (e) {
       console.log(`logout error: ${e}`);
@@ -71,16 +99,12 @@ export const AuthProvider = ({children}) => {
     }
   };
 
-
-
-
-
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
 
-      let userInfo = await AsyncStorage.getItem('userInfo');
-      userInfo = JSON.parse(userInfo);
+      let storedUserInfo = await AsyncStorage.getItem('userInfo');
+      const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) as User : null;
 
       if (userInfo) {
         setUserInfo(userInfo);
