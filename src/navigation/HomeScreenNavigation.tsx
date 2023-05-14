@@ -20,14 +20,14 @@ const Drawer = createDrawerNavigator();
 
 export default function HomeScreenNavigation() {
   const theme = useSelector((state : any) => state.theme);
-  const { userInfo } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
  
 
   //najprej naredi neko random društvo in na mesto šestke prilepi njen id sem not...lahko je bilakaj 
   useEffect(() => {
     const updateUserDrustvo = async () => {
       try {
-        await api.put(`${BASE_URL}/user/setdrustvo/${userInfo.user.user_info.id}/4`);
+        await api.put(`${BASE_URL}/user/setdrustvo/${authContext?.userInfo?.user_info?.id}/4`);
         console.log("Drustvo updated successfully!");
       } catch (error) {
         console.error("Error updating user drustvo: ", error, "ignoriraj zaenkrat, ne vem zakaj je ta error ampak vseeno dela");

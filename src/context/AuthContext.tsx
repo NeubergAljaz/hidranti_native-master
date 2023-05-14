@@ -5,7 +5,6 @@ import {BASE_URL_AUTH} from '../config';
 
 interface UserInfo {
   id: number;
-  address: string | null;
 }
 
 interface User {
@@ -40,7 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
-  const [accessToken, SetAccessToken] = useState<string | null>(null);
+  const [accessToken, SetAccessToken] = useState<string>('');
 
   const register = (username: string, password: string) => {
     setIsLoading(true);
@@ -72,10 +71,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         password,
       });
       const userInfo = response.data.user;
+      const accessToken = response.data.accessToken;
+      SetAccessToken(accessToken);
       setUserInfo(userInfo);
-      AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-      SetAccessToken(response.data.accessToken);
+      const userInfoWithAccessToken = { ...userInfo, accessToken }; // Include accessToken in the userInfo object
+      AsyncStorage.setItem('userInfo', JSON.stringify(userInfoWithAccessToken)); // Store the userInfo object with accessToken
       setIsLoading(false);
+      console.log("Sem se vpisal");
+      //console.log(userInfo.user.accessToken);
       return true;
     } catch (error) {
       console.log(`login error: ${error}`);

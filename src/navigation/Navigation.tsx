@@ -11,18 +11,19 @@ import ModalScreenHidranti from '../screens/ModalScreenHidranti';
 const Stack = createNativeStackNavigator();
 
 const Navigation: React.FC = () => {
-  const { userInfo, splashLoading, accessToken } = useContext(AuthContext) as ContextProps;
+  const {splashLoading } = useContext(AuthContext) as ContextProps;
+  const authContext = useContext(AuthContext);
   
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {splashLoading == null ? (
+        {splashLoading ? (
           <Stack.Screen
             name="Splash Screen"
             component={SplashScreen}
             options={{ headerShown: false }}
           />
-        ) : userInfo?.accessToken ? (
+        ) : authContext?.accessToken ? (
           <>
             <Stack.Screen
               name="Home"

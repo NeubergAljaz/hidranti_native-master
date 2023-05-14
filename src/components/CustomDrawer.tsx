@@ -8,7 +8,9 @@ import { AuthContext } from '../context/AuthContext';
 export default function CustomDrawer(props:any) {
 
     const theme = useSelector((state : any) => state.theme);
-    const { logout, userInfo } = useContext(AuthContext);
+    const { logout} = useContext(AuthContext);
+    const authContext = useContext(AuthContext);
+    const username = authContext?.userInfo?.username;
 
     return (
         <View style={theme.style.container}>
@@ -17,7 +19,7 @@ export default function CustomDrawer(props:any) {
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image source={require('../../assets/img/pdg-lovrenc.png')} style={{ height: 80, width: 80, borderRadius: 40, marginRight: 30 }}></Image>
-                        <Text style={{ fontSize: 15, color: '#fff', fontWeight: 'bold' }}>{userInfo.user.username}</Text>
+                        <Text style={{ fontSize: 15, color: '#fff', fontWeight: 'bold' }}>{username}</Text>
                     </View>
 
                 </ImageBackground>

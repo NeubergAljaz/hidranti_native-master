@@ -72,3 +72,5 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
     </Dialog>
   );
 };
+
+export default DialogPregled;
