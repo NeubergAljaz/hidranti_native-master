@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../context/AuthContext';
 
+
 export default function CustomDrawer(props:any) {
 
     const theme = useSelector((state : any) => state.theme);
@@ -14,12 +15,12 @@ export default function CustomDrawer(props:any) {
 
     return (
         <View style={theme.style.container}>
-            <DrawerContentScrollView {...props} contentContainerStyle={{ backgroundColor: '#4682B4' }}>
-                <ImageBackground source={require('../../assets/img/4682b4.png')} style={{ padding: 20 }}>
+            <DrawerContentScrollView {...props} contentContainerStyle={{backgroundColor:"white"}}>
+                <ImageBackground source={require('../../assets/img/ozadje_belo.jpg')} style={{ padding: 20 }}>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image source={require('../../assets/img/pdg-lovrenc.png')} style={{ height: 80, width: 80, borderRadius: 40, marginRight: 30 }}></Image>
-                        <Text style={{ fontSize: 15, color: '#fff', fontWeight: 'bold' }}>{username}</Text>
+                        <Text style={{ fontSize: 15, color: '#222', fontWeight: 'bold' }}>Uporabniško ime: {'\n'}{username}</Text>
                     </View>
 
                 </ImageBackground>

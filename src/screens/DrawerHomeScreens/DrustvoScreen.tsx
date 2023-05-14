@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC} from 'react';
+import React, { useState, useEffect} from 'react';
 import { View } from 'react-native';
 import api from '../../services/api';
 import { BASE_URL_DRUSTVO } from '../../config';

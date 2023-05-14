@@ -6,7 +6,7 @@ import DialogPregled from '../../components/Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../../config';
 import { FAB} from 'react-native-paper';
 import { Dialog, Input, ButtonGroup, CheckBox, Divider} from '@rneui/themed';
-
+import { useSelector} from 'react-redux'; 
 
 export default function HidrantiMapScreen() {
 
@@ -25,7 +25,7 @@ export default function HidrantiMapScreen() {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-
+  const theme = useSelector((state : any) => state.theme);
 
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
 
@@ -75,11 +75,11 @@ export default function HidrantiMapScreen() {
     setSelectedMarkerId(markerId);
   };
 
-
+  //style={theme.style.nekaj}
   return (
   
-    <View style={styles.container}>
-      <MapView style={styles.map}
+    <View style={theme.style.containerMap}>
+      <MapView style={theme.style.map}
         onPress={(event) => {
           setLat(event.nativeEvent.coordinate.latitude);
           setLng(event.nativeEvent.coordinate.longitude);
@@ -148,26 +148,31 @@ export default function HidrantiMapScreen() {
             isVisible={visible} 
             onDismiss={hideDialog}
             onBackdropPress={hideDialog}
+            overlayStyle={theme.style.dialogContainer}
+    
           >
-          <Dialog.Title title="Dodajanje hidranta"/>
+          <Dialog.Title title="Dodajanje hidranta" titleStyle={theme.style.dialogText}/>
 
               <Input
                 label="Naziv"
                 value={title}
                 onChangeText={text => setTitle(text)}
-                style={{ marginBottom: 16 }}
+                inputStyle={theme.style.dialogText}
+                style={{ marginBottom: 1 }}
               />
               <Input
                 label="Opis"
                 value={description}
                 onChangeText={text => setDescription(text)}
-                style={{ marginBottom: 16 }}
+                inputStyle={theme.style.dialogText}
+                style={{ marginBottom: 1 }}
               />
               <Input
                 label="Lokacija"
                 value={location}
                 onChangeText={text => setLocation(text)}
-                style={{ marginBottom: 16 }}
+                inputStyle={theme.style.dialogText}
+                style={{ marginBottom: 1 }}
               />
 
               <ButtonGroup
@@ -175,20 +180,25 @@ export default function HidrantiMapScreen() {
                   selectedIndex={selectedIndex}
                   onPress={handleButtonPress}
                   selectedButtonStyle={{
-                    backgroundColor: '#4682B4',
+                    backgroundColor: '#FC8A17',
                     }} 
                   vertical={true}
-                  containerStyle={{ marginBottom: 20 }}
+                  containerStyle={[{ marginBottom: 20 }, theme.style.dialogContainer]}
+                  textStyle={theme.style.dialogText}
                 />
-              <Text style={{ marginBottom: 8 }}>Nadzemni:</Text>
+              <Text style={[{ marginBottom: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
               <CheckBox
                 checked={nadzemni}
                 onPress={() => setNadzemni(!nadzemni)}
+                checkedColor={'#FC8A17'} 
+                containerStyle={theme.style.dialogContainer}
                 style={{ marginBottom: 16 }}
               />
             
             <Dialog.Actions>
-            <Dialog.Button onPress={() => {
+            <Dialog.Button 
+            titleStyle={{ color: '#FC8A17' }}
+            onPress={() => {
                   handleSubmit();
                   hideDialog();}}>Potrdi</Dialog.Button>
             </Dialog.Actions>
@@ -196,7 +206,7 @@ export default function HidrantiMapScreen() {
                
       <FAB
         icon="plus"
-        style={styles.fab}
+        style={theme.style.fab}
         onPress={showDialog}
       />
 
@@ -205,35 +215,3 @@ export default function HidrantiMapScreen() {
     
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 0,
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-  marker: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(130,4,150, 0.9)',
-  },
-  ring: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    backgroundColor: 'rgba(130,4,150, 0.3)',
-    position: 'absolute',
-    borderWidth: 1,
-    borderColor: 'rgba(130,4,150, 0.5)',
-  },
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    alignSelf: 'center',
-    bottom: 0,
-    
-  }
-});
