@@ -8,6 +8,8 @@ import { FAB } from 'react-native-paper';
 import { Dialog, Input, ButtonGroup, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { CustomToast } from '../../components/Toasts/CustomToast'; 
+
 export default function HidrantiMapScreen() {
 
   const [data, setData] = useState([]);
@@ -20,7 +22,7 @@ export default function HidrantiMapScreen() {
   const [title, setTitle] = useState('');
   const [visible, setVisible] = React.useState(false);
   const [visible2, setVisible2] = React.useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+
   const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -29,11 +31,7 @@ export default function HidrantiMapScreen() {
 
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
 
-  const handleButtonPress = (value: number) => {
-    setSelectedIndex(value);
-    console.log(`Selected button: ${buttons[value]}`);
-    setStatus(buttons[value])
-  };
+
 
   const toggleOverlay = () => {
     setVisible2(!visible2);
@@ -201,17 +199,7 @@ export default function HidrantiMapScreen() {
           style={{ marginBottom: 1 }}
         />
 
-        <ButtonGroup
-          buttons={buttons}
-          selectedIndex={selectedIndex}
-          onPress={handleButtonPress}
-          selectedButtonStyle={{
-            backgroundColor: '#FC8A17',
-          }}
-          vertical={true}
-          containerStyle={[{ marginBottom: 20 }, theme.style.dialogContainer]}
-          textStyle={theme.style.dialogText}
-        />
+    
         <Text style={[{ marginBottom: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
         <CheckBox
           checked={nadzemni}
@@ -227,6 +215,7 @@ export default function HidrantiMapScreen() {
             onPress={() => {
               handleSubmit();
               hideDialog();
+              CustomToast('Dodali ste društvo.', 'success');
             }}>Potrdi</Dialog.Button>
         </Dialog.Actions>
       </Dialog>
@@ -238,6 +227,7 @@ export default function HidrantiMapScreen() {
       />
 
       <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
+    
     </View>
 
   );
