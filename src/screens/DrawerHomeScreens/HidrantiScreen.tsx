@@ -9,11 +9,10 @@ import { Image } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 
 export default function HidrantiScreen({ navigation }: { navigation: any }) {
-    const theme = useSelector((state : any) => state.theme);
-
+    const theme = useSelector((state: any) => state.theme);
     const [data, setData] = useState<any[]>([]);
-    useEffect(() => {
 
+    const fetchData = () => {
         api.get(`${BASE_URL_HIDRANT}`)
             .then(response => {
                 setData(response.data);
@@ -21,18 +20,26 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
             .catch(error => {
                 console.error(error);
             });
-    }, []);
+    };
 
+    useEffect(() => {
+        fetchData();
+        const unsubscribe = navigation.addListener('focus', () => {
+            fetchData();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
     //console.log("DATA HIDRANTI", data)
 
     return (
         <ScrollView style={theme.style.container}>
             <List.Section style={theme.style.container}>
 
-                
-            {data && [...data].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index:number) => (
+
+                {data && [...data].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index: number) => (
                     <List.Item
-                    onPress={() => {navigation.navigate('Hidrant', {hidrantId: x.id}); console.log(x)}}
+                        onPress={() => { navigation.navigate('Hidrant', { hidrantId: x.id }); console.log(x) }}
                         style={{
                             borderColor: 'rgb(119,136,153)', marginBottom: 5, marginLeft: 10, marginRight: 10,
                             borderWidth: 1, borderRadius: 10
