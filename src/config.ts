@@ -16,4 +16,6 @@ export const BASE_URL_AUTH = `http://${menjaj}:3001/api/auth/`;
 
 export const BASE_URL_HIDRANT = `http://${menjaj}:3001/api/hidrant`;
 
+export const BASE_URL_HIDRANT_PREGLED = `http://${menjaj}:3001/api/pregled`;
+
 export const BASE_URL_DRUSTVO = `http://${menjaj}:3001/api/drustvo`;

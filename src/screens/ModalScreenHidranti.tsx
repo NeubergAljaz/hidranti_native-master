@@ -2,7 +2,7 @@ import React, {useEffect, useState } from 'react';
 import { View, ScrollView  } from "react-native";
 import {Card, Text } from 'react-native-paper';
 import { List } from 'react-native-paper';
-import { BASE_URL_HIDRANT } from '../config';
+import { BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
 // redux hooks
@@ -52,7 +52,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
 
   useEffect(() => {
     if (dataPHidrant.id) {
-      api.get(`${BASE_URL_HIDRANT}`)
+      api.get(`${BASE_URL_HIDRANT_PREGLED}`)
         .then(response => {
           setDataPregledi(response.data.filter((item: any) => item.hidrantId === dataPHidrant.id));
         })

@@ -63,6 +63,7 @@ export default function HidrantiMapScreen() {
     try {
       const response = await api.post(BASE_URL_HIDRANT, data);
       console.log("Map.js--> add hidrant", response.data);
+      setData(prevData => [...prevData, response.data]);
       setTitle("");
       setDescription("");
       setLocation("");
@@ -210,7 +211,7 @@ export default function HidrantiMapScreen() {
         onPress={showDialog}
       />
 
-     <DialogPregled visible = {visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId}/>
+     <DialogPregled visible = {visible2} setVisible={setVisible2} selectedMarkerId = {selectedMarkerId}/>
     </View>
     
   );

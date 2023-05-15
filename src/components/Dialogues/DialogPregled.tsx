@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, Text} from 'react-native';
 import { Button, Dialog, Input, ButtonGroup } from '@rneui/themed';
 import api from '../../services/api';
-//import { BASE_URL_PREGLED } from '../../config';
+import { BASE_URL_HIDRANT_PREGLED } from '../../config';
 
 interface DialogPregledProps {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedMarkerId: string | null;
+  selectedMarkerId: number | null;
 }
 
 const DialogPregled: React.FC<DialogPregledProps> = ({
@@ -29,13 +29,12 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         opis,
         status
       }
-
-      /*await api.post(`${BASE_URL_PREGLED}/${selectedMarkerId}`, data);
-      console.log("Data submitted successfully!");
+      await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
+      //console.log("Data submitted successfully!");
       setOpis('');
       setStatus('');
       setSelectedIndex(0);
-      setVisible(false);*/
+      setVisible(false);
     } catch (error) {
       console.error(error);
     }
@@ -45,7 +44,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
 
   const handleButtonPress = (value:number) => {
     setSelectedIndex(value);
-    console.log(`Selected button: ${buttons[value]}`);
+    //console.log(`Selected button: ${buttons[value]}`);
     setStatus(buttons[value])
   };
   
