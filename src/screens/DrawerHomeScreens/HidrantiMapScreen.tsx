@@ -7,7 +7,7 @@ import { BASE_URL_HIDRANT } from '../../config';
 import { FAB } from 'react-native-paper';
 import { Dialog, Input, ButtonGroup, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 export default function HidrantiMapScreen() {
 
   const [data, setData] = useState([]);
@@ -49,21 +49,21 @@ export default function HidrantiMapScreen() {
           console.error(error);
         });
     }
-}, [data]);
+  }, [data]);
 
-const fetchData = () => {
-  api.get(`${BASE_URL_HIDRANT}`)
-    .then(response => {
-      setData(response.data);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-};
+  const fetchData = () => {
+    api.get(`${BASE_URL_HIDRANT}`)
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
-useEffect(() => {
-  fetchData();
-}, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
 
   const handleSubmit = async () => {
@@ -149,14 +149,22 @@ useEffect(() => {
           longitudeDelta: 0.0421,
         }}>
 
-        {lat && lng && <Marker
-          coordinate={{
-            latitude: lat,
-            longitude: lng
-          }}
-
-        />
-        }
+{lat && lng &&
+  <Marker
+    coordinate={{
+      latitude: lat,
+      longitude: lng
+    }}
+    draggable
+    onDragEnd={(e) => {
+      const { latitude, longitude } = e.nativeEvent.coordinate;
+      setLat(latitude);
+      setLng(longitude);
+    }}
+  >
+    <Icon name="add-circle-outline" size={40} color="#900" />
+  </Marker>
+}
 
         {markers}
 
@@ -229,7 +237,7 @@ useEffect(() => {
         onPress={showDialog}
       />
 
-      <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData}/>
+      <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
     </View>
 
   );
