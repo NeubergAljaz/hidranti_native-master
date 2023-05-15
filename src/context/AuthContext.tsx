@@ -53,9 +53,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         const userInfo = res.data.user;
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        console.log("USER!!", userInfo)
+        //console.log("USER!!", userInfo)
         setIsLoading(false);
-        console.log(userInfo);
+        //console.log(userInfo);
       })
       .catch(e => {
         console.log(`register error ${e}`);
@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       const userInfoWithAccessToken = { ...userInfo, accessToken }; // Include accessToken in the userInfo object
       AsyncStorage.setItem('userInfo', JSON.stringify(userInfoWithAccessToken)); // Store the userInfo object with accessToken
       setIsLoading(false);
-      console.log("Sem se vpisal");
+      //console.log("Sem se vpisal");
       //console.log(userInfo.user.accessToken);
       return true;
     } catch (error) {

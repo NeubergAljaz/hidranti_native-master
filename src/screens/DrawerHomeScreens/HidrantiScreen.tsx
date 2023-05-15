@@ -28,8 +28,9 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
     return (
         <ScrollView style={theme.style.container}>
             <List.Section style={theme.style.container}>
-                {data && data.map((x: any, index:number) => (
 
+                
+            {data && [...data].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index:number) => (
                     <List.Item
                     onPress={() => {navigation.navigate('Hidrant', {hidrantId: x.id}); console.log(x)}}
                         style={{

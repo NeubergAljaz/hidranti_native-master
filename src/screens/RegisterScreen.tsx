@@ -58,6 +58,7 @@ const RegisterScreen = ({ navigation }: { navigation: any }) => {
               return;
             }
             register(name, password);
+            navigation.navigate('Login')
           }}>
             <Text style={signInStyles.buttonText}>Registracija</Text>
         </TouchableOpacity>

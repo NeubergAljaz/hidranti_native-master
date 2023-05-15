@@ -11,7 +11,7 @@ api.interceptors.request.use(async config => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     if (userInfo) {
       const { accessToken } = JSON.parse(userInfo);
-      console.log(userInfo);
+      //console.log(userInfo);
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;

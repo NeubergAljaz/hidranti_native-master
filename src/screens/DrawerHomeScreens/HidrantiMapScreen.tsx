@@ -40,14 +40,30 @@ export default function HidrantiMapScreen() {
   };
 
   useEffect(() => {
-    api.get(`${BASE_URL_HIDRANT}`)
-      .then(response => {
-        setData(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
+    if (data.length === 0) {
+      api.get(`${BASE_URL_HIDRANT}`)
+        .then(response => {
+          setData(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+}, [data]);
+
+const fetchData = () => {
+  api.get(`${BASE_URL_HIDRANT}`)
+    .then(response => {
+      setData(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
+
+useEffect(() => {
+  fetchData();
+}, []);
 
 
   const handleSubmit = async () => {
@@ -63,10 +79,10 @@ export default function HidrantiMapScreen() {
     try {
       const response = await api.post(BASE_URL_HIDRANT, data);
       console.log("Map.js--> add hidrant", response.data);
-      setData(prevData => [...prevData, response.data]);
       setTitle("");
       setDescription("");
       setLocation("");
+      setData([]);
     } catch (error) {
       console.error(error);
     }
@@ -76,6 +92,7 @@ export default function HidrantiMapScreen() {
     setSelectedMarkerId(markerId);
   };
 
+  const MarkerMemo = React.memo(Marker);
   const markers = useMemo(() => data.map((x: any, index: number) => (
     <Marker
       onPress={() => handleMarkerPress(x.id)}
@@ -88,7 +105,7 @@ export default function HidrantiMapScreen() {
       description={x.location}
     >
       <View style={{
-        backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.2)') : x.status == "NEIZPRAVEN" ? ('rgba(255, 0, 0, 0.2)') : ("rgba(255, 255, 0, 0.2)"),
+        backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.6)') : x.status == "NEIZPRAVEN" ? ('rgba(255, 0, 0, 0.3)') : ("rgba(255, 255, 0, 0.6)"),
         borderRadius: 15,
         width: 30,
         height: 30,
@@ -212,7 +229,7 @@ export default function HidrantiMapScreen() {
         onPress={showDialog}
       />
 
-      <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} />
+      <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData}/>
     </View>
 
   );

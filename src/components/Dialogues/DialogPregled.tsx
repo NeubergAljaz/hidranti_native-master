@@ -8,16 +8,18 @@ interface DialogPregledProps {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   selectedMarkerId: number | null;
+  onSubmit: () => void;
 }
 
 const DialogPregled: React.FC<DialogPregledProps> = ({
   visible,
   setVisible,
   selectedMarkerId,
+  onSubmit,
 }) => {
   const [opis, setOpis] = useState('');
   const [status, setStatus] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>(null);
   
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -30,11 +32,12 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         status
       }
       await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
-      //console.log("Data submitted successfully!");
+      console.log("Data submitted successfully!", data);
       setOpis('');
       setStatus('');
       setSelectedIndex(0);
       setVisible(false);
+      onSubmit();
     } catch (error) {
       console.error(error);
     }
@@ -44,7 +47,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
 
   const handleButtonPress = (value:number) => {
     setSelectedIndex(value);
-    //console.log(`Selected button: ${buttons[value]}`);
+    console.log(`Selected button: ${buttons[value]}`);
     setStatus(buttons[value])
   };
   
