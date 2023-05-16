@@ -9,7 +9,7 @@ import Toast from 'react-native-toast-message';
 export const CustomToast = (message: string, type: 'success' | 'error' | 'info' | 'null' = 'success') => {
     Toast.show({
         type: type,
-        position: 'bottom',
+        position: 'top',
         text1: 'Obvestilo',
         text2: message,
         visibilityTime: 4000,

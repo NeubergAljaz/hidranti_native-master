@@ -1,5 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UseConnectivity } from '../../Hooks/UseConnectivity';
 // component state management
 //import { useEffect, useState } from 'react';
 // view component
@@ -13,8 +14,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { switchMode } from '../../redux_store/actions';
 // themes
 import {lightTheme, darkTheme} from '../../styles/ThemesStyle';
-
+import Icon from 'react-native-vector-icons/Foundation';
 export default function NastavitveScreen() {
+
+  const isConnected = UseConnectivity();
   // get the current theme
   const theme = useSelector((state : any) => state.theme);
   // initialize action dispatcher
@@ -93,10 +96,20 @@ return (
             />
           )}
         />
+
+<List.Item
+          key="Internet connection"
+          title="Povezava z internetom"
+          titleStyle={theme.style.listTitle}
+          left={() => <></>}
+          right={() => (
+           (isConnected)?(<Icon name="web" size={40} color="green" />):(<Icon name="web" size={40} color="#900" />)
+          )}
+        />
+
     </View>
 );
 }
-
 
 
 
