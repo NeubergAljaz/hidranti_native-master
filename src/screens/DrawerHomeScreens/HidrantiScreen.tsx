@@ -33,8 +33,8 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
     //console.log("DATA HIDRANTI", data)
 
     return (
-        <ScrollView style={theme.style.container}>
-            <List.Section style={theme.style.container}>
+        <ScrollView style={theme.style.containerFlex}>
+            <List.Section style={theme.style.containerFlex}>
 
 
                 {data && [...data].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index: number) => (

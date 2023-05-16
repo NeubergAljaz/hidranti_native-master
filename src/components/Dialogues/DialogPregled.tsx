@@ -57,11 +57,13 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
   
   return (
     <Dialog
+      overlayStyle={theme.style.dialogContainer}
       isVisible={visible}
       onBackdropPress={toggleOverlay}>
-      <Text> Pregled hidranta:</Text>
+      <Text style={theme.style.dialogText}> Pregled hidranta:</Text>
       <View >
         <Input
+          inputStyle={theme.style.dialogText}
           placeholder="Opis"
           value={opis}
           onChangeText={text => setOpis(text)}
@@ -72,6 +74,8 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         onPress={handleButtonPress}
         vertical={true}
         containerStyle={{ marginBottom: 20 }}
+        buttonStyle={theme.style.dialogContainer} // custom background color style
+        textStyle={theme.style.dialogText} // custom text color style
       />
         <Button title="Potrdi" onPress={handleSubmit} />
       </View>

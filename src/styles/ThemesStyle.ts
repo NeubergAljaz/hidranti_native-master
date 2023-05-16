@@ -30,13 +30,16 @@ export const lightTheme = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'white'
   },
-  containerOptions: {
+  containerPadding: {
     flex: 1,
     backgroundColor: 'white',
     padding: 20,
   },
-  container: {
+  containerFlex: {
     flex: 1,
+    backgroundColor: 'white',
+  },
+  container:{
     backgroundColor: 'white',
   },
   text: {
@@ -67,10 +70,41 @@ export const lightTheme = StyleSheet.create({
     drawerActiveTintColor: 'black',
     drawerActiveBackgroundColor: 'rgba(252, 138, 23, 0.7)'
   },
+  cardStyle: {
+    borderRadius: 10,
+    padding: 0, // Remove padding to fully cover the card
+    marginTop: 15,
+    overflow: 'hidden',
+  },
+  coverCardStyle: {
+    height: '100%',
+    resizeMode: 'cover',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    text: 'white'
+  },
+  contentCardStyle: {
+    position: 'relative', // Ensure content stays on top of the cover
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the overlay background color and opacity
+    padding: 16,
+  },
+  cardTextStyle: {
+    color: 'white', // Set the title text color to white
+  },
   
 });
 
 export const darkTheme = StyleSheet.create({
+  headerStyle: {
+    backgroundColor: 'black',
+    color: 'white'
+  },
+  headerTitleStyle: {
+    color: 'white',
+  },
   containerMap: {
     flex: 0,
   },
@@ -106,16 +140,16 @@ export const darkTheme = StyleSheet.create({
   dialogText: {
     color: 'white',
   },
-  containerOptions: {
+  containerPadding: {
     flex: 1,
     backgroundColor: 'black',
     padding: 20,
   },
-  container: {
+  containerFlex: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'black'
   },
-  containerNoFlex: {
+  container:{
     backgroundColor: 'black',
   },
   text: {
@@ -141,9 +175,6 @@ export const darkTheme = StyleSheet.create({
     borderWidth: 5,
     backgroundColor: 'black',
   },
-  containerStyle:{
-    backgroundColor: 'black',
-  },
   screenOptions:{
     drawerInactiveTintColor: 'white',
     drawerActiveTintColor: 'white',
@@ -151,6 +182,34 @@ export const darkTheme = StyleSheet.create({
     drawerInactiveBackgroundColor: 'black',
     fontSize: 15,
     color: 'white',
+    headerStyle: {
+      backgroundColor: 'black',
+    },
+    headerTintColor: 'white',
+  },
+  cardStyle: {
+    borderRadius: 10,
+    padding: 0, // Remove padding to fully cover the card
+    marginTop: 15,
+    overflow: 'hidden',
+  },
+  coverCardStyle: {
+    height: '100%',
+    resizeMode: 'cover',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    text: 'white'
+  },
+  contentCardStyle: {
+    position: 'relative', // Ensure content stays on top of the cover
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the overlay background color and opacity
+    padding: 16,
+  },
+  cardTextStyle: {
+    color: 'white', // Set the title text color to white
   },
 
 });

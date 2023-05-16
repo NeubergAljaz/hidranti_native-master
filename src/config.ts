@@ -7,7 +7,7 @@
 */
 
 //var menjaj = "192.168.64.111"
-var menjaj:String = "192.168.1.104"
+var menjaj:String = "192.168.1.107"
 
 
 export const BASE_URL = `http://${menjaj}:3001/api`;

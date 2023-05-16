@@ -56,7 +56,7 @@ export default function DrustvoScreen()  {
 
     return (
         
-            <View style={theme.style.containerOptions}>
+            <View style={theme.style.containerPadding}>
                 <Button 
                     buttonStyle={theme.style.buttonStyle} 
                     onPress={showDialog}>DODAJ DRUŠTVO
@@ -74,22 +74,22 @@ export default function DrustvoScreen()  {
                         
                 ))}
                 
-                        <Dialog isVisible={visible} onDismiss={hideDialog}>
-                            <Dialog.Title title="Dodajanje društva"/>
+                        <Dialog overlayStyle={theme.style.dialogContainer} isVisible={visible} onDismiss={hideDialog}>
+                            <Dialog.Title titleStyle={theme.style.dialogText} title="Dodajanje društva"/>
                             
-                                <Input label="Naziv" value={naziv}
+                                <Input inputStyle={theme.style.dialogText} label="Naziv" value={naziv}
                                         onChangeText={text => setNaziv(text)}/>
 
-                                <Input label="Email" value={email}
+                                <Input inputStyle={theme.style.dialogText} label="Email" value={email}
                                     onChangeText={text => setEmail(text)} />
 
-                                <Input label="Naslov" value={naslov}
+                                <Input inputStyle={theme.style.dialogText} label="Naslov" value={naslov}
                                     onChangeText={text => setNaslov(text)} />
 
                             <Dialog.Actions>
-                                <Dialog.Button 
+                                <Dialog.Button titleStyle={{ color: '#FC8A17' }}
                                     onPress={handleSubmit}>Potrdi</Dialog.Button>
-                                <Dialog.Button 
+                                <Dialog.Button titleStyle={{ color: '#FC8A17' }}
                                     onPress={hideDialog}>Prekliči</Dialog.Button>
                             </Dialog.Actions>
                         </Dialog>

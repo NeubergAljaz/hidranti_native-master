@@ -82,7 +82,7 @@ React.useEffect(() => {
 }, []);
 
 return (
-    <View style={theme.style.containerOptions}>
+    <View style={theme.style.containerPadding}>
         <List.Item
           key="Dark Mode"
           title="Dark Mode"
