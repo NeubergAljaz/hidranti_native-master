@@ -4,6 +4,7 @@ import { Button, Dialog, Input, ButtonGroup } from '@rneui/themed';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT_PREGLED } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
+import { useSelector } from 'react-redux';
 
 interface DialogPregledProps {
   visible: boolean;
@@ -46,6 +47,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
   };
 
   const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
+  const theme = useSelector((state: any) => state.theme);
 
   const handleButtonPress = (value:number) => {
     setSelectedIndex(value);
@@ -71,7 +73,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         vertical={true}
         containerStyle={{ marginBottom: 20 }}
       />
-        <Button title="Submit" onPress={handleSubmit} />
+        <Button title="Potrdi" onPress={handleSubmit} />
       </View>
     </Dialog>
   );

@@ -67,12 +67,7 @@ export const lightTheme = StyleSheet.create({
     drawerActiveTintColor: 'black',
     drawerActiveBackgroundColor: 'rgba(252, 138, 23, 0.7)'
   },
-  buttonStyle:{
-    backgroundColor: '#FC8A17',
-    borderColor: 'transparent',
-    borderWidth: 0,
-    borderRadius: 30,
-  }
+  
 });
 
 export const darkTheme = StyleSheet.create({
@@ -157,12 +152,7 @@ export const darkTheme = StyleSheet.create({
     fontSize: 15,
     color: 'white',
   },
-  buttonStyle:{
-    backgroundColor: '#FC8A17',
-    borderColor: 'transparent',
-    borderWidth: 0,
-    borderRadius: 30,
-  }
+
 });
 
 export default {

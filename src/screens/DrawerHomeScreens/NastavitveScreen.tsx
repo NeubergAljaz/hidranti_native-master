@@ -1,4 +1,5 @@
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // component state management
 //import { useEffect, useState } from 'react';
 // view component
@@ -24,7 +25,7 @@ export default function NastavitveScreen() {
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
-  const handleThemeChange = () => { 
+/*  const handleThemeChange = () => { 
     
     dispatch(switchMode(theme.mode === 'light' ? {
       mode: 'dark',
@@ -35,7 +36,47 @@ export default function NastavitveScreen() {
     }));
 
     onToggleSwitch();
-}
+}*/
+const handleThemeChange = async () => {
+  const newThemeMode = theme.mode === 'light' ? 'dark' : 'light';
+  const newIsSwitchOn = !isSwitchOn;
+
+  try {
+    // Store the new switch state and theme mode in AsyncStorage
+    await AsyncStorage.setItem('themeMode', newThemeMode);
+    await AsyncStorage.setItem('isSwitchOn', JSON.stringify(newIsSwitchOn));
+  } catch (error) {
+    console.log('Error storing switch state:', error);
+  }
+
+  // Update the switch state immediately
+  setIsSwitchOn(newIsSwitchOn);
+
+  // Dispatch the theme switch action
+  dispatch(switchMode({
+    mode: newThemeMode,
+    style: newThemeMode === 'light' ? lightTheme : darkTheme
+  }));
+};
+
+React.useEffect(() => {
+  const retrieveSwitchState = async () => {
+    try {
+      // Retrieve the switch state from AsyncStorage
+      const storedSwitchState = await AsyncStorage.getItem('isSwitchOn');
+      const parsedSwitchState = storedSwitchState ? JSON.parse(storedSwitchState) : false;
+
+      // Update the switch state if it's different from the default value
+      if (parsedSwitchState !== isSwitchOn) {
+        setIsSwitchOn(parsedSwitchState);
+      }
+    } catch (error) {
+      console.log('Error retrieving switch state:', error);
+    }
+  };
+
+  retrieveSwitchState();
+}, []);
 
 return (
     <View style={theme.style.containerOptions}>

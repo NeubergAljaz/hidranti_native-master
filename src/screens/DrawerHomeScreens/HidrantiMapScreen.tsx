@@ -29,10 +29,6 @@ export default function HidrantiMapScreen() {
 
   const theme = useSelector((state: any) => state.theme);
 
-  const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
-
-
-
   const toggleOverlay = () => {
     setVisible2(!visible2);
   };

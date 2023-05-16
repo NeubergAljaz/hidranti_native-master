@@ -60,7 +60,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
 
   return (
     <ScrollView style={theme.style.containerOptions}>
-      <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding: 10, marginTop: 15 }}>
+      <Card style={{ backgroundColor: 'rgb(32, 137, 220)', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding: 10, marginTop: 15 }}>
         <Card.Content>
           <Text variant="titleMedium" style={{ color: 'white' }}>Lokacija:</Text>
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.location}</Text>
@@ -74,7 +74,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.zadnjiPregled}</Text>
         </Card.Content>
       </Card>
-      <Card style={{ backgroundColor: '#4682B4', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding: 10, marginTop: 15 }}>
+      <Card style={{ backgroundColor: 'rgb(32, 137, 220)', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding: 10, marginTop: 15 }}>
         <Card.Content>
           <Text variant="titleLarge" style={{ color: 'white' }}>Seznam pregledov:</Text>
 
