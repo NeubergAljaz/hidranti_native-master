@@ -5,7 +5,7 @@ import api from '../../services/api';
 import DialogPregled from '../../components/Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../../config';
 import { FAB } from 'react-native-paper';
-import { Dialog, Input, ButtonGroup, CheckBox, Divider } from '@rneui/themed';
+import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CustomToast } from '../../components/Toasts/CustomToast'; 
@@ -28,6 +28,7 @@ export default function HidrantiMapScreen() {
   const hideDialog = () => setVisible(false);
 
   const theme = useSelector((state: any) => state.theme);
+
 
   const toggleOverlay = () => {
     setVisible2(!visible2);

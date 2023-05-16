@@ -10,7 +10,6 @@ import { AuthContext } from '../context/AuthContext';
 import {
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-
 import api from '../services/api';
 import { BASE_URL } from '../config';
 import { useSelector} from 'react-redux'; 

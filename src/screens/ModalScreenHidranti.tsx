@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView } from "react-native";
-import { Card, Text } from 'react-native-paper';
-import { List } from 'react-native-paper';
+import { ScrollView, ImageBackground } from "react-native";
+import { Card, List, Text, Title, Subheading } from 'react-native-paper';
 import { BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -39,7 +38,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
       .then(response => {
         setDataHidrant(response.data);
-        navigation.setOptions({ title: response.data.title });
+        navigation.setOptions({ title: response.data.title});
       })
       .catch(error => {
         console.error(error);
@@ -58,52 +57,57 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   },
     []);
 
-  return (
-    <ScrollView style={theme.style.containerOptions}>
-      <Card style={{ backgroundColor: 'rgb(32, 137, 220)', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding: 10, marginTop: 15 }}>
-        <Card.Content>
-          <Text variant="titleMedium" style={{ color: 'white' }}>Lokacija:</Text>
-          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.location}</Text>
-          <Text variant="titleMedium" style={{ color: 'white' }}>Naziv:</Text>
-          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.title}</Text>
-          <Text variant="titleMedium" style={{ color: 'white' }}>Status:</Text>
-          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.status} </Text>
-          <Text variant="titleMedium" style={{ color: 'white' }}>Datum vnosa:</Text>
-          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.createdDate} </Text>
-          <Text variant="titleMedium" style={{ color: 'white' }}>Datum zadnjega pregleda:</Text>
-          <Text variant="bodyMedium" style={{ color: 'white' }}>{dataPHidrant.zadnjiPregled}</Text>
-        </Card.Content>
-      </Card>
-      <Card style={{ backgroundColor: 'rgb(32, 137, 220)', borderBottomRightRadius: 10, borderTopEndRadius: 10, borderBottomLeftRadius: 10, borderBottomStartRadius: 10, borderTopStartRadius: 10, padding: 10, marginTop: 15 }}>
-        <Card.Content>
-          <Text variant="titleLarge" style={{ color: 'white' }}>Seznam pregledov:</Text>
-
-          {dataPregledi === undefined ? (
-            <Text>Loading</Text>
-          ) : dataPregledi.length === 0 ? (
-            <Text style={{ color: 'white' }}>Hidrant nima pregleda <Icon name="squared-cross" size={20} color="black" /></Text>
-          ) : (
-            <>
-
-              {dataPregledi.slice().reverse().map((x: any, index: number) => (
-
-                <List.Section>
+    return (
+      <ScrollView style={theme.style.containerPadding}>
+        <Card style={theme.style.cardStyle}>
+          <Card.Cover
+            source={require('../../assets/img/ozadje_temno.webp')}
+            style={theme.style.coverCardStyle}
+          />
+          <Card.Content style={theme.style.contentCardStyle}>
+            <Title style={theme.style.cardTextStyle}>Lokacija:</Title>
+            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.location}</Subheading>
+    
+            <Title style={theme.style.cardTextStyle}>Naziv:</Title>
+            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.title}</Subheading>
+    
+            <Title style={theme.style.cardTextStyle}>Status:</Title>
+            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.status}</Subheading>
+    
+            <Title style={theme.style.cardTextStyle}>Datum zadnjega pregleda:</Title>
+            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.zadnjiPregled}</Subheading>
+          </Card.Content>
+        </Card>
+        <Card style={theme.style.cardStyle}>
+          <Card.Cover
+            source={require('../../assets/img/ozadje_temno.webp')}
+            style={theme.style.coverCardStyle}
+          />
+          <Card.Content style={theme.style.contentCardStyle}>
+            <Title style={theme.style.cardTextStyle}>Seznam pregledov:</Title>
+    
+            {dataPregledi === undefined ? (
+              <Text>Loading</Text>
+            ) : dataPregledi.length === 0 ? (
+              <Text style={theme.style.cardTextStyle}>
+                Hidrant nima pregleda <Icon name="squared-cross" size={20} color="black" />
+              </Text>
+            ) : (
+              <>
+                {dataPregledi.slice().reverse().map((x: any, index: number) => (
                   <List.Item
                     key={index}
                     title={x.opis}
-                    titleStyle={{ color: 'white' }}
-                    description={<>{x.status}, Datum:{x.createdDate}</>}
+                    titleStyle={theme.style.cardTextStyle}
+                    descriptionStyle={theme.style.cardTextStyle}
+                    description={`Status: ${x.status}, Datum: ${x.createdDate}`}
                     left={props => <List.Icon {...props} icon="folder" />}
                   />
-                </List.Section>
-              ))}
-            </>
-          )}
-
-
-        </Card.Content>
-      </Card>
-
-    </ScrollView>
-  );
+                ))}
+              </>
+            )}
+          </Card.Content>
+        </Card>
+      </ScrollView>
+    );
 }

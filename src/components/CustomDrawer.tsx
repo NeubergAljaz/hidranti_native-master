@@ -14,7 +14,7 @@ export default function CustomDrawer(props:any) {
     const username = authContext?.userInfo?.username;
 
     return (
-        <View style={theme.style.container}>
+        <View style={theme.style.containerFlex}>
             <DrawerContentScrollView {...props} contentContainerStyle={{backgroundColor:"white"}}>
                 <ImageBackground source={require('../../assets/img/ozadje_belo.jpg')} style={{ padding: 20 }}>
 
@@ -24,7 +24,7 @@ export default function CustomDrawer(props:any) {
                     </View>
 
                 </ImageBackground>
-                <View style={theme.style.containerOptions}>
+                <View style={theme.style.containerPadding}>
                     <DrawerItemList {...props} />
                 </View>
             </DrawerContentScrollView>
