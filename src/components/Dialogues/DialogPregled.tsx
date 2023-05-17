@@ -6,6 +6,7 @@ import { BASE_URL_HIDRANT_PREGLED } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
 import { useSelector } from 'react-redux';
 
+
 interface DialogPregledProps {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -77,6 +78,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         buttonStyle={theme.style.dialogContainer} // custom background color style
         textStyle={theme.style.dialogText} // custom text color style
       />
+
         <Button title="Potrdi" onPress={handleSubmit} />
       </View>
     </Dialog>

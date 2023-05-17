@@ -7,6 +7,7 @@ import { Dialog, Input, Button, Divider } from '@rneui/themed';
 import { List } from 'react-native-paper';
 // redux hooks
 import { useSelector} from 'react-redux'; 
+import { CameraComponent } from '../../components/Camera/CameraComponent';
 
 export default function DrustvoScreen()  {
     const [visible, setVisible] = React.useState(false);
@@ -62,7 +63,7 @@ export default function DrustvoScreen()  {
                     onPress={showDialog}>DODAJ DRUŠTVO
                 </Button>
                 <Divider style={{padding: 10}}/>
-                {data && data.map((x:any) => (
+              {/* {data && data.map((x:any) => (
                         <List.Item
                             key={x.naziv}
                             title={x.naziv}
@@ -73,6 +74,10 @@ export default function DrustvoScreen()  {
                         />
                         
                 ))}
+
+              */}
+
+              <CameraComponent />
                 
                         <Dialog overlayStyle={theme.style.dialogContainer} isVisible={visible} onDismiss={hideDialog}>
                             <Dialog.Title titleStyle={theme.style.dialogText} title="Dodajanje društva"/>
