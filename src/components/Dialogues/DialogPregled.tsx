@@ -74,10 +74,11 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         onPress={handleButtonPress}
         vertical={true}
         containerStyle={{ marginBottom: 20 }}
-        buttonStyle={theme.style.dialogContainer} // custom background color style
+        selectedButtonStyle={{ backgroundColor: '#FC8A17' }} // background color for selected button
+        //buttonStyle={theme.style} // custom background color style
         textStyle={theme.style.dialogText} // custom text color style
       />
-        <Button title="Potrdi" onPress={handleSubmit} />
+        <Button title="Potrdi" buttonStyle={theme.style.buttonStyle} onPress={handleSubmit} />
       </View>
     </Dialog>
   );
