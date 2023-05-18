@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT } from '../../config';
 import { List } from 'react-native-paper';
-import { View, TextInput, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { Image } from 'react-native-elements';
 // redux hooks
 import { useSelector } from 'react-redux';
@@ -66,27 +66,30 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
         <ScrollView style={theme.style.containerFlex}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
                 <View>
-                    <Text>Izpraven</Text>
+                    <Text style={theme.style.dialogText}>Izpraven</Text>
                     <CheckBox
                         checkedColor={'#FC8A17'}
+                        containerStyle={theme.style.container}
                         checked={filterStatus.izpraven}
                         onPress={() => setFilterStatus({ ...filterStatus, izpraven: !filterStatus.izpraven })}
                     />
                 </View>
 
                 <View>
-                    <Text>Neizpraven</Text>
+                    <Text style={theme.style.dialogText}>Neizpraven</Text>
                     <CheckBox
                         checkedColor={'#FC8A17'}
+                        containerStyle={theme.style.container}
                         checked={filterStatus.neizpraven}
                         onPress={() => setFilterStatus({ ...filterStatus, neizpraven: !filterStatus.neizpraven })}
                     />
                 </View>
 
                 <View>
-                    <Text>Nepregledan</Text>
+                    <Text style={theme.style.dialogText}>Nepregledan</Text>
                     <CheckBox
                         checkedColor={'#FC8A17'}
+                        containerStyle={theme.style.container}
                         checked={filterStatus.nepregledan}
                         onPress={() => setFilterStatus({ ...filterStatus, nepregledan: !filterStatus.nepregledan })}
                     />
