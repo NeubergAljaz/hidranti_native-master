@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
 import {BASE_URL_AUTH} from '../config';
+import { createTable} from '../local_storage/SQLite';
+
 
 interface UserInfo {
   id: number;
@@ -76,6 +78,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       setUserInfo(userInfo);
       const userInfoWithAccessToken = { ...userInfo, accessToken }; // Include accessToken in the userInfo object
       AsyncStorage.setItem('userInfo', JSON.stringify(userInfoWithAccessToken)); // Store the userInfo object with accessToken
+      // Create tables
+      createTable();  
       setIsLoading(false);
       //console.log("Sem se vpisal");
       //console.log(userInfo.user.accessToken);

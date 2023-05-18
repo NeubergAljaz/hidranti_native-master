@@ -11,7 +11,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
-import { UseLocationPermission } from '../../Hooks/UseLocationPermission';
+import { UseLocationPermission } from '../../hooks/UseLocationPermission';
 import DialogPregled from '../../components/Dialogues/DialogPregled';
 
 export default function HidrantiMapScreen() {
@@ -31,12 +31,12 @@ export default function HidrantiMapScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [izpraven, setIzpraven] = useState(true);
-const [neizpraven, setNeizpraven] = useState(true);
-const [nepregledan, setNepregledan] = useState(true);
+  const [neizpraven, setNeizpraven] = useState(true);
+  const [nepregledan, setNepregledan] = useState(true);
 
-const [isIzpravenPressed, setIzpravenPressed] = useState(false);
-const [isNeizpravenPressed, setNeizpravenPressed] = useState(false);
-const [isNepregledanPressed, setNepregledanPressed] = useState(false);
+  const [isIzpravenPressed, setIzpravenPressed] = useState(false);
+  const [isNeizpravenPressed, setNeizpravenPressed] = useState(false);
+  const [isNepregledanPressed, setNepregledanPressed] = useState(false);
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -44,7 +44,7 @@ const [isNepregledanPressed, setNepregledanPressed] = useState(false);
   const theme = useSelector((state: any) => state.theme);
   const isLocationEnabled = UseLocationPermission();
 
-  console.log(isLocationEnabled, "location")
+  //console.log(isLocationEnabled, "location")
 
   const toggleOverlay = () => {
     setVisible2(!visible2);
