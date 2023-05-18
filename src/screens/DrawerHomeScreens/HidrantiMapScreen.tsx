@@ -8,7 +8,10 @@ import { FAB } from 'react-native-paper';
 import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { CustomToast } from '../../components/Toasts/CustomToast'; 
+import Octicons from 'react-native-vector-icons/Octicons';
+import { CustomToast } from '../../components/Toasts/CustomToast';
+import * as Location from 'expo-location';
+import { UseLocationPermission } from '../../Hooks/UseLocationPermission';
 
 export default function HidrantiMapScreen() {
 
@@ -22,17 +25,43 @@ export default function HidrantiMapScreen() {
   const [title, setTitle] = useState('');
   const [visible, setVisible] = React.useState(false);
   const [visible2, setVisible2] = React.useState(false);
-
   const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
+
+  const [currentPosition, setCurrentPosition] = useState<Location.LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
   const theme = useSelector((state: any) => state.theme);
+  const isLocationEnabled = UseLocationPermission();
 
+  console.log(isLocationEnabled, "location")
 
   const toggleOverlay = () => {
     setVisible2(!visible2);
   };
+
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (currentPosition) {
+    text = JSON.stringify(currentPosition);
+  }
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentPosition(location);
+    })();
+  }, []);
 
   useEffect(() => {
     if (data.length === 0) {
@@ -138,28 +167,42 @@ export default function HidrantiMapScreen() {
           setLng(event.nativeEvent.coordinate.longitude);
         }}
         initialRegion={{
-          latitude: 46.55472,
-          longitude: 15.64667,
+          latitude: currentPosition ? currentPosition.coords.latitude : 46.55472,
+          longitude: currentPosition ? currentPosition.coords.longitude : 15.64667,
           latitudeDelta: 0.9922,
           longitudeDelta: 0.0421,
         }}>
 
-{lat && lng &&
-  <Marker
-    coordinate={{
-      latitude: lat,
-      longitude: lng
-    }}
-    draggable
-    onDragEnd={(e) => {
-      const { latitude, longitude } = e.nativeEvent.coordinate;
-      setLat(latitude);
-      setLng(longitude);
-    }}
-  >
-    <Icon name="add-circle-outline" size={40} color="#900" />
-  </Marker>
-}
+        {lat && lng &&
+          <Marker
+            coordinate={{
+              latitude: lat,
+              longitude: lng
+            }}
+            draggable
+            onDragEnd={(e) => {
+              const { latitude, longitude } = e.nativeEvent.coordinate;
+              setLat(latitude);
+              setLng(longitude);
+            }}
+          >
+            <Icon name="add-circle-outline" size={40} color="#900" />
+          </Marker>
+        }
+
+
+
+        {currentPosition &&  
+          <Marker
+            coordinate={{
+              latitude: currentPosition.coords.latitude,
+              longitude: currentPosition.coords.longitude,
+            }}
+            title="Moja lokacija"
+          >
+            <Octicons name="dot-fill" size={30} color="blue" />
+          </Marker>
+        }
 
         {markers}
 
@@ -196,7 +239,7 @@ export default function HidrantiMapScreen() {
           style={{ marginBottom: 1 }}
         />
 
-    
+
         <Text style={[{ marginBottom: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
         <CheckBox
           checked={nadzemni}
@@ -224,7 +267,7 @@ export default function HidrantiMapScreen() {
       />
 
       <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
-    
+
     </View>
 
   );
