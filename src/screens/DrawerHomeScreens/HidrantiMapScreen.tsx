@@ -12,6 +12,7 @@ import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
 import { UseLocationPermission } from '../../Hooks/UseLocationPermission';
+import DialogPregled from '../../components/Dialogues/DialogPregled';
 
 export default function HidrantiMapScreen() {
   const [data, setData] = useState([]);
@@ -306,6 +307,7 @@ const [isNepregledanPressed, setNepregledanPressed] = useState(false);
         style={theme.style.fab}
         onPress={showDialog}
       />
+      <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
     </View>
   );
 }
