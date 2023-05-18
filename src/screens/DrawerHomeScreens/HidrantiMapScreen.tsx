@@ -2,20 +2,18 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Image, Text, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import api from '../../services/api';
-import DialogPregled from '../../components/Dialogues/DialogPregled';
 import { BASE_URL_HIDRANT } from '../../config';
 import { FAB } from 'react-native-paper';
 import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
 import { UseLocationPermission } from '../../Hooks/UseLocationPermission';
 
 export default function HidrantiMapScreen() {
-
   const [data, setData] = useState([]);
   const [description, setDescription] = useState('');
   const [lat, setLat] = useState<number | null>(null);
@@ -31,6 +29,14 @@ export default function HidrantiMapScreen() {
   const [currentPosition, setCurrentPosition] = useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  const [izpraven, setIzpraven] = useState(true);
+const [neizpraven, setNeizpraven] = useState(true);
+const [nepregledan, setNepregledan] = useState(true);
+
+const [isIzpravenPressed, setIzpravenPressed] = useState(false);
+const [isNeizpravenPressed, setNeizpravenPressed] = useState(false);
+const [isNepregledanPressed, setNepregledanPressed] = useState(false);
+
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
@@ -42,7 +48,6 @@ export default function HidrantiMapScreen() {
   const toggleOverlay = () => {
     setVisible2(!visible2);
   };
-
 
   let text = 'Waiting..';
   if (errorMsg) {
@@ -90,7 +95,6 @@ export default function HidrantiMapScreen() {
     fetchData();
   }, []);
 
-
   const handleSubmit = async () => {
     const data = {
       title,
@@ -117,51 +121,92 @@ export default function HidrantiMapScreen() {
     setSelectedMarkerId(markerId);
   };
 
-  const MarkerMemo = React.memo(Marker);
-  const markers = useMemo(() => data.map((x: any, index: number) => (
-    <Marker
-      onPress={() => handleMarkerPress(x.id)}
-      coordinate={{
-        latitude: x.lat,
-        longitude: x.lng
-      }}
-      key={index}
-      title={x.title}
-      description={x.location}
-    >
-      <View style={{
-        backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.6)') : x.status == "NEIZPRAVEN" ? ('rgba(255, 0, 0, 0.3)') : ("rgba(255, 255, 0, 0.6)"),
-        borderRadius: 15,
-        width: 30,
-        height: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderColor: 'rgb(119,136,153)',
-        borderWidth: 1,
-      }}>
-        <Image
-          source={x.nadzemni == true ? (require("../../../assets/icons/hidrant32.png")) : (require("../../../assets/icons/podzemni32.png"))}
-          style={{ width: 20, height: 20 }}
-        />
+  const renderStatusCards = () => {
+    return (
+      <View style={styles.cardContainer}>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: isIzpravenPressed ? '#D3D3D3' : '#fff' }]}
+          onPress={() => {
+            setIzpraven(!izpraven);
+            setIzpravenPressed(!isIzpravenPressed);
+          }}
+          activeOpacity={1}
+        >
+          <Text style={styles.cardTitle}>IZPRAVEN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: isNeizpravenPressed ? '#D3D3D3' : '#fff' }]}
+          onPress={() => {
+            setNeizpraven(!neizpraven);
+            setNeizpravenPressed(!isNeizpravenPressed);
+          }}
+          activeOpacity={1}
+        >
+          <Text style={styles.cardTitle}>NEIZPRAVEN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: isNepregledanPressed ? '#D3D3D3' : '#fff' }]}
+          onPress={() => {
+            setNepregledan(!nepregledan);
+            setNepregledanPressed(!isNepregledanPressed);
+          }}
+          activeOpacity={1}
+        >
+          <Text style={styles.cardTitle}>NEPREGLEDAN</Text>
+        </TouchableOpacity>
       </View>
-      <Callout style={{ width: 250, height: 200 }} onPress={toggleOverlay}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-            Naziv: {x.title}</Text>
-          <Divider />
-          <View style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 14, marginBottom: 5 }}>Lokacija: {x.location}</Text>
-            <Text style={{ fontSize: 14, marginBottom: 5 }}>Opis: {x.description}</Text>
-            <Text style={{ fontSize: 14 }}>Status: {x.status}</Text>
+    )
+  }
+  const markers = useMemo(() => data.map((x: any, index: number) => {
+    if (
+      (izpraven && x.status == "IZPRAVEN") ||
+      (neizpraven && x.status == "NEIZPRAVEN") ||
+      (nepregledan && x.status == "NEPREGLEDAN")
+    ) {
+      return (
+        <Marker
+          onPress={() => handleMarkerPress(x.id)}
+          coordinate={{
+            latitude: x.lat,
+            longitude: x.lng
+          }}
+          key={index}
+          title={x.title}
+          description={x.location}
+        >
+          <View style={{
+            backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.6)') : x.status == "NEIZPRAVEN" ? ('rgba(255, 0, 0, 0.3)') : ("rgba(255, 255, 0, 0.6)"),
+            borderRadius: 15,
+            width: 30,
+            height: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderColor: 'rgb(119,136,153)',
+            borderWidth: 1,
+          }}>
+            <Image
+              source={x.nadzemni == true ? (require("../../../assets/icons/hidrant32.png")) : (require("../../../assets/icons/podzemni32.png"))}
+              style={{ width: 20, height: 20 }}
+            />
           </View>
-        </View>
-      </Callout>
-    </Marker>
-  )), [data]);
+          <Callout style={{ width: 200, height: 100, borderRadius: 25 }} onPress={toggleOverlay}>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+                Naziv: {x.title} </Text>
+              <Divider />
+              <Text>Zadnji Pregled: {x.zadnjiPregled}</Text>
+              <View style={{ marginTop: 10 }}>
+              </View>
+            </View>
+          </Callout>
+        </Marker>
+      )
+    }
+  }), [data, izpraven, neizpraven, nepregledan]);
 
   return (
-
     <View style={theme.style.containerMap}>
+      {renderStatusCards()}
       <MapView style={theme.style.map}
         onPress={(event) => {
           setLat(event.nativeEvent.coordinate.latitude);
@@ -191,9 +236,7 @@ export default function HidrantiMapScreen() {
           </Marker>
         }
 
-
-
-        {currentPosition &&  
+        {currentPosition &&
           <Marker
             coordinate={{
               latitude: currentPosition.coords.latitude,
@@ -206,7 +249,6 @@ export default function HidrantiMapScreen() {
         }
 
         {markers}
-
       </MapView>
 
       <Dialog
@@ -214,7 +256,6 @@ export default function HidrantiMapScreen() {
         onDismiss={hideDialog}
         onBackdropPress={hideDialog}
         overlayStyle={theme.style.dialogContainer}
-
       >
         <Dialog.Title title="Dodajanje hidranta" titleStyle={theme.style.dialogText} />
 
@@ -239,7 +280,6 @@ export default function HidrantiMapScreen() {
           inputStyle={theme.style.dialogText}
           style={{ marginBottom: 1 }}
         />
-
 
         <Text style={[{ marginBottom: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
         <CheckBox
@@ -266,10 +306,29 @@ export default function HidrantiMapScreen() {
         style={theme.style.fab}
         onPress={showDialog}
       />
-
-      <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
-
     </View>
-
   );
 }
+
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    position: 'absolute',
+    top: 10,
+    width: '100%',
+    zIndex: 1000,
+  },
+  card: {
+    padding: 10,
+    borderRadius: 10,
+  },
+  cardTitle: {
+    color: '#808080',
+    fontWeight: 'bold',
+    fontSize:12
+  },
+});
+
+
