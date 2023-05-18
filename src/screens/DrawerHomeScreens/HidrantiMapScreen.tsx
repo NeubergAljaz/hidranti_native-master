@@ -9,6 +9,7 @@ import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
+import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
 import { UseLocationPermission } from '../../Hooks/UseLocationPermission';
@@ -200,7 +201,7 @@ export default function HidrantiMapScreen() {
             }}
             title="Moja lokacija"
           >
-            <Octicons name="dot-fill" size={30} color="blue" />
+            <User name="user-circle-o" size={20} color="blue" />
           </Marker>
         }
 

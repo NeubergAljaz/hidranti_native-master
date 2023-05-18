@@ -18,7 +18,7 @@ const App = () => {
     <AuthProvider>
       <Provider store={store}>
         <>
-          <StatusBar backgroundColor="#06bcee" />
+          <StatusBar backgroundColor="#FC8A17" />
           <Navigation />
           <Toast />
         </>
