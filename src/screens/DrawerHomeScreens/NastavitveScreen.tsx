@@ -26,7 +26,7 @@ export default function NastavitveScreen() {
   //const [mode, setMode] = useState(theme.mode);
 
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  //const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
 /*  const handleThemeChange = () => { 
     

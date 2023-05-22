@@ -13,6 +13,8 @@ import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
 import { UseLocationPermission } from '../../hooks/UseLocationPermission';
 import DialogPregled from '../../components/Dialogues/DialogPregled';
+import { UseConnectivity } from '../../hooks/UseConnectivity';
+import * as SQLite from 'expo-sqlite';
 
 export default function HidrantiMapScreen() {
   const [data, setData] = useState([]);
@@ -43,7 +45,8 @@ export default function HidrantiMapScreen() {
 
   const theme = useSelector((state: any) => state.theme);
   const isLocationEnabled = UseLocationPermission();
-
+  const isConnected = UseConnectivity();
+  const db = SQLite.openDatabase('pregled_hidrantov.db');
   //console.log(isLocationEnabled, "location")
 
   const toggleOverlay = () => {
@@ -106,15 +109,64 @@ export default function HidrantiMapScreen() {
       status,
       nadzemni,
     };
-    try {
-      const response = await api.post(BASE_URL_HIDRANT, data);
-      console.log("Map.js--> add hidrant", response.data);
-      setTitle("");
-      setDescription("");
-      setLocation("");
-      setData([]);
-    } catch (error) {
-      console.error(error);
+  
+    if (isConnected) {
+      try {
+        const response = await api.post(BASE_URL_HIDRANT, data);
+        console.log("Map.js --> add hidrant", response.data);
+        setTitle("");
+        setDescription("");
+        setLocation("");
+        setData([]);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      // Save data to SQLite table
+      db.transaction((tx) => {
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 23).replace('T', ' ');
+
+        tx.executeSql(
+          `INSERT INTO hidrant (title, location, description, status, nadzemni, lat, lng, createdDate) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            data.title,
+            data.location,
+            data.description,
+            'NEPREGLEDAN',
+            data.nadzemni ? 1 : 0,
+            data.lat,
+            data.lng,
+            formattedDate,
+          ],
+          (_, result) => {
+            console.log('Data saved to SQLite table:', result);
+            setTitle("");
+            setDescription("");
+            setLocation("");
+            setData([]);
+          // Retrieve the inserted data
+            db.transaction((tx) => {
+              tx.executeSql(
+                'SELECT * FROM hidrant WHERE id = ?',
+                [result.insertId],
+                (_, resultSet) => {
+                  console.log('Inserted data:', resultSet.rows.item(0));
+                },
+                (_, error) => {
+                  console.error('Error retrieving inserted data:', error);
+                  return true;
+                }
+              );
+            });
+          },
+        (_, error) => {
+          console.error('Error saving data to SQLite table:', error);
+          return true;
+        }
+        );
+      });
     }
   };
 
@@ -297,7 +349,7 @@ export default function HidrantiMapScreen() {
             onPress={() => {
               handleSubmit();
               hideDialog();
-              CustomToast('Dodali ste društvo.', 'success');
+              CustomToast('Dodali ste hidrant.', 'success');
             }}>Potrdi</Dialog.Button>
         </Dialog.Actions>
       </Dialog>

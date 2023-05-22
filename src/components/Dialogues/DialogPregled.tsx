@@ -5,6 +5,8 @@ import api from '../../services/api';
 import { BASE_URL_HIDRANT_PREGLED } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
 import { useSelector } from 'react-redux';
+import { UseConnectivity } from '../../hooks/UseConnectivity';
+import * as SQLite from 'expo-sqlite';
 
 interface DialogPregledProps {
   visible: boolean;
@@ -23,6 +25,8 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
   const [status, setStatus] = useState('');
   const [selectedIndex, setSelectedIndex] = useState<number>(null);
   
+  const isConnected = UseConnectivity();
+  const db = SQLite.openDatabase('pregled_hidrantov.db');
   const toggleOverlay = () => {
     setVisible(!visible);
   };
@@ -33,20 +37,58 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         opis,
         status
       }
-      await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
-      console.log("Data submitted successfully!", data);
-      setOpis('');
-      setStatus('');
-      setSelectedIndex(0);
-      setVisible(false);
-      onSubmit();
+      if (isConnected) {
+        await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
+        console.log("Data submitted successfully!", data);
+        setOpis('');
+        setStatus('');
+        setSelectedIndex(0);
+        setVisible(false);
+        onSubmit();
+      } else {
+        // Save the data to SQLite database
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 23).replace('T', ' ');
+
+        db.transaction(tx => {
+          tx.executeSql(
+            `INSERT INTO pregled (opis, status, createdDate, hidrantId) VALUES (?, ?, ?, ?)`,
+            [opis, status, formattedDate, selectedMarkerId],
+            (_, result) => {
+              setOpis('');
+              setStatus('');
+              setSelectedIndex(0);
+              setVisible(false);
+              onSubmit();
+              console.log('Data saved to SQLite database successfully!', result);
+              // Retrieve the inserted data
+              tx.executeSql(
+                'SELECT * FROM pregled WHERE id = ?',
+                [result.insertId],
+                (_, queryResult) => {
+                  if (queryResult.rows.length > 0) {
+                    const insertedData = queryResult.rows.item(0);
+                    console.log('Inserted data:', insertedData);
+                  }
+                }
+              );
+            },
+            (_, error) => {
+              console.error('Error saving data to SQLite database:', error);
+              return true;
+            }
+          );
+        });
+      }
+      
       CustomToast('Dodali ste pregled.', 'success');
     } catch (error) {
       console.error(error);
     }
+  
   };
 
-  const buttons = ['IZPRAVEN', 'NEIZPRAVEN', 'NEPREGLEDAN'];
+  const buttons = ['IZPRAVEN', 'NEIZPRAVEN'];
   const theme = useSelector((state: any) => state.theme);
 
   const handleButtonPress = (value:number) => {
