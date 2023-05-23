@@ -94,7 +94,9 @@ export const lightTheme = StyleSheet.create({
   cardTextStyle: {
     color: 'white', // Set the title text color to white
   },
-  
+  buttonStyle:{ 
+    backgroundColor: '#FC8A17'
+  },
 });
 
 export const darkTheme = StyleSheet.create({
@@ -211,7 +213,9 @@ export const darkTheme = StyleSheet.create({
   cardTextStyle: {
     color: 'white', // Set the title text color to white
   },
-
+  buttonStyle:{ 
+    backgroundColor: '#FC8A17'
+  },
 });
 
 export default {

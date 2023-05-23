@@ -3,14 +3,23 @@ import { ScrollView } from 'react-native';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT } from '../../config';
 import { List } from 'react-native-paper';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { Image } from 'react-native-elements';
 // redux hooks
 import { useSelector } from 'react-redux';
+import { CheckBox } from '@rneui/themed';
+import { Searchbar } from 'react-native-paper';
+
 
 export default function HidrantiScreen({ navigation }: { navigation: any }) {
     const theme = useSelector((state: any) => state.theme);
     const [data, setData] = useState<any[]>([]);
+    const [filter, setFilter] = useState<string>('');
+    const [filterStatus, setFilterStatus] = useState({
+        izpraven: true,
+        neizpraven: true,
+        nepregledan: true,
+    });
 
     const fetchData = () => {
         api.get(`${BASE_URL_HIDRANT}`)
@@ -30,14 +39,79 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
 
         return unsubscribe;
     }, [navigation]);
+
+
+    useEffect(() => {
+        fetchData();
+        const unsubscribe = navigation.addListener('focus', () => {
+            fetchData();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
     //console.log("DATA HIDRANTI", data)
+
+
+    const filteredData = data.filter((x) => {
+        const statusLower = x.status.toLowerCase();
+        const filterStatusLower = Object.keys(filterStatus).includes(statusLower) ? filterStatus[statusLower] : false;
+        return x.title.toLowerCase().includes(filter.toLowerCase()) && filterStatusLower;
+    });
+
+    const isAnyCheckboxSelected = Object.values(filterStatus).some(val => val);
+
+    const finalData = isAnyCheckboxSelected ? filteredData : data;
 
     return (
         <ScrollView style={theme.style.containerFlex}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
+                <View>
+                    <Text style={theme.style.dialogText}>Izpraven</Text>
+                    <CheckBox
+                        checkedColor={'#FC8A17'}
+                        containerStyle={theme.style.container}
+                        checked={filterStatus.izpraven}
+                        onPress={() => setFilterStatus({ ...filterStatus, izpraven: !filterStatus.izpraven })}
+                    />
+                </View>
+
+                <View>
+                    <Text style={theme.style.dialogText}>Neizpraven</Text>
+                    <CheckBox
+                        checkedColor={'#FC8A17'}
+                        containerStyle={theme.style.container}
+                        checked={filterStatus.neizpraven}
+                        onPress={() => setFilterStatus({ ...filterStatus, neizpraven: !filterStatus.neizpraven })}
+                    />
+                </View>
+
+                <View>
+                    <Text style={theme.style.dialogText}>Nepregledan</Text>
+                    <CheckBox
+                        checkedColor={'#FC8A17'}
+                        containerStyle={theme.style.container}
+                        checked={filterStatus.nepregledan}
+                        onPress={() => setFilterStatus({ ...filterStatus, nepregledan: !filterStatus.nepregledan })}
+                    />
+                </View>
+            </View>
+
+            <Searchbar
+                placeholder="Išči:"
+                onChangeText={text => setFilter(text)}
+                value={filter}
+                theme={{
+                    colors: {
+                        background: 'white',
+                        placeholder: 'white',
+                        text: 'black',
+                    },
+                }}
+            />
+
             <List.Section style={theme.style.containerFlex}>
+                {filteredData && [...filteredData].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index: number) => (
 
-
-                {data && [...data].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index: number) => (
                     <List.Item
                         onPress={() => { navigation.navigate('Hidrant', { hidrantId: x.id }); console.log(x) }}
                         style={{
@@ -68,6 +142,7 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
                     />
 
                 ))}
+
             </List.Section>
         </ScrollView>
     );

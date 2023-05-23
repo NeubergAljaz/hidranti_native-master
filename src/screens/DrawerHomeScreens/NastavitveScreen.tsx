@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UseConnectivity } from '../../Hooks/UseConnectivity';
+import { UseConnectivity } from '../../hooks/UseConnectivity';
 // component state management
 //import { useEffect, useState } from 'react';
 // view component
@@ -26,7 +26,7 @@ export default function NastavitveScreen() {
   //const [mode, setMode] = useState(theme.mode);
 
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  //const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
 /*  const handleThemeChange = () => { 
     
