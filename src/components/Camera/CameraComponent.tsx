@@ -5,6 +5,8 @@ import * as ImagePicker from 'expo-image-picker';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT_SLIKA } from '../../config';
 import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
+import mime from 'mime';
 
 export const CameraComponent: React.FC = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -49,40 +51,32 @@ export const CameraComponent: React.FC = () => {
   }
 
   const handleSubmit = async () => {
-    try {
-      if (!image) {
-        console.log('Nobena slika ni izbrana.');
-        return;
-      }
-  
-      const newImageUri =  "file:///" + image.split("file:/").join("");
-      
-      let poskus = {
-        uri: newImageUri,
-        type: 'image/jpeg',
-        name: 'photo.jpg'
-      }
+    if (image) {
       let formData = new FormData();
-      formData.append('photo', {
-        uri: newImageUri,
-        type: 'image/jpeg',
-        name: 'photo.jpg'
-      } as any);
-  
-      const response = await api.post(`http://192.168.64.113:3001/api/images/hidrant/1`, formData, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      console.log('SLIKA JE DODANA', response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      let newImageUri =  "file:///" + image.split("file:/").join("");
+      let nameParts = image.split('/');
+      let name = nameParts[nameParts.length - 1];
+      let type = mime.getType(newImageUri);
 
- 
+      formData.append('image', {
+        uri: newImageUri,
+        type: type,
+        name: name
+      } as any);
+
+      try {
+        let response = await api.post(`${BASE_URL_HIDRANT_SLIKA}/1`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <ExpoCamera style={{ flex: 1 }} type={type} ref={cameraRef}>
@@ -95,4 +89,4 @@ export const CameraComponent: React.FC = () => {
       </ExpoCamera>
     </View>
   );
-};
+}

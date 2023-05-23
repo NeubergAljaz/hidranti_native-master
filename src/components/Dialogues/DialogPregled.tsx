@@ -5,6 +5,8 @@ import api from '../../services/api';
 import { BASE_URL_HIDRANT_PREGLED } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
 import { useSelector } from 'react-redux';
+import { UseConnectivity } from '../../Hooks/useConnectivity';
+import * as SQLite from 'expo-sqlite';
 
 interface DialogPregledProps {
   visible: boolean;
