@@ -4,7 +4,8 @@ const signInStyles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start', 
+    marginTop: 90, 
   },
   backgroundImage: {
     flex: 1,
@@ -18,18 +19,18 @@ const signInStyles = StyleSheet.create({
     borderRadius: 10,
   },
   input: {
-    marginBottom: 12,
+    marginBottom: 20,
     borderWidth: 1,
     borderColor: '#7f8c8d',
     borderRadius: 5,
+    paddingVertical: 10,
     paddingHorizontal: 14,
     backgroundColor: '#ecf0f1',
-    fontSize: 16, // Adjust the font size as desired
-    
+    fontSize: 18,
   },
   buttonContainer: {
     backgroundColor: '#FC8A17',
-    paddingVertical: 5,
+    paddingVertical: 10,
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 2.5,

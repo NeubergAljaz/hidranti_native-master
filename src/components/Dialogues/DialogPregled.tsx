@@ -5,7 +5,7 @@ import api from '../../services/api';
 import { BASE_URL_HIDRANT_PREGLED, BASE_URL_PREGLED_SLIKA } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
 import { useSelector } from 'react-redux';
-import { UseConnectivity } from '../../Hooks/useConnectivity';
+import { UseConnectivity } from '../../hooks/UseConnectivity';
 import * as SQLite from 'expo-sqlite';
 import { CameraComponent } from '../Camera/CameraComponent';
 

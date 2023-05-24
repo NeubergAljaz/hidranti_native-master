@@ -4,16 +4,16 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT } from '../../config';
 import { FAB } from 'react-native-paper';
-import { Dialog, Input, ButtonGroup, CheckBox, Divider } from '@rneui/themed';
+import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
-import { UseLocationPermission } from '../../Hooks/useLocationPermission';
+import { UseLocationPermission } from '../../hooks/UseLocationPermission';
 import DialogPregled from '../../components/Dialogues/DialogPregled';
-import { UseConnectivity } from '../../Hooks/useConnectivity';
+import { UseConnectivity } from '../../hooks/UseConnectivity';
 import * as SQLite from 'expo-sqlite';
 
 export default function HidrantiMapScreen() {
@@ -353,15 +353,16 @@ export default function HidrantiMapScreen() {
           inputStyle={theme.style.dialogText}
           style={{ marginBottom: 1 }}
         />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={[{ marginRight: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
+          <CheckBox
+            checked={nadzemni}
+            onPress={() => setNadzemni(!nadzemni)}
+            checkedColor={'#FC8A17'}
+            containerStyle={theme.style.dialogContainer}
+          />
+        </View>
 
-        <Text style={[{ marginBottom: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
-        <CheckBox
-          checked={nadzemni}
-          onPress={() => setNadzemni(!nadzemni)}
-          checkedColor={'#FC8A17'}
-          containerStyle={theme.style.dialogContainer}
-          style={{ marginBottom: 16 }}
-        />
 
         <Dialog.Actions>
           <Dialog.Button
