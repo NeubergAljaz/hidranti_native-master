@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, ImageBackground, } from "react-native";
+import { ScrollView, ImageBackground, View } from "react-native";
 import { Image } from '@rneui/themed';
 import { Card, List, Text, Title, Subheading } from 'react-native-paper';
 import { IP_PORT, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
-// redux hooks
 import { useSelector } from 'react-redux';
-import Iconn from 'react-native-vector-icons/FontAwesome';
+import { Divider } from '@rneui/themed';
 
 interface ModalScreenHidrantiProps {
   route: {
@@ -64,8 +63,6 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   }, []);
 
   return (
-    <>
-
       <ScrollView style={theme.style.containerPadding}>
         <Card style={theme.style.cardStyle}>
           <Card.Cover
@@ -73,22 +70,27 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
             style={theme.style.coverCardStyle}
           />
           <Card.Content style={theme.style.contentCardStyle}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Title style={theme.style.cardTextStyle}>Naziv: {dataHidrant.title}</Title>
+              <Title style={theme.style.cardTextStyle}>{dataHidrant.status}</Title>
+            </View>
             {imageSrc ? (
-              <Image source={{ uri: imageSrc }} style={{ width: 100, height: 100 }} />
+              <Image
+                source={{ uri: imageSrc }}
+                style={{ width: '100%', height: 200 }}
+                resizeMode="contain"
+              />
             ) : (
               <Icon name="image" size={30} />
             )}
-            <Title style={theme.style.cardTextStyle}>Lokacija:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataHidrant.location}</Subheading>
+            <Divider style={{ marginVertical: 10 }} />
+            <View style={{ alignItems: 'center' }}>
+              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Lokacija:</Title>
+              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.location}</Subheading>
 
-            <Title style={theme.style.cardTextStyle}>Naziv:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataHidrant.title}</Subheading>
-
-            <Title style={theme.style.cardTextStyle}>Status:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataHidrant.status}</Subheading>
-
-            <Title style={theme.style.cardTextStyle}>Datum zadnjega pregleda:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataHidrant.zadnjiPregled}</Subheading>
+              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Datum zadnjega pregleda:</Title>
+              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.zadnjiPregled}</Subheading>
+            </View>
           </Card.Content>
         </Card>
         <Card style={theme.style.cardStyle}>
@@ -122,6 +124,5 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           </Card.Content>
         </Card>
       </ScrollView>
-    </>
   );
 }
