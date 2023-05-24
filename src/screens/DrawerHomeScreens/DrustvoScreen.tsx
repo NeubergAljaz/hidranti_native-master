@@ -77,7 +77,7 @@ export default function DrustvoScreen()  {
 
               */}
 
-              <CameraComponent />
+            
                 
                         <Dialog overlayStyle={theme.style.dialogContainer} isVisible={visible} onDismiss={hideDialog}>
                             <Dialog.Title titleStyle={theme.style.dialogText} title="Dodajanje društva"/>

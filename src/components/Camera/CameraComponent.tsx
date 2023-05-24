@@ -7,7 +7,15 @@ import { BASE_URL_HIDRANT_SLIKA } from '../../config';
 import { Ionicons } from '@expo/vector-icons';
 import mime from 'mime';
 
-export const CameraComponent: React.FC = () => {
+
+
+export interface CameraComponentProps {
+  hydrantId: number;
+  onPictureTaken: (formData: FormData) => void;
+  onSubmit: () => void;
+}
+
+export const CameraComponent: React.FC<CameraComponentProps> = ({ hydrantId, onPictureTaken, onSubmit }) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [type] = useState(CameraType.back);
   const [image, setImage] = useState<string | null>(null);
@@ -30,10 +38,23 @@ export const CameraComponent: React.FC = () => {
     return <Text>No access to camera</Text>;
   }
 
-  const takePicture = async () => {
+  const captureImage = async () => {
     if (cameraRef.current) {
       let photo = await cameraRef.current.takePictureAsync();
+      let formData = new FormData();
+      let newImageUri =  "file:///" + photo.uri.split("file:/").join("");
+      let nameParts = photo.uri.split('/');
+      let name = nameParts[nameParts.length - 1];
+      let type = mime.getType(newImageUri);
+
+      formData.append('image', {
+        uri: newImageUri,
+        type: type,
+        name: name
+      } as any);
+
       setImage(photo.uri);
+      onPictureTaken(formData); // Here
     }
   }
 
@@ -50,35 +71,12 @@ export const CameraComponent: React.FC = () => {
     }
   }
 
-  const handleSubmit = async () => {
-    if (image) {
-      let formData = new FormData();
-      let newImageUri =  "file:///" + image.split("file:/").join("");
-      let nameParts = image.split('/');
-      let name = nameParts[nameParts.length - 1];
-      let type = mime.getType(newImageUri);
-
-      formData.append('image', {
-        uri: newImageUri,
-        type: type,
-        name: name
-      } as any);
-
-      try {
-        let response = await api.post(`${BASE_URL_HIDRANT_SLIKA}/1`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
-
   const toggleFlash = () => {
     setFlash(flash === FlashMode.off ? FlashMode.on : FlashMode.off);
+  };
+
+  const sendData = () => {
+    onSubmit();
   };
 
   return (
@@ -90,8 +88,8 @@ export const CameraComponent: React.FC = () => {
         <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
           <Ionicons name={flash === FlashMode.off ? "flash-off-outline" : "flash-outline"} size={30} color="#fff" />
         </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+
+        <TouchableOpacity style={styles.captureButton} onPress={captureImage}>
           <Ionicons name="camera-outline" size={40} color="#fff" />
         </TouchableOpacity>
 
@@ -100,7 +98,7 @@ export const CameraComponent: React.FC = () => {
             <Ionicons name="images-outline" size={30} color="#fff" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.iconButton} onPress={handleSubmit}>
+          <TouchableOpacity style={styles.iconButton} onPress ={sendData}>
             <Ionicons name="checkmark-circle-outline" size={30} color="#fff" />
           </TouchableOpacity>
         </View>

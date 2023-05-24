@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { View, Text} from 'react-native';
 import { Button, Dialog, Input, ButtonGroup } from '@rneui/themed';
 import api from '../../services/api';
-import { BASE_URL_HIDRANT_PREGLED } from '../../config';
+import { BASE_URL_HIDRANT_PREGLED, BASE_URL_PREGLED_SLIKA } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
 import { useSelector } from 'react-redux';
 import { UseConnectivity } from '../../Hooks/useConnectivity';
 import * as SQLite from 'expo-sqlite';
+import { CameraComponent } from '../Camera/CameraComponent';
 
 interface DialogPregledProps {
   visible: boolean;
@@ -24,6 +25,8 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
   const [opis, setOpis] = useState('');
   const [status, setStatus] = useState('');
   const [selectedIndex, setSelectedIndex] = useState<number>(null);
+  const [formData, setFormData] = useState<FormData | null>(null);
+  const [step, setStep] = useState(0);
   
   const isConnected = UseConnectivity();
   const db = SQLite.openDatabase('pregled_hidrantov.db');
@@ -40,10 +43,16 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
       if (isConnected) {
         await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
         console.log("Data submitted successfully!", data);
+        await api.post(`${BASE_URL_PREGLED_SLIKA}/${selectedMarkerId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         setOpis('');
         setStatus('');
         setSelectedIndex(0);
         setVisible(false);
+        setStep(0)
         onSubmit();
       } else {
         // Save the data to SQLite database
@@ -96,14 +105,26 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
     console.log(`Selected button: ${buttons[value]}`);
     setStatus(buttons[value])
   };
+
+
+  const handleNext = () => {
+    setStep(step + 1);
+  };
+
+  const handlePictureTaken = (formData: FormData) => {
+    setFormData(formData);
+  }
   
+  console.log(formData)
   return (
     <Dialog
-      overlayStyle={theme.style.dialogContainer}
-      isVisible={visible}
-      onBackdropPress={toggleOverlay}>
-      <Text style={theme.style.dialogText}> Pregled hidranta:</Text>
-      <View >
+    overlayStyle={[theme.style.dialogContainer, {height: '90%', width: '90%'}]}
+    isVisible={visible}
+    onBackdropPress={toggleOverlay}
+  >
+    {step === 0 && (
+      <View>
+        <Text style={theme.style.dialogText}> Pregled hidranta:</Text>
         <Input
           inputStyle={theme.style.dialogText}
           placeholder="Opis"
@@ -120,10 +141,18 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         //buttonStyle={theme.style} // custom background color style
         textStyle={theme.style.dialogText} // custom text color style
       />
-        <Button title="Potrdi" onPress={handleSubmit} />
+        <Button title="Naprej" onPress={handleNext} />
       </View>
-    </Dialog>
-  );
-};
+    )}
 
+    {step === 1 && (
+      <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit}/>
+    )}
+    
+
+   
+  </Dialog>
+  );
+
+}
 export default DialogPregled;
