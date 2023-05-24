@@ -75,7 +75,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
             },
             (_, error) => {
               console.error('Error saving data to SQLite database:', error);
-              return true;
+              return false;
             }
           );
         });

@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 
 const databaseName = 'pregled_hidrantov.db';
-const databaseVersion = '7.0'; // Update the version number here
+const databaseVersion = '8.0'; // Update the version number here
 
 const db = SQLite.openDatabase(databaseName, databaseVersion);
 
@@ -18,7 +18,9 @@ export const createTable = () => {
         lat REAL,
         lng REAL,
         createdDate TEXT,
-        zadnjiPregled TEXT
+        zadnjiPregled TEXT,
+        drustvoId INTEGER,
+        FOREIGN KEY (drustvoId) REFERENCES drustvo(id)
       )`,
       [],
       (_, result) => {
@@ -37,7 +39,8 @@ export const createTable = () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT,
         drustvoId INTEGER,
-        role TEXT
+        role TEXT,
+        FOREIGN KEY (drustvoId) REFERENCES drustvo(id)
       )`,
       [],
       (_, result) => {
@@ -45,6 +48,27 @@ export const createTable = () => {
       },
       (_, error) => {
         console.log('Error creating table "user":', error);
+        return false; // Return false to indicate an error occurred
+      }
+    );
+  });
+
+  
+  db.transaction((tx) => {
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS drustvo (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        createdDate TEXT,
+        naziv TEXT,
+        email TEXT,
+        naslov TEXT
+      )`,
+      [],
+      (_, result) => {
+        console.log('Table "drustvo" created successfully');
+      },
+      (_, error) => {
+        console.log('Error creating table "drustvo":', error);
         return false; // Return false to indicate an error occurred
       }
     );
@@ -93,6 +117,24 @@ export const insertData = (tableName, data) => {
         (_, error) => {
           console.log(`Error inserting into ${tableName}:`, error);
           reject(error);
+          return false;
+        }
+      );
+    });
+  });
+};
+export const clearTable = async (tableName: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM ${tableName}`,
+        [],
+        (_, result) => {
+          console.log(`Table "${tableName}" cleared successfully`);
+          resolve();
+        },
+        (_, error) => {
+          console.log(`Error clearing table "${tableName}":`, error);
           return false;
         }
       );

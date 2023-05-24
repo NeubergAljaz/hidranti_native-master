@@ -75,6 +75,13 @@ export default function HidrantiMapScreen() {
 
   useEffect(() => {
     if (data.length === 0) {
+      fetchData();
+    }
+  }, [data]);
+
+  const fetchData = () => {
+    if (isConnected) {
+      // Fetch data from API
       api.get(`${BASE_URL_HIDRANT}`)
         .then(response => {
           setData(response.data);
@@ -82,17 +89,30 @@ export default function HidrantiMapScreen() {
         .catch(error => {
           console.error(error);
         });
-    }
-  }, [data]);
-
-  const fetchData = () => {
-    api.get(`${BASE_URL_HIDRANT}`)
-      .then(response => {
-        setData(response.data);
-      })
-      .catch(error => {
-        console.error(error);
+    } else {
+      // Fetch data from SQLite database
+      //console.log("fetching from SQLite")
+      db.transaction(tx => {
+        tx.executeSql(
+          'SELECT * FROM hidrant',
+          [],
+          (_, result) => {
+            const rows = result.rows;
+            const fetchedData = [];
+  
+            for (let i = 0; i < rows.length; i++) {
+              fetchedData.push(rows.item(i));
+            }
+  
+            setData(fetchedData);
+          },
+          (_, error) => {
+            console.error('Error fetching data from SQLite database:', error);
+            return false;
+          }
+        );
       });
+    }
   };
 
   useEffect(() => {
@@ -156,14 +176,14 @@ export default function HidrantiMapScreen() {
                 },
                 (_, error) => {
                   console.error('Error retrieving inserted data:', error);
-                  return true;
+                  return false;
                 }
               );
             });
           },
         (_, error) => {
           console.error('Error saving data to SQLite table:', error);
-          return true;
+          return false;
         }
         );
       });

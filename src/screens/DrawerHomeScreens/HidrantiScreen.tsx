@@ -9,6 +9,8 @@ import { Image } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { CheckBox } from '@rneui/themed';
 import { Searchbar } from 'react-native-paper';
+import { UseConnectivity } from '../../hooks/UseConnectivity';
+import * as SQLite from 'expo-sqlite';
 
 
 export default function HidrantiScreen({ navigation }: { navigation: any }) {
@@ -20,17 +22,44 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
         neizpraven: true,
         nepregledan: true,
     });
+    const isConnected = UseConnectivity();
+    const db = SQLite.openDatabase('pregled_hidrantov.db');
 
     const fetchData = () => {
-        api.get(`${BASE_URL_HIDRANT}`)
-            .then(response => {
+        if (isConnected) {
+            // Fetch data from API
+            api.get(`${BASE_URL_HIDRANT}`)
+              .then(response => {
                 setData(response.data);
-            })
-            .catch(error => {
+              })
+              .catch(error => {
                 console.error(error);
+              });
+          } else {
+            // Fetch data from SQLite database
+            console.log("fetching from SQLite")
+            db.transaction(tx => {
+              tx.executeSql(
+                'SELECT * FROM hidrant',
+                [],
+                (_, result) => {
+                  const rows = result.rows;
+                  const fetchedData = [];
+        
+                  for (let i = 0; i < rows.length; i++) {
+                    fetchedData.push(rows.item(i));
+                  }
+        
+                  setData(fetchedData);
+                },
+                (_, error) => {
+                  console.error('Error fetching data from SQLite database:', error);
+                  return false;
+                }
+              );
             });
-    };
-
+          }
+    }      
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {

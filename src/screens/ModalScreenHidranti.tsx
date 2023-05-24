@@ -6,6 +6,8 @@ import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
 // redux hooks
 import { useSelector } from 'react-redux';
+import { UseConnectivity } from '../hooks/UseConnectivity';
+import * as SQLite from 'expo-sqlite';
 
 interface ModalScreenHidrantiProps {
   route: {
@@ -34,28 +36,64 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   const [dataPHidrant, setDataHidrant] = useState<Hidrant>({ location: "", title: "", status: "", createdDate: "", zadnjiPregled: "" });
   const [dataPregledi, setDataPregledi] = useState([]);
 
-  useEffect(() => {
-    api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
-      .then(response => {
-        setDataHidrant(response.data);
-        navigation.setOptions({ title: response.data.title});
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
-  }, []);
+  const isConnected = UseConnectivity();
+  const db = SQLite.openDatabase('pregled_hidrantov.db');
 
   useEffect(() => {
-    api.get(`${BASE_URL_HIDRANT_PREGLED}/hidrant/${hidrantId}`)
-      .then(response => {
-        setDataPregledi(response.data);
-      })
-      .catch(error => {
-        console.error(error);
+    if (isConnected) {
+      api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
+        .then(response => {
+          setDataHidrant(response.data);
+          navigation.setOptions({ title: response.data.title });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    } else {
+      db.transaction(tx => {
+        tx.executeSql(
+          `SELECT * FROM hidrant WHERE id = ?;`,
+          [hidrantId],
+          (_, { rows }) => {
+            const hidrantData = rows.item(0);
+            setDataHidrant(hidrantData);
+            navigation.setOptions({ title: hidrantData.title });
+          },
+          (_, error) => {
+            console.error('Error fetching hidrant data from SQLite:', error);
+            return false;
+          }
+        );
       });
-  },
-    []);
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (isConnected) {
+      api.get(`${BASE_URL_HIDRANT_PREGLED}/hidrant/${hidrantId}`)
+        .then(response => {
+          setDataPregledi(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    } else {
+      db.transaction(tx => {
+        tx.executeSql(
+          `SELECT * FROM pregled WHERE hidrantId = ?;`,
+          [hidrantId],
+          (_, { rows }) => {
+            const preglediData = rows._array;
+            setDataPregledi(preglediData);
+          },
+          (_, error) => {
+            console.error('Error fetching pregledi data from SQLite:', error);
+            return false;
+          }
+        );
+      });
+    }
+  }, [isConnected]);
 
     return (
       <ScrollView style={theme.style.containerPadding}>

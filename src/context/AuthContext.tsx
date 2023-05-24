@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
-import {BASE_URL_AUTH} from '../config';
-import { createTable} from '../local_storage/SQLite';
-
+import {BASE_URL_AUTH, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED} from '../config';
+import { createTable, insertData, clearTable} from '../local_storage/SQLite';
+import api from './../services/api';
 
 interface UserInfo {
   id: number;
@@ -80,6 +80,67 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       AsyncStorage.setItem('userInfo', JSON.stringify(userInfoWithAccessToken)); // Store the userInfo object with accessToken
       // Create tables
       createTable();  
+      // Insert user data into the SQLite table
+      await insertData('user', {
+        id: userInfo.user_info.id,
+        username: userInfo.username,
+        drustvoId: 1,
+        role: userInfo.role,
+      });
+      // Fetch data from API
+      api.get(`${BASE_URL_HIDRANT}`)
+      .then(response => {
+        const hidrantData = response.data; // Assuming the response data is an array of hidrant objects
+
+        // Save the fetched hidrant data to the SQLite table
+        hidrantData.forEach((hidrant: any) => {
+          // Assuming hidrant has properties like title, location, description, status, etc.
+          insertData('hidrant', {
+            title: hidrant.title,
+            location: hidrant.location,
+            description: hidrant.description,
+            status: hidrant.status,
+            nadzemni: hidrant.nadzemni,
+            lat: hidrant.lat,
+            lng: hidrant.lng,
+            createdDate: hidrant.createdDate,
+            zadnjiPregled: hidrant.zadnjiPregled,
+            drustvoId: hidrant.drustvoId
+          }).then(() => {
+            console.log('Hidrant data inserted into SQLite table');
+          }).catch(error => {
+            console.error('Error inserting hidrant data into SQLite table:', error);
+          });
+        });
+         // Fetch pregledi data from API
+        api.get(`${BASE_URL_HIDRANT_PREGLED}`)
+        .then(preglediResponse => {
+          const preglediData = preglediResponse.data; // Assuming the response data is an array of pregledi objects
+        
+          // Save the fetched pregledi data to the SQLite table
+          preglediData.forEach((pregled: any) => {
+            // Assuming pregled has properties like hidrantId, date, status, etc.
+            insertData('pregled', {
+              opis: pregled.opis,
+              status: pregled.status,
+              createdDate: pregled.createdDate,
+              userId: pregled.userId,
+              hidrantId: pregled.hidrantId
+            }).then(() => {
+              console.log('Pregled data inserted into SQLite table');
+            }).catch(error => {
+              console.error('Error inserting pregled data into SQLite table:', error);
+            });
+          });
+        })
+        .catch(preglediError => {
+          console.error('Error fetching pregledi data from API:', preglediError);
+        });
+
+      })
+    .catch(error => {
+      console.error(error);
+    });
       setIsLoading(false);
       //console.log("Sem se vpisal");
       //console.log(userInfo.user.accessToken);
@@ -96,6 +157,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     setIsLoading(true);
   
     try {
+      // Clear SQLite tables
+      await clearTable('user'); // Clear the 'user' table
+      await clearTable('hidrant'); // Clear the 'hidrant' table
+      await clearTable('pregled'); // Clear the 'pregled' table
+      await clearTable('drustvo'); // Clear the 'drustvo' table
+  
+  
       AsyncStorage.removeItem('userInfo');
       setUserInfo(null);
       SetAccessToken(null);
