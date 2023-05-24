@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, ImageBackground } from "react-native";
+import { ScrollView, ImageBackground, View } from "react-native";
+import { Image } from '@rneui/themed';
 import { Card, List, Text, Title, Subheading } from 'react-native-paper';
-import { BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
+import { IP_PORT, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
-// redux hooks
 import { useSelector } from 'react-redux';
 import { UseConnectivity } from '../hooks/UseConnectivity';
 import * as SQLite from 'expo-sqlite';
+
+import { Divider } from '@rneui/themed';
+
 
 interface ModalScreenHidrantiProps {
   route: {
@@ -19,6 +22,7 @@ interface ModalScreenHidrantiProps {
 }
 
 interface Hidrant {
+  [x: string]: any;
   id?: number;
   location: string;
   title: string;
@@ -30,14 +34,30 @@ interface Hidrant {
 export default function ModalScreenHidranti({ route, navigation }: ModalScreenHidrantiProps) {
 
   const theme = useSelector((state: any) => state.theme);
-
   const { hidrantId } = route.params;
-
-  const [dataPHidrant, setDataHidrant] = useState<Hidrant>({ location: "", title: "", status: "", createdDate: "", zadnjiPregled: "" });
+  const [dataHidrant, setDataHidrant] = useState<Hidrant>({ location: "", title: "", status: "", createdDate: "", zadnjiPregled: "" });
   const [dataPregledi, setDataPregledi] = useState([]);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const isConnected = UseConnectivity();
   const db = SQLite.openDatabase('pregled_hidrantov.db');
+
+  useEffect(() => {
+    api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
+      .then(response => {
+        setDataHidrant(response.data);
+        navigation.setOptions({ title: response.data.title });
+
+        if (response.data.image && response.data.image.filename) {
+          const vrni = `http://${IP_PORT}:3001/uploads/${response.data.image.filename}`;
+          setImageSrc(vrni);
+        }
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
 
   useEffect(() => {
     if (isConnected) {
@@ -65,6 +85,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           }
         );
       });
+
     }
   }, [isConnected]);
 
@@ -95,7 +116,8 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     }
   }, [isConnected]);
 
-    return (
+
+  return (
       <ScrollView style={theme.style.containerPadding}>
         <Card style={theme.style.cardStyle}>
           <Card.Cover
@@ -103,17 +125,27 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
             style={theme.style.coverCardStyle}
           />
           <Card.Content style={theme.style.contentCardStyle}>
-            <Title style={theme.style.cardTextStyle}>Lokacija:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.location}</Subheading>
-    
-            <Title style={theme.style.cardTextStyle}>Naziv:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.title}</Subheading>
-    
-            <Title style={theme.style.cardTextStyle}>Status:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.status}</Subheading>
-    
-            <Title style={theme.style.cardTextStyle}>Datum zadnjega pregleda:</Title>
-            <Subheading style={theme.style.cardTextStyle}>{dataPHidrant.zadnjiPregled}</Subheading>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Title style={theme.style.cardTextStyle}>Naziv: {dataHidrant.title}</Title>
+              <Title style={theme.style.cardTextStyle}>{dataHidrant.status}</Title>
+            </View>
+            {imageSrc ? (
+              <Image
+                source={{ uri: imageSrc }}
+                style={{ width: '100%', height: 200 }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Icon name="image" size={30} />
+            )}
+            <Divider style={{ marginVertical: 10 }} />
+            <View style={{ alignItems: 'center' }}>
+              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Lokacija:</Title>
+              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.location}</Subheading>
+
+              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Datum zadnjega pregleda:</Title>
+              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.zadnjiPregled}</Subheading>
+            </View>
           </Card.Content>
         </Card>
         <Card style={theme.style.cardStyle}>
@@ -123,7 +155,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           />
           <Card.Content style={theme.style.contentCardStyle}>
             <Title style={theme.style.cardTextStyle}>Seznam pregledov:</Title>
-    
+
             {dataPregledi === undefined ? (
               <Text>Loading</Text>
             ) : dataPregledi.length === 0 ? (
@@ -147,5 +179,5 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           </Card.Content>
         </Card>
       </ScrollView>
-    );
+  );
 }

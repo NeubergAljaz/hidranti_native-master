@@ -4,16 +4,16 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT } from '../../config';
 import { FAB } from 'react-native-paper';
-import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
+import { Dialog, Input, ButtonGroup, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
-import { UseLocationPermission } from '../../hooks/UseLocationPermission';
+import { UseLocationPermission } from '../../Hooks/useLocationPermission';
 import DialogPregled from '../../components/Dialogues/DialogPregled';
-import { UseConnectivity } from '../../hooks/UseConnectivity';
+import { UseConnectivity } from '../../Hooks/useConnectivity';
 import * as SQLite from 'expo-sqlite';
 
 export default function HidrantiMapScreen() {
