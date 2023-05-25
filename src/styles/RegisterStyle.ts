@@ -6,25 +6,31 @@ const signInStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#34495e',
+        backgroundColor: 'transparent',
       },
       formContainer: {
         width: '80%',
         padding: 20,
-        backgroundColor: '#ecf0f1',
+        backgroundColor: '#2C2C2C',
         borderRadius: 10,
+      },
+      backgroundImage: {
+        flex: 1,
+        width: '100%',
+        resizeMode: 'cover',
       },
       input: {
         marginBottom: 12,
         borderWidth: 1,
         borderColor: '#7f8c8d',
         borderRadius: 5,
+        paddingVertical: 10,
         paddingHorizontal: 14,
         backgroundColor: '#ecf0f1',
       },
       buttonContainer: {
-        backgroundColor: '#2ecc71',
-        paddingVertical: 15,
+        backgroundColor: '#FC8A17',
+        paddingVertical: 10,
         borderRadius: 5,
         alignItems: 'center',
         marginTop: 20,
@@ -41,7 +47,10 @@ const signInStyles = StyleSheet.create({
         marginTop: 20,
       },
       link: {
-        color: '#2980b9',
+        color: '#FC8A17',
+      },
+      whiteText: {
+        color: 'white',
       },
   });
 

@@ -4,7 +4,6 @@ import api from '../../services/api';
 import { BASE_URL_DRUSTVO } from '../../config';
 //import CreateDrustvo from './CreateDrustvo';
 import { Dialog, Input, Button, Divider } from '@rneui/themed';
-import { List } from 'react-native-paper';
 // redux hooks
 import { useSelector} from 'react-redux'; 
 import { CameraComponent } from '../../components/Camera/CameraComponent';
@@ -30,7 +29,6 @@ export default function DrustvoScreen()  {
             email,
             naslov
         }
-
         api.post(`${BASE_URL_DRUSTVO}`, data)
             .then(response => {
                 console.log(response.data);
@@ -43,7 +41,6 @@ export default function DrustvoScreen()  {
     };
  
     useEffect(() => {
-   
         api.get(`${BASE_URL_DRUSTVO}`)
             .then(response => {
                 setData(response.data);
@@ -52,8 +49,6 @@ export default function DrustvoScreen()  {
                 console.error(error);
             });
     }, [visible]);
-
-    
 
     return (
         

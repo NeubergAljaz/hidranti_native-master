@@ -22,7 +22,7 @@ export default function HidrantiMapScreen() {
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const [location, setLocation] = useState('');
-  const [nadzemni, setNadzemni] = React.useState(false);
+  const [nadzemni, setNadzemni] = React.useState(true);
   const [status, setStatus] = useState<string>('');
   const [title, setTitle] = useState('');
   const [visible, setVisible] = React.useState(false);

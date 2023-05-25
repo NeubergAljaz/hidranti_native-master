@@ -44,7 +44,7 @@ export default function HomeScreenNavigation() {
           <Ionicons name='map-outline' size={22} style={theme.style.listIcon}/>
         )
       }}/>
-      <Drawer.Screen name="Drustva" component={DrustvoScreen} options={{
+      <Drawer.Screen name="Društva" component={DrustvoScreen} options={{
         drawerIcon: () => (
           <Ionicons name='home-outline' size={22} style={theme.style.listIcon}/>
         )

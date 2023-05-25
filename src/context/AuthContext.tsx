@@ -12,6 +12,8 @@ interface UserInfo {
 interface User {
   [x: string]: any;
   user: any;
+  name: string,
+  surname: string,
   username: string;
   user_info: UserInfo;
 }
@@ -27,7 +29,7 @@ export interface ContextProps {
   userInfo: User | null;
   splashLoading: boolean;
   accessToken: string | null;
-  register: (username: string, password: string) => void;
+  register: (name: string, surname: string, username: string, password: string) => void;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
 }
@@ -43,11 +45,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [splashLoading, setSplashLoading] = useState(false);
   const [accessToken, SetAccessToken] = useState<string>('');
 
-  const register = (username: string, password: string) => {
+  const register = (name: string, surname: string, username: string, password: string) => {
     setIsLoading(true);
 
     axios
       .post<AuthResponse>(`${BASE_URL_AUTH}signup`, {
+        name,
+        surname,
         username,
         password,
       })
