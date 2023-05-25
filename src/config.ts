@@ -7,8 +7,9 @@
 */
 
 //var menjaj = "192.168.64.111"
-var menjaj:String = "192.168.1.102"
+var menjaj:String = "192.168.64.108"
 
+export const IP_PORT = `${menjaj}`;
 
 export const BASE_URL = `http://${menjaj}:3001/api`;
 
@@ -19,5 +20,7 @@ export const BASE_URL_HIDRANT = `http://${menjaj}:3001/api/hidrant`;
 export const BASE_URL_HIDRANT_PREGLED = `http://${menjaj}:3001/api/pregled`;
 
 export const BASE_URL_HIDRANT_SLIKA = `http://${menjaj}:3001/api/images/hidrant`;
+
+export const BASE_URL_PREGLED_SLIKA = `http://${menjaj}:3001/api/images/pregled`;
 
 export const BASE_URL_DRUSTVO = `http://${menjaj}:3001/api/drustvo`;

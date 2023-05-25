@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UseConnectivity } from '../../hooks/UseConnectivity';
+import { UseConnectivity } from '../../Hooks/UseConnectivityHook';
 // component state management
 //import { useEffect, useState } from 'react';
 // view component

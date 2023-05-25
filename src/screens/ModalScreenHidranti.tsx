@@ -6,7 +6,7 @@ import { IP_PORT, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useSelector } from 'react-redux';
-import { UseConnectivity } from '../hooks/UseConnectivity';
+import { UseConnectivity } from '../Hooks/UseConnectivityHook';
 import * as SQLite from 'expo-sqlite';
 
 import { Divider } from '@rneui/themed';
@@ -38,6 +38,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   const [dataHidrant, setDataHidrant] = useState<Hidrant>({ location: "", title: "", status: "", createdDate: "", zadnjiPregled: "" });
   const [dataPregledi, setDataPregledi] = useState([]);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [imageSrcPregled, setImageSrcPregled] = useState<string | null>(null);
 
   const isConnected = UseConnectivity();
   const db = SQLite.openDatabase('pregled_hidrantov.db');
@@ -116,6 +117,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     }
   }, [isConnected]);
 
+  console.log("aa", dataPregledi)
 
   return (
       <ScrollView style={theme.style.containerPadding}>

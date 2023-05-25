@@ -2,19 +2,20 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Image, Text, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import api from '../../services/api';
-import { BASE_URL_HIDRANT } from '../../config';
+import { BASE_URL_HIDRANT, BASE_URL_HIDRANT_SLIKA } from '../../config';
 import { FAB } from 'react-native-paper';
 import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Button } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
-import { UseLocationPermission } from '../../hooks/UseLocationPermission';
+import { UseLocationPermission } from '../../Hooks/UseLocationPermissionHook';
 import DialogPregled from '../../components/Dialogues/DialogPregled';
-import { UseConnectivity } from '../../hooks/UseConnectivity';
+import { UseConnectivity } from '../../Hooks/UseConnectivityHook';
 import * as SQLite from 'expo-sqlite';
+import { CameraComponent } from '../../components/Camera/CameraComponent';
 
 export default function HidrantiMapScreen() {
   const [data, setData] = useState([]);
@@ -39,6 +40,8 @@ export default function HidrantiMapScreen() {
   const [isIzpravenPressed, setIzpravenPressed] = useState(false);
   const [isNeizpravenPressed, setNeizpravenPressed] = useState(false);
   const [isNepregledanPressed, setNepregledanPressed] = useState(false);
+  const [formData, setFormData] = useState<FormData | null>(null);
+  const [step, setStep] = useState(0);
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -129,15 +132,24 @@ export default function HidrantiMapScreen() {
       status,
       nadzemni,
     };
+
+   
   
     if (isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
         console.log("Map.js --> add hidrant", response.data);
+        await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         setTitle("");
         setDescription("");
         setLocation("");
         setData([]);
+        hideDialog();
+        CustomToast('Dodali ste hidrant.', 'success');
       } catch (error) {
         console.error(error);
       }
@@ -277,6 +289,14 @@ export default function HidrantiMapScreen() {
     }
   }), [data, izpraven, neizpraven, nepregledan]);
 
+  const handleNext = () => {
+    setStep(step + 1);
+  };
+
+  const handlePictureTaken = (formData: FormData) => {
+    setFormData(formData);
+  }
+
   return (
     <View style={theme.style.containerMap}>
       {renderStatusCards()}
@@ -325,54 +345,45 @@ export default function HidrantiMapScreen() {
       </MapView>
 
       <Dialog
+
         isVisible={visible}
         onDismiss={hideDialog}
         onBackdropPress={hideDialog}
-        overlayStyle={theme.style.dialogContainer}
+        overlayStyle={[theme.style.dialogContainer, {height: '90%', width: '90%'}]}
       >
-        <Dialog.Title title="Dodajanje hidranta" titleStyle={theme.style.dialogText} />
+        {step === 0 && (
+        <><Dialog.Title title="Dodajanje hidranta" titleStyle={theme.style.dialogText} /><Input
+            label="Naziv"
+            value={title}
+            onChangeText={text => setTitle(text)}
+            inputStyle={theme.style.dialogText}
+            style={{ marginBottom: 1 }} /><Input
+              label="Opis"
+              value={description}
+              onChangeText={text => setDescription(text)}
+              inputStyle={theme.style.dialogText}
+              style={{ marginBottom: 1 }} /><Input
+              label="Lokacija"
+              value={location}
+              onChangeText={text => setLocation(text)}
+              inputStyle={theme.style.dialogText}
+              style={{ marginBottom: 1 }} /><View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[{ marginRight: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
+              <CheckBox
+                checked={nadzemni}
+                onPress={() => setNadzemni(!nadzemni)}
+                checkedColor={'#FC8A17'}
+                containerStyle={theme.style.dialogContainer} />
+                <Button title="Naprej" onPress={handleNext} />
+            </View></>
+)}
 
-        <Input
-          label="Naziv"
-          value={title}
-          onChangeText={text => setTitle(text)}
-          inputStyle={theme.style.dialogText}
-          style={{ marginBottom: 1 }}
-        />
-        <Input
-          label="Opis"
-          value={description}
-          onChangeText={text => setDescription(text)}
-          inputStyle={theme.style.dialogText}
-          style={{ marginBottom: 1 }}
-        />
-        <Input
-          label="Lokacija"
-          value={location}
-          onChangeText={text => setLocation(text)}
-          inputStyle={theme.style.dialogText}
-          style={{ marginBottom: 1 }}
-        />
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[{ marginRight: 8 }, theme.style.dialogText]}>Nadzemni:</Text>
-          <CheckBox
-            checked={nadzemni}
-            onPress={() => setNadzemni(!nadzemni)}
-            checkedColor={'#FC8A17'}
-            containerStyle={theme.style.dialogContainer}
-          />
-        </View>
+{step === 1 && (
+      <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit}/>
+    )}
 
-
-        <Dialog.Actions>
-          <Dialog.Button
-            titleStyle={{ color: '#FC8A17' }}
-            onPress={() => {
-              handleSubmit();
-              hideDialog();
-              CustomToast('Dodali ste hidrant.', 'success');
-            }}>Potrdi</Dialog.Button>
-        </Dialog.Actions>
+        
+        
       </Dialog>
 
       <FAB

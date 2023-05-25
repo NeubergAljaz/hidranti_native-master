@@ -9,7 +9,7 @@ import { Image } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { CheckBox } from '@rneui/themed';
 import { Searchbar } from 'react-native-paper';
-import { UseConnectivity } from '../../hooks/UseConnectivity';
+import { UseConnectivity } from '../../Hooks/UseConnectivityHook';
 import * as SQLite from 'expo-sqlite';
 
 

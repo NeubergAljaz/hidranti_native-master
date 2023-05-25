@@ -5,7 +5,7 @@ import api from '../../services/api';
 import { BASE_URL_HIDRANT_PREGLED, BASE_URL_PREGLED_SLIKA } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
 import { useSelector } from 'react-redux';
-import { UseConnectivity } from '../../hooks/UseConnectivity';
+import { UseConnectivity } from '../../Hooks/UseConnectivityHook';
 import * as SQLite from 'expo-sqlite';
 import { CameraComponent } from '../Camera/CameraComponent';
 
@@ -115,7 +115,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
     setFormData(formData);
   }
   
-  console.log(formData)
+  
   return (
     <Dialog
     overlayStyle={[theme.style.dialogContainer, {height: '90%', width: '90%'}]}
