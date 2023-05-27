@@ -40,7 +40,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         opis,
         status
       }
-      if (!isConnected) {
+      if (isConnected) {
         await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
         console.log("Data submitted successfully!", data);
         await api.post(`${BASE_URL_PREGLED_SLIKA}/${selectedMarkerId}`, formData, {

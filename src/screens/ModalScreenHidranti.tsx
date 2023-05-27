@@ -78,7 +78,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   }, []);
 
   useEffect(() => {
-    if (!isConnected) {
+    if (isConnected) {
       api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
         .then(response => {
           setDataHidrant(response.data);
@@ -108,7 +108,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   }, [isConnected]);
 
   useEffect(() => {
-    if (!isConnected) {
+    if (isConnected) {
       api.get(`${BASE_URL_HIDRANT_PREGLED}/hidrant/${hidrantId}`)
         .then(response => {
           setDataPregledi(response.data);
