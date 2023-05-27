@@ -43,6 +43,15 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   const isConnected = UseConnectivity();
   const db = SQLite.openDatabase('pregled_hidrantov.db');
 
+  //date formatting
+  const formatDate = (dateString: string): string => {
+    const dateObj = new Date(dateString);
+    const day = dateObj.getDate().toString().padStart(2, '0');
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    const year = dateObj.getFullYear().toString();
+    return `${day}. ${month}. ${year}`;
+  };
+
   useEffect(() => {
     api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
       .then(response => {
@@ -117,7 +126,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     }
   }, [isConnected]);
 
-  console.log("aa", dataPregledi)
+  //console.log("aa", dataPregledi)
 
   return (
       <ScrollView style={theme.style.containerPadding}>
@@ -146,40 +155,36 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
               <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.location}</Subheading>
 
               <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Datum zadnjega pregleda:</Title>
-              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.zadnjiPregled}</Subheading>
+              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{formatDate(dataHidrant.zadnjiPregled)}</Subheading>
             </View>
           </Card.Content>
         </Card>
-        <Card style={theme.style.cardStyle}>
-          <Card.Cover
-            source={require('../../assets/img/ozadje_temno.webp')}
-            style={theme.style.coverCardStyle}
-          />
-          <Card.Content style={theme.style.contentCardStyle}>
-            <Title style={theme.style.cardTextStyle}>Seznam pregledov:</Title>
-
-            {dataPregledi === undefined ? (
-              <Text>Loading</Text>
-            ) : dataPregledi.length === 0 ? (
-              <Text style={theme.style.cardTextStyle}>
-                Hidrant nima pregleda <Icon name="squared-cross" size={20} color="black" />
-              </Text>
-            ) : (
-              <>
-                {dataPregledi.slice().reverse().map((x: any, index: number) => (
-                  <List.Item
-                    key={index}
-                    title={x.opis}
-                    titleStyle={theme.style.cardTextStyle}
-                    descriptionStyle={theme.style.cardTextStyle}
-                    description={`Status: ${x.status}, Datum: ${x.createdDate}`}
-                    left={props => <List.Icon {...props} icon="folder" />}
+        <>
+          {dataPregledi === undefined ? (
+            <Text>Loading</Text>
+          ) : dataPregledi.length === 0 ? (
+            <Text style={theme.style.cardTextStyle}>
+              Hidrant nima pregleda <Icon name="squared-cross" size={20} color="black" />
+            </Text>
+          ) : (
+            <>
+              {dataPregledi.slice().reverse().map((x: any, index: number) => (
+                <Card key={index} style={theme.style.cardStyle}>
+                  <Card.Cover
+                    source={require('../../assets/img/ozadje_temno.webp')}
+                    style={theme.style.coverCardStyle}
                   />
-                ))}
-              </>
-            )}
-          </Card.Content>
-        </Card>
+                  <Card.Content style={theme.style.contentCardStyle}>
+                    <Title style={theme.style.cardTextStyle}>{x.opis}</Title>
+                    <Text style={theme.style.cardTextStyle}>
+                      Status: {x.status}, Datum: {formatDate(x.createdDate)}
+                    </Text>
+                  </Card.Content>
+                </Card>
+              ))}
+            </>
+          )}
+        </>
       </ScrollView>
   );
 }

@@ -52,6 +52,15 @@ export default function HidrantiMapScreen() {
   const db = SQLite.openDatabase('pregled_hidrantov.db');
   //console.log(isLocationEnabled, "location")
 
+   //date formatting
+   const formatDate = (dateString: string): string => {
+    const dateObj = new Date(dateString);
+    const day = dateObj.getDate().toString().padStart(2, '0');
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    const year = dateObj.getFullYear().toString();
+    return `${day}. ${month}. ${year}`;
+  };
+
   const toggleOverlay = () => {
     setVisible2(!visible2);
   };
@@ -279,7 +288,7 @@ export default function HidrantiMapScreen() {
               <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
                 Naziv: {x.title} </Text>
               <Divider />
-              <Text>Zadnji Pregled: {x.zadnjiPregled}</Text>
+              <Text>Zadnji Pregled: {formatDate(x.zadnjiPregled)}</Text>
               <View style={{ marginTop: 10 }}>
               </View>
             </View>
