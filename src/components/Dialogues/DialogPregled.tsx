@@ -40,7 +40,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         opis,
         status
       }
-      if (isConnected) {
+      if (!isConnected) {
         await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
         console.log("Data submitted successfully!", data);
         await api.post(`${BASE_URL_PREGLED_SLIKA}/${selectedMarkerId}`, formData, {
@@ -64,10 +64,22 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
             `INSERT INTO pregled (opis, status, createdDate, hidrantId) VALUES (?, ?, ?, ?)`,
             [opis, status, formattedDate, selectedMarkerId],
             (_, result) => {
+              tx.executeSql(
+                'UPDATE hidrant SET status = ? WHERE id = ?',
+                [status, selectedMarkerId],
+                (_, updateResult) => {
+                  console.log('Status updated for hydrant:', updateResult);
+                },
+                (_, error) => {
+                  console.error('Error updating hydrant status:', error);
+                  return false;
+                }
+              );
               setOpis('');
               setStatus('');
               setSelectedIndex(0);
               setVisible(false);
+              setStep(0)
               onSubmit();
               console.log('Data saved to SQLite database successfully!', result);
               // Retrieve the inserted data
@@ -109,8 +121,14 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
 
   const handleNext = () => {
     setStep(step + 1);
-  };
-
+  }
+  const handleLast = () => {
+    setStep(0);
+  }
+  const handlePress = () => {
+    handleLast();
+    handleSubmit();
+  }
   const handlePictureTaken = (formData: FormData) => {
     setFormData(formData);
   }
@@ -141,12 +159,12 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         //buttonStyle={theme.style} // custom background color style
         textStyle={theme.style.dialogText} // custom text color style
       />
-        <Button title="Naprej" onPress={handleNext} />
+        <Button buttonStyle={theme.style.buttonStyle} title="NAPREJ" onPress={handleNext} />
       </View>
     )}
 
     {step === 1 && (
-      <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit}/>
+      <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handlePress}/>
     )}
     
 

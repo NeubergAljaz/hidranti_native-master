@@ -103,7 +103,7 @@ return (
           titleStyle={theme.style.listTitle}
           left={() => <></>}
           right={() => (
-           (isConnected)?(<Icon name="web" size={40} color="green" />):(<Icon name="web" size={40} color="#900" />)
+           (!isConnected)?(<Icon name="web" size={40} color="green" />):(<Icon name="web" size={40} color="#900" />)
           )}
         />
 

@@ -26,7 +26,7 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
     const db = SQLite.openDatabase('pregled_hidrantov.db');
 
     const fetchData = () => {
-        if (isConnected) {
+        if (!isConnected) {
             // Fetch data from API
             api.get(`${BASE_URL_HIDRANT}`)
               .then(response => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, ImageBackground, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Image } from '@rneui/themed';
-import { Card, List, Text, Title, Subheading } from 'react-native-paper';
+import { Card, Text, Title, Subheading } from 'react-native-paper';
 import { IP_PORT, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
 import api from '../services/api';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -45,11 +45,19 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
 
   //date formatting
   const formatDate = (dateString: string): string => {
-    const dateObj = new Date(dateString);
-    const day = dateObj.getDate().toString().padStart(2, '0');
-    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-    const year = dateObj.getFullYear().toString();
+    if (dateString.includes('Z')){
+      const dateObj = new Date(dateString);
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+      const year = dateObj.getFullYear().toString();
     return `${day}. ${month}. ${year}`;
+    } else {
+      const parts = dateString.split(/[- :]/); // Split the date string by '-', ':', and ' ' characters
+      const year = parts[0];
+      const month = parts[1];
+      const day = parts[2];
+      return `${day}. ${month}. ${year}`;
+    }
   };
 
   useEffect(() => {
@@ -70,7 +78,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   }, []);
 
   useEffect(() => {
-    if (isConnected) {
+    if (!isConnected) {
       api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
         .then(response => {
           setDataHidrant(response.data);
@@ -100,7 +108,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   }, [isConnected]);
 
   useEffect(() => {
-    if (isConnected) {
+    if (!isConnected) {
       api.get(`${BASE_URL_HIDRANT_PREGLED}/hidrant/${hidrantId}`)
         .then(response => {
           setDataPregledi(response.data);

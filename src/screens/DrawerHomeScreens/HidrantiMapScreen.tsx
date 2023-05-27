@@ -4,10 +4,10 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import api from '../../services/api';
 import { BASE_URL_HIDRANT, BASE_URL_HIDRANT_SLIKA } from '../../config';
 import { FAB } from 'react-native-paper';
-import { Dialog, Input, CheckBox, Divider } from '@rneui/themed';
+import { Dialog, Input, CheckBox, Divider, Button } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
 import * as Location from 'expo-location';
@@ -92,7 +92,7 @@ export default function HidrantiMapScreen() {
   }, [data]);
 
   const fetchData = () => {
-    if (isConnected) {
+    if (!isConnected) {
       // Fetch data from API
       api.get(`${BASE_URL_HIDRANT}`)
         .then(response => {
@@ -132,6 +132,7 @@ export default function HidrantiMapScreen() {
   }, []);
 
   const handleSubmit = async () => {
+
     const data = {
       title,
       description,
@@ -142,9 +143,7 @@ export default function HidrantiMapScreen() {
       nadzemni,
     };
 
-   
-  
-    if (isConnected) {
+    if (!isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
         console.log("Map.js --> add hidrant", response.data);
@@ -169,16 +168,17 @@ export default function HidrantiMapScreen() {
         const formattedDate = currentDate.toISOString().slice(0, 23).replace('T', ' ');
 
         tx.executeSql(
-          `INSERT INTO hidrant (title, location, description, status, nadzemni, lat, lng, createdDate) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO hidrant (title, location, description, status, nadzemni, lat, lng, zadnjiPregled, createdDate) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             data.title,
             data.location,
             data.description,
-            'NEPREGLEDAN',
+            data.status,
             data.nadzemni ? 1 : 0,
             data.lat,
             data.lng,
+            null,
             formattedDate,
           ],
           (_, result) => {
@@ -187,6 +187,7 @@ export default function HidrantiMapScreen() {
             setDescription("");
             setLocation("");
             setData([]);
+            hideDialog();
           // Retrieve the inserted data
             db.transaction((tx) => {
               tx.executeSql(
@@ -299,9 +300,15 @@ export default function HidrantiMapScreen() {
   }), [data, izpraven, neizpraven, nepregledan]);
 
   const handleNext = () => {
-    setStep(step + 1);
+      setStep(step + 1);
   };
-
+  const handleLast = () => {
+    setStep(0);
+  }
+  const handlePress = () => {
+    handleLast();
+    showDialog();
+  };
   const handlePictureTaken = (formData: FormData) => {
     setFormData(formData);
   }
@@ -354,7 +361,6 @@ export default function HidrantiMapScreen() {
       </MapView>
 
       <Dialog
-
         isVisible={visible}
         onDismiss={hideDialog}
         onBackdropPress={hideDialog}
@@ -383,26 +389,27 @@ export default function HidrantiMapScreen() {
                 onPress={() => setNadzemni(!nadzemni)}
                 checkedColor={'#FC8A17'}
                 containerStyle={theme.style.dialogContainer} />
-                <Button title="Naprej" onPress={handleNext} />
-            </View></>
-)}
+                
+            </View>
+            <Button buttonStyle={theme.style.buttonStyle} title="NAPREJ" onPress={handleNext} /></>
+          )}
 
 {step === 1 && (
+  
       <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit}/>
     )}
-
-        
         
       </Dialog>
 
       <FAB
         icon="plus"
         style={theme.style.fab}
-        onPress={showDialog}
+        onPress={handlePress}
       />
       <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
     </View>
   );
+  
 }
 
 
