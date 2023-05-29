@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Image, Text, View, Platform, TouchableOpacity, StyleSheet  } from 'react-native';
+import { Button, Image, Text, View, Platform, TouchableOpacity, StyleSheet } from 'react-native';
 import { Camera as ExpoCamera, CameraType, FlashMode } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import api from '../../services/api';
@@ -42,7 +42,7 @@ export const CameraComponent: React.FC<CameraComponentProps> = ({ hydrantId, onP
     if (cameraRef.current) {
       let photo = await cameraRef.current.takePictureAsync();
       let formData = new FormData();
-      let newImageUri =  "file:///" + photo.uri.split("file:/").join("");
+      let newImageUri = "file:///" + photo.uri.split("file:/").join("");
       let nameParts = photo.uri.split('/');
       let name = nameParts[nameParts.length - 1];
       let type = mime.getType(newImageUri);
@@ -81,30 +81,38 @@ export const CameraComponent: React.FC<CameraComponentProps> = ({ hydrantId, onP
 
   return (
     <View style={{ flex: 1 }}>
-    <ExpoCamera style={{ flex: 1 }} type={type} flashMode={flash} ref={cameraRef}>
-      <View style={styles.container}>
-        {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
+      <ExpoCamera style={{ flex: 1 }} type={type} flashMode={flash} ref={cameraRef}>
+        <View style={styles.container}>
+          {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
 
-        <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
-          <Ionicons name={flash === FlashMode.off ? "flash-off-outline" : "flash-outline"} size={30} color="#fff" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.captureButton} onPress={captureImage}>
-          <Ionicons name="camera-outline" size={40} color="#fff" />
-        </TouchableOpacity>
-
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.iconButton} onPress={pickImage}>
-            <Ionicons name="images-outline" size={30} color="#fff" />
+          <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
+            <Ionicons name={flash === FlashMode.off ? "flash-off-outline" : "flash-outline"} size={30} color="#fff" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.iconButton} onPress ={sendData}>
-            <Ionicons name="checkmark-circle-outline" size={30} color="#fff" />
+          <TouchableOpacity style={styles.captureButton} onPress={captureImage}>
+            <Ionicons name="camera-outline" size={40} color="#fff" />
           </TouchableOpacity>
+
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity style={styles.iconButton} onPress={pickImage}>
+              <Ionicons name="images-outline" size={30} color="#fff" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={image ? sendData : undefined}
+              disabled={!image}
+            >
+              <Ionicons
+                name="checkmark-circle-outline"
+                size={30}
+                color={image ? "#fff" : "#888"} // Izbrano belo, če je izbrana slika, sicer sivo.
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ExpoCamera>
-  </View>
+      </ExpoCamera>
+    </View>
   );
 }
 
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    width: 100, 
+    width: 100,
     height: 100
   },
   flashButton: {

@@ -7,6 +7,7 @@ import { FAB } from 'react-native-paper';
 import { Dialog, Input, CheckBox, Divider, Button } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconBack from 'react-native-vector-icons/Ionicons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
@@ -302,6 +303,10 @@ export default function HidrantiMapScreen() {
   const handleNext = () => {
       setStep(step + 1);
   };
+  const handleBack = () => {
+    setStep(step - 1);
+};
+
   const handleLast = () => {
     setStep(0);
   }
@@ -394,9 +399,10 @@ export default function HidrantiMapScreen() {
             <Button buttonStyle={theme.style.buttonStyle} title="NAPREJ" onPress={handleNext} /></>
           )}
 
-{step === 1 && (
-  
+{step === 1 && (<>
+      <Button onPress = {handleBack}>Nazaj</Button>
       <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit}/>
+      </>
     )}
         
       </Dialog>
