@@ -147,12 +147,18 @@ export default function HidrantiMapScreen() {
     if (isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
-        console.log("Map.js --> add hidrant", response.data);
-        await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        console.log("Map.js --> add hydrant", response.data);
+        try {
+          await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        } catch (error) {
+          console.error('Error while uploading the image:', error);
+          // If image uploading fails, don't reset the form
+          throw error;
+        }
         setTitle("");
         setDescription("");
         setLocation("");
@@ -301,8 +307,11 @@ export default function HidrantiMapScreen() {
   }), [data, izpraven, neizpraven, nepregledan]);
 
   const handleNext = () => {
-      setStep(step + 1);
-  };
+    if (validateFields()) {
+      setStep(1);
+    }
+  }
+
   const handleBack = () => {
     setStep(step - 1);
 };
@@ -316,6 +325,14 @@ export default function HidrantiMapScreen() {
   };
   const handlePictureTaken = (formData: FormData) => {
     setFormData(formData);
+  }
+
+  const validateFields = () => {
+    if (!title || !description || !location) {
+      alert("Prosimo, izpolnite vsa polja");
+      return false;
+    }
+    return true;
   }
 
   return (
