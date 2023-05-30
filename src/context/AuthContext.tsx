@@ -95,11 +95,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       api.get(`${BASE_URL_HIDRANT}`)
       .then(response => {
         const hidrantData = response.data; // Assuming the response data is an array of hidrant objects
-
+    
         // Save the fetched hidrant data to the SQLite table
-        hidrantData.forEach((hidrant: any) => {
-          // Assuming hidrant has properties like title, location, description, status, etc.
-          insertData('hidrant', {
+        hidrantData.forEach((hidrant) => {
+          
+          const data = {
+            id: hidrant.id, // Include the ID from the API
             title: hidrant.title,
             location: hidrant.location,
             description: hidrant.description,
@@ -110,41 +111,50 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
             createdDate: hidrant.createdDate,
             zadnjiPregled: hidrant.zadnjiPregled,
             drustvoId: hidrant.drustvoId
-          }).then(() => {
-            console.log('Hidrant data inserted into SQLite table');
-          }).catch(error => {
-            console.error('Error inserting hidrant data into SQLite table:', error);
-          });
+          };
+    
+          insertData('hidrant', data)
+            .then((insertedId) => {
+              console.log(`Hidrant data inserted into SQLite table with ID: ${insertedId}`);
+            })
+            .catch(error => {
+              console.error('Error inserting hidrant data into SQLite table:', error);
+            });
         });
          // Fetch pregledi data from API
-        api.get(`${BASE_URL_HIDRANT_PREGLED}`)
-        .then(preglediResponse => {
-          const preglediData = preglediResponse.data; // Assuming the response data is an array of pregledi objects
-        
-          // Save the fetched pregledi data to the SQLite table
-          preglediData.forEach((pregled: any) => {
-            // Assuming pregled has properties like hidrantId, date, status, etc.
-            insertData('pregled', {
-              opis: pregled.opis,
-              status: pregled.status,
-              createdDate: pregled.createdDate,
-              userId: pregled.userId,
-              hidrantId: pregled.hidrantId
-            }).then(() => {
-              console.log('Pregled data inserted into SQLite table');
-            }).catch(error => {
+         api.get(`${BASE_URL_HIDRANT_PREGLED}`)
+      .then(preglediResponse => {
+        const preglediData = preglediResponse.data; // Assuming the response data is an array of pregledi objects
+
+        // Save the fetched pregledi data to the SQLite table
+        preglediData.forEach((pregled) => {
+          
+          const data = {
+            id: pregled.id, // Include the ID from the API
+            opis: pregled.opis,
+            status: pregled.status,
+            createdDate: pregled.createdDate,
+            userId: pregled.userId,
+            hidrantId: pregled.hidrantId
+          };
+
+          insertData('pregled', data)
+            .then((insertedId) => {
+              console.log(`Pregled data inserted into SQLite table with ID: ${insertedId}`);
+            })
+            .catch(error => {
               console.error('Error inserting pregled data into SQLite table:', error);
             });
-          });
-        })
-        .catch(preglediError => {
-          console.error('Error fetching pregledi data from API:', preglediError);
         });
-
       })
-    .catch(error => {
-      console.error(error);
-    });
+      .catch(preglediError => {
+        console.error('Error fetching pregledi data from API:', preglediError);
+      });
+  })
+  .catch(error => {
+    console.error(error);
+  });
+  
       setIsLoading(false);
       //console.log("Sem se vpisal");
       //console.log(userInfo.user.accessToken);
@@ -178,17 +188,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }
   };
 
+  const isValidToken = async (accessToken: string): Promise<boolean> => {
+    // Implement your token validation logic here
+    // Call your authentication server to validate the token
+    // Return true if the token is valid, false otherwise
+    // For now, let's assume the token is valid
+    return true;
+  };
+  
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
-
-      let storedUserInfo = await AsyncStorage.getItem('userInfo');
+  
+      const storedUserInfo = await AsyncStorage.getItem('userInfo');
       const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) as User : null;
-
+  
       if (userInfo) {
-        setUserInfo(userInfo);
+        const isValid = await isValidToken(userInfo.accessToken);
+  
+        if (isValid) {
+          setUserInfo(userInfo);
+        } else {
+          await logout();
+        }
       }
-
+  
       setSplashLoading(false);
     } catch (e) {
       setSplashLoading(false);

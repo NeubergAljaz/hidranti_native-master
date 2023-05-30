@@ -142,7 +142,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     }
   }, [isConnected]);
 
-  console.log("aa", dataPregledi)
+  //console.log("aa", dataPregledi)
   dataPregledi.map((pregled) => console.log(pregled.image.filename));
   const openImageView = (imageUrls) => {
     setImages(imageUrls);

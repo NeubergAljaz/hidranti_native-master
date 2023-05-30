@@ -133,7 +133,7 @@ export default function HidrantiMapScreen() {
   }, []);
 
   const handleSubmit = async () => {
-
+    
     const data = {
       title,
       description,
@@ -147,6 +147,7 @@ export default function HidrantiMapScreen() {
     if (isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
+        setStep(0);
         console.log("Map.js --> add hydrant", response.data);
         try {
           await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {

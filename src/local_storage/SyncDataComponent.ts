@@ -12,7 +12,7 @@ const SyncDataComponent: React.FC = () => {
       if(isConnected){
          syncDataWithAPI();
       }
-    }, 60000);
+    }, 30000);
 
     // Clear the interval when the component unmounts
     return () => clearInterval(checkConnectivityInterval);

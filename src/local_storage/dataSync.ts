@@ -68,41 +68,48 @@ const retrievePregledsFromDatabase = () => {
 };
 
 const sendHidrantsToAPI = async (hidrants: any[]) => {
-    for (const hidrant of hidrants) {
-      // Check if the hidrant is already present in the API by comparing IDs or any other unique identifier
-      const isAlreadySent = await checkHidrantExistsInAPI(hidrant.id);
-      if (isAlreadySent) {
+  for (const hidrant of hidrants) {
+    try {
+      const isAlreadySent = await checkHidrantExistsInAPI(hidrant.id, hidrant.lat, hidrant.lng);
+      if (await isAlreadySent) {
         console.log('Hidrant already exists in the API:', hidrant.id);
-        continue; // Skip sending this hidrant
+        continue;
       }
   
-      // Send the hidrant data to the API
-      const data = {
-        title: hidrant.title,
-        location: hidrant.location,
-        description: hidrant.description,
-        status: hidrant.status,
-        nadzemni: hidrant.nadzemni,
-        lat: hidrant.lat,
-        lng: hidrant.lng,
-        createdDate: hidrant.createdDate,
-        zadnjiPregled: hidrant.zadnjiPregled,
-        drustvoId: hidrant.drustvoId,
-      };
-      try {
+        // Send the hidrant data to the API
+        const data = {
+          title: hidrant.title,
+          location: hidrant.location,
+          description: hidrant.description,
+          status: hidrant.status,
+          nadzemni: hidrant.nadzemni,
+          lat: hidrant.lat,
+          lng: hidrant.lng,
+          createdDate: hidrant.createdDate,
+          zadnjiPregled: hidrant.zadnjiPregled,
+          drustvoId: hidrant.drustvoId,
+        };
+
         const response = await api.post(BASE_URL_HIDRANT, data);
         console.log('Hidrant data sent to the API:', response.data);
+
       } catch (error) {
         console.error('Error sending hidrant data to the API:', error);
       }
     }
   };
   
-  const checkHidrantExistsInAPI = async (hidrantId: number): Promise<boolean> => {
+  const checkHidrantExistsInAPI = async (hidrantId: number, lat: number, lng: number): Promise<boolean> => {
     try {
-      // Perform a request to the API to check if the hidrant with the given ID exists
+      // Perform a request to the API to check if the hidrant with the given ID and coordinates exists
       const response = await api.get(`${BASE_URL_HIDRANT}/${hidrantId}`);
-      return response.data !== null;
+      const existingHidrant = response.data;
+  
+      if (existingHidrant && existingHidrant.lat === lat && existingHidrant.lng === lng) {
+        // Hidrant with the same ID and coordinates already exists in the API
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error('Error checking hidrant existence in the API:', error);
       return false;
@@ -111,22 +118,22 @@ const sendHidrantsToAPI = async (hidrants: any[]) => {
   
   const sendPregledsToAPI = async (pregleds: any[]) => {
     for (const pregled of pregleds) {
-      // Check if the pregled is already present in the API by comparing IDs or any other unique identifier
-      const isAlreadySent = await checkPregledExistsInAPI(pregled.id);
-      if (isAlreadySent) {
-        console.log('Pregled already exists in the API:', pregled.id);
-        continue; // Skip sending this pregled
-      }
-  
-      // Send the pregled data to the API
-      const data = {
-        opis: pregled.opis,
-        status: pregled.status,
-        createdDate: pregled.createdDate,
-        userId: pregled.userId,
-        hidrantId: pregled.hidrantId,
-      };
       try {
+        const isAlreadySent = await checkPregledExistsInAPI(pregled.id, pregled.createdDate);
+        if (await isAlreadySent) {
+          console.log('Pregled already exists in the API:', pregled.id);
+          continue; // Skip sending this pregled
+        }
+    
+        // Send the pregled data to the API
+        const data = {
+          opis: pregled.opis,
+          status: pregled.status,
+          createdDate: pregled.createdDate,
+          userId: pregled.userId,
+          hidrantId: pregled.hidrantId,
+        };
+
         const response = await api.post(`${BASE_URL_HIDRANT_PREGLED}/${pregled.hidrantId}`, data);
         console.log('Pregled data sent to the API:', response.data);
       } catch (error) {
@@ -135,11 +142,18 @@ const sendHidrantsToAPI = async (hidrants: any[]) => {
     }
   };
   
-  const checkPregledExistsInAPI = async (pregledId: number): Promise<boolean> => {
+  const checkPregledExistsInAPI = async (pregledId: number, createdDate: string): Promise<boolean> => {
     try {
-      // Perform a request to the API to check if the pregled with the given ID exists
+      // Perform a request to the API to check if the pregled with the given ID and createdDate exists
       const response = await api.get(`${BASE_URL_HIDRANT_PREGLED}/${pregledId}`);
-      return response.data !== null;
+      const existingPregled = response.data;
+  
+      if (existingPregled && existingPregled.createdDate === createdDate) {
+        // Pregled with the same ID and createdDate already exists in the API
+        return true;
+      }
+  
+      return false;
     } catch (error) {
       console.error('Error checking pregled existence in the API:', error);
       return false;

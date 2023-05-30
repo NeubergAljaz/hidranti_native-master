@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar} from 'react-native';
 import Navigation from './src/navigation/Navigation';
 import { AuthProvider } from './src/context/AuthContext';
 import { Provider } from 'react-redux';
@@ -13,7 +13,7 @@ const store = configureStore();
 const App = () => {
 
   UseConnectivity();
-  
+
   return (
     <AuthProvider>
       <Provider store={store}>
