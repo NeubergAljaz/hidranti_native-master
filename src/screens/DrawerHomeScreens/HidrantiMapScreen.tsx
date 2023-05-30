@@ -416,27 +416,48 @@ export default function HidrantiMapScreen() {
                 containerStyle={theme.style.dialogContainer} />
 
             </View>
-            <Button
-              buttonStyle={theme.style.buttonStyle}
-              title="DODAJ"
-              onPress={handleSubmit}
-              style={{ marginBottom: 20 }}
-            />
             <View style={{ height: 20 }} />
-          { isConnected? (<Button
-              buttonStyle={theme.style.buttonStyle}
-              title="DODAJ FOTOGRAFIJO"
-              icon={<Icon name="photo-camera" size={24} color="white" />}
-              onPress={handleNext}
-            />):(<></>)
-          }
+            {isConnected ?
+
+              (<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Button
+                  buttonStyle={{ ...theme.style.buttonStyle, marginRight: 10 }}
+                  title="DODAJ"
+                  onPress={handleSubmit}
+                />
+                <Button
+                  buttonStyle={{ ...theme.style.buttonStyle, marginLeft: 10 }}
+                  title="DODAJ "
+                  icon={<Icon name="photo-camera" size={24} color="white" />}
+                  onPress={handleNext}
+                />
+              </View>) :
+
+              (<Button
+                buttonStyle={{ ...theme.style.buttonStyle, marginRight: 10 }}
+                title="DODAJ"
+                onPress={handleSubmit}
+              />)
+            }
           </>
         )}
 
-        {step === 1 && (<>
-          <Button onPress={handleBack}>Nazaj</Button>
-          <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit} />
-        </>
+        {step === 1 && (
+          <>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: -5, marginTop: -5 }}>
+              <TouchableOpacity onPress={handleBack}>
+                <Icon name="arrow-back" size={30} color="black" />
+              </TouchableOpacity>
+              <Text style={{ textAlign: 'center', marginLeft: 70 }}>Posnemi sliko</Text>
+            </View>
+            <Divider style={{ marginTop: 10 }} />
+            <CameraComponent
+              hydrantId={selectedMarkerId}
+              onPictureTaken={handlePictureTaken}
+              onSubmit={handleSubmit}
+            // prilagodite to vrednost glede na velikost ikone
+            />
+          </>
         )}
 
       </Dialog>
@@ -449,9 +470,7 @@ export default function HidrantiMapScreen() {
       <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
     </View>
   );
-
 }
-
 
 const styles = StyleSheet.create({
   cardContainer: {
