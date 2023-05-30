@@ -104,7 +104,7 @@ export const insertData = (tableName, data) => {
       const placeholders = Object.keys(data).fill('?').join(', ');
       const values = Object.values(data) as (string | number)[];
 
-      const query = `INSERT INTO ${tableName} (${columnNames}) VALUES (${placeholders})`;
+      const query = `INSERT OR REPLACE INTO ${tableName} (${columnNames}) VALUES (${placeholders})`;
 
       tx.executeSql(
         query,
@@ -112,7 +112,8 @@ export const insertData = (tableName, data) => {
         (_, result) => {
           console.log(`Insert into ${tableName} successful`);
           console.log(result); // Log the result object if needed
-          resolve(result);
+          const insertedId = result.insertId || data.id; // Use insertId if available, otherwise use the provided ID
+          resolve(insertedId);
         },
         (_, error) => {
           console.log(`Error inserting into ${tableName}:`, error);
