@@ -15,8 +15,8 @@ import { switchMode } from '../../redux_store/actions';
 // themes
 import {lightTheme, darkTheme} from '../../styles/ThemesStyle';
 import Icon from 'react-native-vector-icons/Foundation';
-export default function NastavitveScreen() {
 
+export default function NastavitveScreen() {
   const isConnected = UseConnectivity();
   // get the current theme
   const theme = useSelector((state : any) => state.theme);
@@ -81,11 +81,13 @@ React.useEffect(() => {
   retrieveSwitchState();
 }, []);
 
+const listItemTitle = theme.mode === 'light' ? 'Svetla tema' : 'Temna tema';
+
 return (
     <View style={theme.style.containerPadding}>
         <List.Item
           key="Dark Mode"
-          title="Dark Mode"
+          title={listItemTitle}
           titleStyle={theme.style.listTitle}
           left={() => <List.Icon color={theme.style.listIcon.color} icon="brightness-4"/>}
           right={() => (
