@@ -7,6 +7,7 @@ import { FAB } from 'react-native-paper';
 import { Dialog, Input, CheckBox, Divider, Button } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconBack from 'react-native-vector-icons/Ionicons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import User from 'react-native-vector-icons/FontAwesome';
 import { CustomToast } from '../../components/Toasts/CustomToast';
@@ -146,12 +147,18 @@ export default function HidrantiMapScreen() {
     if (isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
-        console.log("Map.js --> add hidrant", response.data);
-        await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        console.log("Map.js --> add hydrant", response.data);
+        try {
+          await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        } catch (error) {
+          console.error('Error while uploading the image:', error);
+          // If image uploading fails, don't reset the form
+          throw error;
+        }
         setTitle("");
         setDescription("");
         setLocation("");
@@ -300,8 +307,15 @@ export default function HidrantiMapScreen() {
   }), [data, izpraven, neizpraven, nepregledan]);
 
   const handleNext = () => {
-      setStep(step + 1);
-  };
+    if (validateFields()) {
+      setStep(1);
+    }
+  }
+
+  const handleBack = () => {
+    setStep(step - 1);
+};
+
   const handleLast = () => {
     setStep(0);
   }
@@ -311,6 +325,14 @@ export default function HidrantiMapScreen() {
   };
   const handlePictureTaken = (formData: FormData) => {
     setFormData(formData);
+  }
+
+  const validateFields = () => {
+    if (!title || !description || !location) {
+      alert("Prosimo, izpolnite vsa polja");
+      return false;
+    }
+    return true;
   }
 
   return (
@@ -394,9 +416,10 @@ export default function HidrantiMapScreen() {
             <Button buttonStyle={theme.style.buttonStyle} title="NAPREJ" onPress={handleNext} /></>
           )}
 
-{step === 1 && (
-  
+{step === 1 && (<>
+      <Button onPress = {handleBack}>Nazaj</Button>
       <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit}/>
+      </>
     )}
         
       </Dialog>

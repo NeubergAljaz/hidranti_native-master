@@ -41,9 +41,9 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
         status
       }
       if (isConnected) {
-        await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
+        const response =  await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
         console.log("Data submitted successfully!", data);
-        await api.post(`${BASE_URL_PREGLED_SLIKA}/${selectedMarkerId}`, formData, {
+        await api.post(`${BASE_URL_PREGLED_SLIKA}/${response.data.id}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
