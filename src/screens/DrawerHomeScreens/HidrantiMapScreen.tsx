@@ -18,6 +18,7 @@ import { UseConnectivity } from '../../Hooks/UseConnectivityHook';
 import * as SQLite from 'expo-sqlite';
 import { CameraComponent } from '../../components/Camera/CameraComponent';
 
+
 export default function HidrantiMapScreen() {
   const [data, setData] = useState([]);
   const [description, setDescription] = useState('');
@@ -53,8 +54,8 @@ export default function HidrantiMapScreen() {
   const db = SQLite.openDatabase('pregled_hidrantov.db');
   //console.log(isLocationEnabled, "location")
 
-   //date formatting
-   const formatDate = (dateString: string): string => {
+  //date formatting
+  const formatDate = (dateString: string): string => {
     const dateObj = new Date(dateString);
     const day = dateObj.getDate().toString().padStart(2, '0');
     const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
@@ -112,11 +113,11 @@ export default function HidrantiMapScreen() {
           (_, result) => {
             const rows = result.rows;
             const fetchedData = [];
-  
+
             for (let i = 0; i < rows.length; i++) {
               fetchedData.push(rows.item(i));
             }
-  
+
             setData(fetchedData);
           },
           (_, error) => {
@@ -150,11 +151,13 @@ export default function HidrantiMapScreen() {
         setStep(0);
         console.log("Map.js --> add hydrant", response.data);
         try {
-          await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
+          if (step === 1) {
+            await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+          }
         } catch (error) {
           console.error('Error while uploading the image:', error);
           // If image uploading fails, don't reset the form
@@ -196,7 +199,7 @@ export default function HidrantiMapScreen() {
             setLocation("");
             setData([]);
             hideDialog();
-          // Retrieve the inserted data
+            // Retrieve the inserted data
             db.transaction((tx) => {
               tx.executeSql(
                 'SELECT * FROM hidrant WHERE id = ?',
@@ -211,10 +214,10 @@ export default function HidrantiMapScreen() {
               );
             });
           },
-        (_, error) => {
-          console.error('Error saving data to SQLite table:', error);
-          return false;
-        }
+          (_, error) => {
+            console.error('Error saving data to SQLite table:', error);
+            return false;
+          }
         );
       });
     }
@@ -227,7 +230,7 @@ export default function HidrantiMapScreen() {
   const renderStatusCards = () => {
     return (
       <View style={styles.cardContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.card, { backgroundColor: isIzpravenPressed ? '#D3D3D3' : '#fff' }]}
           onPress={() => {
             setIzpraven(!izpraven);
@@ -237,7 +240,7 @@ export default function HidrantiMapScreen() {
         >
           <Text style={styles.cardTitle}>IZPRAVEN</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.card, { backgroundColor: isNeizpravenPressed ? '#D3D3D3' : '#fff' }]}
           onPress={() => {
             setNeizpraven(!neizpraven);
@@ -247,7 +250,7 @@ export default function HidrantiMapScreen() {
         >
           <Text style={styles.cardTitle}>NEIZPRAVEN</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.card, { backgroundColor: isNepregledanPressed ? '#D3D3D3' : '#fff' }]}
           onPress={() => {
             setNepregledan(!nepregledan);
@@ -315,7 +318,7 @@ export default function HidrantiMapScreen() {
 
   const handleBack = () => {
     setStep(step - 1);
-};
+  };
 
   const handleLast = () => {
     setStep(0);
@@ -387,10 +390,10 @@ export default function HidrantiMapScreen() {
         isVisible={visible}
         onDismiss={hideDialog}
         onBackdropPress={hideDialog}
-        overlayStyle={[theme.style.dialogContainer, {height: '90%', width: '90%'}]}
+        overlayStyle={[theme.style.dialogContainer, { height: '90%', width: '90%' }]}
       >
         {step === 0 && (
-        <><Dialog.Title title="Dodajanje hidranta" titleStyle={theme.style.dialogText} /><Input
+          <><Dialog.Title title="Dodajanje hidranta" titleStyle={theme.style.dialogText} /><Input
             label="Naziv"
             value={title}
             onChangeText={text => setTitle(text)}
@@ -412,17 +415,52 @@ export default function HidrantiMapScreen() {
                 onPress={() => setNadzemni(!nadzemni)}
                 checkedColor={'#FC8A17'}
                 containerStyle={theme.style.dialogContainer} />
-                
-            </View>
-            <Button buttonStyle={theme.style.buttonStyle} title="NAPREJ" onPress={handleNext} /></>
-          )}
 
-{step === 1 && (<>
-      <Button onPress = {handleBack}>Nazaj</Button>
-      <CameraComponent hydrantId={selectedMarkerId} onPictureTaken={handlePictureTaken} onSubmit={handleSubmit}/>
-      </>
-    )}
-        
+            </View>
+            <View style={{ height: 20 }} />
+            {isConnected ?
+
+              (<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Button
+                  buttonStyle={{ ...theme.style.buttonStyle, marginRight: 10 }}
+                  title="DODAJ"
+                  onPress={handleSubmit}
+                />
+                <Button
+                  buttonStyle={{ ...theme.style.buttonStyle, marginLeft: 10 }}
+                  title="DODAJ "
+                  icon={<Icon name="photo-camera" size={24} color="white" />}
+                  onPress={handleNext}
+                />
+              </View>) :
+
+              (<Button
+                buttonStyle={{ ...theme.style.buttonStyle, marginRight: 10 }}
+                title="DODAJ"
+                onPress={handleSubmit}
+              />)
+            }
+          </>
+        )}
+
+        {step === 1 && (
+          <>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: -5, marginTop: -5 }}>
+              <TouchableOpacity onPress={handleBack}>
+                <Icon name="arrow-back" size={30} color="black" />
+              </TouchableOpacity>
+              <Text style={{ textAlign: 'center', marginLeft: 70 }}>Posnemi sliko</Text>
+            </View>
+            <Divider style={{ marginTop: 10 }} />
+            <CameraComponent
+              hydrantId={selectedMarkerId}
+              onPictureTaken={handlePictureTaken}
+              onSubmit={handleSubmit}
+            // prilagodite to vrednost glede na velikost ikone
+            />
+          </>
+        )}
+
       </Dialog>
 
       <FAB
@@ -433,9 +471,7 @@ export default function HidrantiMapScreen() {
       <DialogPregled visible={visible2} setVisible={setVisible2} selectedMarkerId={selectedMarkerId} onSubmit={fetchData} />
     </View>
   );
-  
 }
-
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -453,7 +489,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     color: '#808080',
     fontWeight: 'bold',
-    fontSize:12
+    fontSize: 12
   },
 });
 
