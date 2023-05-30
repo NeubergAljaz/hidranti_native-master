@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
+import { ScrollView, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { Image } from '@rneui/themed';
 import { Card, Text, Title, Subheading } from 'react-native-paper';
 import { IP_PORT, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED } from '../config';
@@ -10,9 +10,9 @@ import { UseConnectivity } from '../Hooks/UseConnectivityHook';
 import * as SQLite from 'expo-sqlite';
 import ImageView from "react-native-image-viewing";
 import { Divider } from '@rneui/themed';
-
-
-
+import { CameraComponent } from '../components/Camera/CameraComponent';
+import { Entypo } from '@expo/vector-icons';
+import DialogModalScreenHidrant from '../components/Dialogues/DialogModalScreenHidrant';
 interface ModalScreenHidrantiProps {
   route: {
     params: {
@@ -39,13 +39,21 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   const [dataHidrant, setDataHidrant] = useState<Hidrant>({ location: "", title: "", status: "", createdDate: "", zadnjiPregled: "" });
   const [dataPregledi, setDataPregledi] = useState([]);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [imageSrcPregled, setImageSrcPregled] = useState<string | null>(null);
-
+  const [formData, setFormData] = useState<FormData | null>(null);
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const [images, setImages] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const isConnected = UseConnectivity();
+  const [visible, setVisible] = React.useState(false);
+  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+  const [selectedPregled, setSelectedPregled] = useState(null)
+  const [shouldRefresh, setShouldRefresh] = useState(false);
   const db = SQLite.openDatabase('pregled_hidrantov.db');
+
+  const toggleOverlay = (id) => {
+    setSelectedMarkerId(id)
+    setVisible(!visible);
+  };
 
   //date formatting
   const formatDate = (dateString: string): string => {
@@ -64,7 +72,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     }
   };
 
-  useEffect(() => {
+  const fetchData = useCallback(() => {
     api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
       .then(response => {
         setDataHidrant(response.data);
@@ -79,7 +87,11 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
       .catch(error => {
         console.error(error);
       });
-  }, []);
+  }, [hidrantId, navigation]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     if (isConnected) {
@@ -115,11 +127,8 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     if (isConnected) {
       api.get(`${BASE_URL_HIDRANT_PREGLED}/hidrant/${hidrantId}`)
         .then(response => {
-          if (response.data.image && response.data.image.filename) {
-            const vrni = `http://${IP_PORT}:3001/uploads/${response.data.image.filename}`;
-            setImageSrcPregled(vrni);
-          }
           setDataPregledi(response.data);
+          setIsLoading(false);
         })
         .catch(error => {
           console.error(error);
@@ -132,6 +141,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           (_, { rows }) => {
             const preglediData = rows._array;
             setDataPregledi(preglediData);
+            setIsLoading(false);
           },
           (_, error) => {
             console.error('Error fetching pregledi data from SQLite:', error);
@@ -142,110 +152,125 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     }
   }, [isConnected]);
 
-  console.log("aa", dataPregledi)
-  dataPregledi.map((pregled) => console.log(pregled.image.filename));
+  const updatePregled = useCallback(async () => {
+    setShouldRefresh(true);
+  }, []);
+
+  useEffect(() => {
+    if (shouldRefresh) {
+      api.get(`${BASE_URL_HIDRANT_PREGLED}/hidrant/${hidrantId}`)
+        .then(response => {
+          setDataPregledi(response.data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error(error);
+        });// Ta funkcija mora biti definirana za pridobivanje podatkov
+      setShouldRefresh(false);
+    }
+  }, [shouldRefresh]);
+
   const openImageView = (imageUrls) => {
     setImages(imageUrls);
     setIsImageViewVisible(true);
   };
-  
+
+  const preglediCards = useMemo(() => {
+    return dataPregledi.map((x: any) => {
+
+      let imageSrcPregled = null;
+      let imageUrls = [];
+
+      if (x.image && x.image.length > 0) {
+        const latestImage = x.image[x.image.length - 1];
+
+        imageSrcPregled = `http://${IP_PORT}:3001/uploads/${latestImage.filename}`;
+        imageUrls = x.image.map((img) => ({ uri: `http://${IP_PORT}:3001/uploads/${img.filename}` }));
+      }
+
+      return (
+        <Card key={x.id} style={theme.style.cardStyle}>
+          <Card.Cover
+            source={require('../../assets/img/ozadje_temno.webp')}
+            style={theme.style.coverCardStyle}
+          />
+          <Card.Content style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10 }}>
+            {imageSrcPregled ? (
+              <TouchableOpacity onPress={() => openImageView(imageUrls)}>
+                <Image
+                  source={{ uri: imageSrcPregled }}
+                  style={{ width: 50, height: 50, margin: 5 }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <View style={{ width: 50, height: 50, margin: 5 }} />
+            )}
+
+            <View style={{ flex: 1, marginLeft: 10 }}>
+              <Text style={theme.style.cardTextStyle}>{x.opis}</Text>
+              <Text style={theme.style.cardTextStyle}>Status: {x.status}</Text>
+              <Text style={theme.style.cardTextStyle}>Datum: {formatDate(x.createdDate)}</Text>
+            </View>
+
+            <TouchableOpacity onPress={() => { toggleOverlay(x.id) }}>
+              <Entypo name="camera" size={30} color="grey" style={{ borderRadius: 15, padding: 5 }} />
+            </TouchableOpacity>
+          </Card.Content>
+        </Card>);
+    })
+  }, [dataPregledi, selectedPregled]);
+
   return (
     <>
-     <ImageView
-      images={images}
-      imageIndex={0}
-      visible={isImageViewVisible}
-      onRequestClose={() => setIsImageViewVisible(false)}
-    />
-    <ScrollView style={theme.style.containerPadding}>
-      <Card style={theme.style.cardStyle}>
-        <Card.Cover
-          source={require('../../assets/img/ozadje_temno.webp')}
-          style={theme.style.coverCardStyle}
-        />
-        <Card.Content style={theme.style.contentCardStyle}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Title style={theme.style.cardTextStyle}>Naziv: {dataHidrant.title}</Title>
-            <Title style={theme.style.cardTextStyle}>{dataHidrant.status}</Title>
-          </View>
-          {imageSrc ? (
-            <Image
-              source={{ uri: imageSrc }}
-              style={{ width: '100%', height: 200 }}
-              resizeMode="contain"
-            />
-          ) : (
-            <Icon name="image" size={30} />
-          )}
-          <Divider style={{ marginVertical: 10 }} />
-          <View style={{ alignItems: 'center' }}>
-            <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Lokacija:</Title>
-            <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.location}</Subheading>
-
-            <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Datum zadnjega pregleda:</Title>
-            <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{formatDate(dataHidrant.zadnjiPregled)}</Subheading>
-          </View>
-        </Card.Content>
-      </Card>
-      <>
-        {dataPregledi === undefined ? (
-          <Text>Loading</Text>
-        ) : dataPregledi.length === 0 ? (
-          <Text style={theme.style.cardTextStyle}>
-            Hidrant nima pregleda <Icon name="squared-cross" size={20} color="black" />
-          </Text>
-        ) : (
-          <>
-          {dataPregledi.slice().reverse().map((x: any, index: number) => {
-  let imageSrcPregled = null;
-  let imageUrls = [];
-
-  // Preveri, če obstaja polje "image" in če vsebuje vsaj en element
-  if (x.image && x.image.length > 0) {
-    // Vzemi zadnji element iz polja "image" (tj., najnovejšo sliko)
-    const latestImage = x.image[x.image.length - 1];
-
-    // Sestavi URL slike
-    imageSrcPregled = `http://${IP_PORT}:3001/uploads/${latestImage.filename}`;
-
-    // Sestavi seznam URL-jev slik za galerijo
-    imageUrls = x.image.map((img) => ({ uri: `http://${IP_PORT}:3001/uploads/${img.filename}` }));
-  }
-
-  return (
-    <Card key={index} style={theme.style.cardStyle}>
-      <Card.Cover
-        source={require('../../assets/img/ozadje_temno.webp')}
-        style={theme.style.coverCardStyle}
+      <ImageView
+        images={images}
+        imageIndex={0}
+        visible={isImageViewVisible}
+        onRequestClose={() => setIsImageViewVisible(false)}
       />
-      <Card.Content style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        {imageSrcPregled ? (
-          <TouchableOpacity onPress={() => openImageView(imageUrls)}>
-            <Image
-              source={{ uri: imageSrcPregled }}
-              style={{ width: 50, height: 50 }}  // Fixna širina in višina
-            />
-          </TouchableOpacity>
-        ) : (
-          <Icon name="image" size={30} />
-        )}
+      <ScrollView style={theme.style.containerPadding}>
+        <Card style={theme.style.cardStyle}>
+          <Card.Cover
+            source={require('../../assets/img/ozadje_temno.webp')}
+            style={theme.style.coverCardStyle}
+          />
+          <Card.Content style={theme.style.contentCardStyle}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Title style={theme.style.cardTextStyle}>Naziv: {dataHidrant.title}</Title>
+              <Title style={theme.style.cardTextStyle}>{dataHidrant.status}</Title>
+            </View>
+            {imageSrc ? (
+              <Image
+                source={{ uri: imageSrc }}
+                style={{ width: '100%', height: 200 }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Icon name="image" size={30} />
+            )}
+            <Divider style={{ marginVertical: 10 }} />
+            <View style={{ alignItems: 'center' }}>
+              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Lokacija:</Title>
+              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.location}</Subheading>
 
-<View style={{ flex: 1, marginLeft: 10 }}>  
-      <Text style={theme.style.cardTextStyle}>{x.opis}</Text>
-    </View>
+              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Datum zadnjega pregleda:</Title>
+              <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{formatDate(dataHidrant.zadnjiPregled)}</Subheading>
+            </View>
+          </Card.Content>
+        </Card>
+        <>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#FC8A17" style={{ marginTop: 200 }} />
+          ) : preglediCards.length === 0 ? (
 
-    <View style={{ alignItems: 'flex-end' }}> 
-      <Text style={theme.style.cardTextStyle}>Status: {x.status}</Text>
-      <Text style={theme.style.cardTextStyle}>Datum: {formatDate(x.createdDate)}</Text>
-    </View>
-      </Card.Content>
-    </Card>
-  );
-})}
-          </>
-        )}
-      </>
-    </ScrollView>
+            <Icon name="squared-cross" size={50} color="black" style={{ marginTop: 200, marginLeft: 140 }} />
+
+          ) : (
+            <>{preglediCards}</>
+          )}
+        </>
+      </ScrollView>
+      <DialogModalScreenHidrant visible={visible} setVisible={setVisible} selectedMarkerId={selectedMarkerId} updatePregled={updatePregled} />
     </>
   );
 }
