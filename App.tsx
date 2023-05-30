@@ -21,7 +21,7 @@ const App = () => {
           <StatusBar backgroundColor="#FC8A17" />
           <Navigation />
           <Toast />
-          
+          <SyncDataComponent />
         </>
       </Provider>
     </AuthProvider>

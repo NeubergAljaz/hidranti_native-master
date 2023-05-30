@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 
 const databaseName = 'pregled_hidrantov.db';
-const databaseVersion = '8.0'; // Update the version number here
+const databaseVersion = '9.0'; // Update the version number here
 
 const db = SQLite.openDatabase(databaseName, databaseVersion);
 
@@ -18,7 +18,7 @@ export const createTable = () => {
         lat REAL,
         lng REAL,
         createdDate TEXT,
-        zadnjiPregled TEXT,
+        zadnjiPregled TEXT NULL,
         drustvoId INTEGER,
         FOREIGN KEY (drustvoId) REFERENCES drustvo(id)
       )`,
