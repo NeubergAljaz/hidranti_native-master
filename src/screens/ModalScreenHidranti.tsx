@@ -10,16 +10,17 @@ import { UseConnectivity } from '../Hooks/UseConnectivityHook';
 import * as SQLite from 'expo-sqlite';
 import ImageView from "react-native-image-viewing";
 import { Divider } from '@rneui/themed';
-import { CameraComponent } from '../components/Camera/CameraComponent';
 import { Entypo } from '@expo/vector-icons';
+import DialogModalScreenHidrantPregled from '../components/Dialogues/DialogModalScreenHidrantPregled';
 import DialogModalScreenHidrant from '../components/Dialogues/DialogModalScreenHidrant';
+
 interface ModalScreenHidrantiProps {
   route: {
     params: {
       hidrantId: number;
     };
   };
-  navigation: any; // Update with actual type of navigation prop
+  navigation: any;
 }
 
 interface Hidrant {
@@ -39,23 +40,36 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   const [dataHidrant, setDataHidrant] = useState<Hidrant>({ location: "", title: "", status: "", createdDate: "", zadnjiPregled: "" });
   const [dataPregledi, setDataPregledi] = useState([]);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [formData, setFormData] = useState<FormData | null>(null);
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const isConnected = UseConnectivity();
   const [visible, setVisible] = React.useState(false);
+  const [visible2, setVisible2] = React.useState(false);
   const [selectedMarkerId, setSelectedMarkerId] = useState(null);
   const [selectedPregled, setSelectedPregled] = useState(null)
   const [shouldRefresh, setShouldRefresh] = useState(false);
+  const [shouldRefreshMain, setShouldRefreshMain] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const db = SQLite.openDatabase('pregled_hidrantov.db');
+
+  const openImageView = (imageUrls) => {
+    const reversedImages = imageUrls.reverse();
+    setImages(reversedImages);
+    setCurrentImageIndex(0);
+    setIsImageViewVisible(true);
+  };
 
   const toggleOverlay = (id) => {
     setSelectedMarkerId(id)
     setVisible(!visible);
   };
 
-  //date formatting
+  const toggleOverlay2 = () => {
+    setVisible2(!visible2);
+  };
+
   const formatDate = (dateString: string): string => {
     if (dateString.includes('Z')) {
       const dateObj = new Date(dateString);
@@ -73,16 +87,15 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   };
 
   const fetchData = useCallback(() => {
+
     api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
       .then(response => {
         setDataHidrant(response.data);
         navigation.setOptions({ title: response.data.title });
-
         if (response.data.image && response.data.image.filename) {
           const vrni = `http://${IP_PORT}:3001/uploads/${response.data.image.filename}`;
           setImageSrc(vrni);
         }
-
       })
       .catch(error => {
         console.error(error);
@@ -92,6 +105,26 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+
+  useEffect(() => {
+    if (shouldRefreshMain) {
+      api.get(`${BASE_URL_HIDRANT}/${hidrantId}`)
+        .then(response => {
+          setDataHidrant(response.data);
+          navigation.setOptions({ title: response.data.title });
+
+          if (response.data.image && response.data.image.filename) {
+            const vrni = `http://${IP_PORT}:3001/uploads/${response.data.image.filename}`;
+            setImageSrc(vrni);
+          }
+
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    } setShouldRefreshMain(false);
+  }, [shouldRefreshMain]);
 
   useEffect(() => {
     if (isConnected) {
@@ -156,6 +189,9 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
     setShouldRefresh(true);
   }, []);
 
+  const updatePregledMain = useCallback(async () => {
+    setShouldRefreshMain(true);
+  }, []);
   useEffect(() => {
     if (shouldRefresh) {
       api.get(`${BASE_URL_HIDRANT_PREGLED}/hidrant/${hidrantId}`)
@@ -165,15 +201,12 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
         })
         .catch(error => {
           console.error(error);
-        });// Ta funkcija mora biti definirana za pridobivanje podatkov
+        });
       setShouldRefresh(false);
     }
   }, [shouldRefresh]);
 
-  const openImageView = (imageUrls) => {
-    setImages(imageUrls);
-    setIsImageViewVisible(true);
-  };
+
 
   const preglediCards = useMemo(() => {
     return dataPregledi.map((x: any) => {
@@ -205,13 +238,12 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
             ) : (
               <View style={{ width: 50, height: 50, margin: 5 }} />
             )}
-
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text style={theme.style.cardTextStyle}>{x.opis}</Text>
               <Text style={theme.style.cardTextStyle}>{x.status}</Text>
               <Text style={theme.style.cardTextStyle}>{formatDate(x.createdDate)}</Text>
+              <Text style={theme.style.cardTextStyle}>{x.user.surname} {x.user.name}</Text>
             </View>
-
             <TouchableOpacity onPress={() => { toggleOverlay(x.id) }}>
               <Entypo name="camera" size={30} color="grey" style={{ borderRadius: 15, padding: 5 }} />
             </TouchableOpacity>
@@ -219,7 +251,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
         </Card>);
     })
   }, [dataPregledi, selectedPregled]);
-
+  console.log(dataPregledi)
   return (
     <>
       <ImageView
@@ -227,6 +259,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
         imageIndex={0}
         visible={isImageViewVisible}
         onRequestClose={() => setIsImageViewVisible(false)}
+        onImageIndexChange={setCurrentImageIndex}
       />
       <ScrollView style={theme.style.containerPadding}>
         <Card style={theme.style.cardStyle}>
@@ -239,7 +272,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
               <Title style={theme.style.cardTextStyle}>{dataHidrant.title}</Title>
               <Title style={theme.style.cardTextStyle}>{dataHidrant.status}</Title>
             </View>
-            <Divider style = {{marginBottom:10}}/>
+            <Divider style={{ marginBottom: 10 }} />
             {imageSrc ? (
               <Image
                 source={{ uri: imageSrc }}
@@ -249,6 +282,11 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
             ) : (
               <Icon name="image" size={30} />
             )}
+            <View style={{ alignItems: 'center' }}>
+              <TouchableOpacity onPress={toggleOverlay2}>
+                <Entypo name="camera" size={30} color="grey" style={{ borderRadius: 15, padding: 5 }} />
+              </TouchableOpacity>
+            </View>
             <Divider style={{ marginVertical: 10 }} />
             <View style={{ alignItems: 'center' }}>
               <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.location}</Subheading>
@@ -270,7 +308,8 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           )}
         </>
       </ScrollView>
-      <DialogModalScreenHidrant visible={visible} setVisible={setVisible} selectedMarkerId={selectedMarkerId} updatePregled={updatePregled} />
+      <DialogModalScreenHidrantPregled visible={visible} setVisible={setVisible} selectedMarkerId={selectedMarkerId} updatePregled={updatePregled} />
+      <DialogModalScreenHidrant visible={visible2} setVisible={setVisible2} selectedMarkerId={hidrantId} updatePregled={updatePregledMain} />
     </>
   );
 }
