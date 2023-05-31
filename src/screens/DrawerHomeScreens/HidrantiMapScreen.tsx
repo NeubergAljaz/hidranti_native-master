@@ -148,7 +148,6 @@ export default function HidrantiMapScreen() {
     if (isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
-        setStep(0);
         console.log("Map.js --> add hydrant", response.data);
         try {
           if (step === 1) {
@@ -168,6 +167,7 @@ export default function HidrantiMapScreen() {
         setLocation("");
         setData([]);
         hideDialog();
+        setStep(0);
         CustomToast('Dodali ste hidrant.', 'success');
       } catch (error) {
         console.error(error);

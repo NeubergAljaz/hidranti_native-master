@@ -208,8 +208,8 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
 
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text style={theme.style.cardTextStyle}>{x.opis}</Text>
-              <Text style={theme.style.cardTextStyle}>Status: {x.status}</Text>
-              <Text style={theme.style.cardTextStyle}>Datum: {formatDate(x.createdDate)}</Text>
+              <Text style={theme.style.cardTextStyle}>{x.status}</Text>
+              <Text style={theme.style.cardTextStyle}>{formatDate(x.createdDate)}</Text>
             </View>
 
             <TouchableOpacity onPress={() => { toggleOverlay(x.id) }}>
@@ -236,9 +236,10 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
           />
           <Card.Content style={theme.style.contentCardStyle}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Title style={theme.style.cardTextStyle}>Naziv: {dataHidrant.title}</Title>
+              <Title style={theme.style.cardTextStyle}>{dataHidrant.title}</Title>
               <Title style={theme.style.cardTextStyle}>{dataHidrant.status}</Title>
             </View>
+            <Divider style = {{marginBottom:10}}/>
             {imageSrc ? (
               <Image
                 source={{ uri: imageSrc }}
@@ -250,10 +251,9 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
             )}
             <Divider style={{ marginVertical: 10 }} />
             <View style={{ alignItems: 'center' }}>
-              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Lokacija:</Title>
               <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{dataHidrant.location}</Subheading>
 
-              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Datum zadnjega pregleda:</Title>
+              <Title style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>Zadnji pregled:</Title>
               <Subheading style={{ ...theme.style.cardTextStyle, textAlign: 'center' }}>{formatDate(dataHidrant.zadnjiPregled)}</Subheading>
             </View>
           </Card.Content>
