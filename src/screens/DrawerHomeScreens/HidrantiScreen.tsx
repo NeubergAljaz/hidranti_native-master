@@ -18,9 +18,9 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
     const [data, setData] = useState<any[]>([]);
     const [filter, setFilter] = useState<string>('');
     const [filterStatus, setFilterStatus] = useState({
-        izpraven: true,
-        neizpraven: true,
-        nepregledan: true,
+        izpraven: false,
+        neizpraven: false,
+        nepregledan: false,
     });
     const isConnected = UseConnectivity();
     const db = SQLite.openDatabase('pregled_hidrantov.db');
@@ -29,37 +29,37 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
         if (isConnected) {
             // Fetch data from API
             api.get(`${BASE_URL_HIDRANT}`)
-              .then(response => {
-                setData(response.data);
-              })
-              .catch(error => {
-                console.error(error);
-              });
-          } else {
+                .then(response => {
+                    setData(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        } else {
             // Fetch data from SQLite database
             console.log("fetching from SQLite")
             db.transaction(tx => {
-              tx.executeSql(
-                'SELECT * FROM hidrant',
-                [],
-                (_, result) => {
-                  const rows = result.rows;
-                  const fetchedData = [];
-        
-                  for (let i = 0; i < rows.length; i++) {
-                    fetchedData.push(rows.item(i));
-                  }
-        
-                  setData(fetchedData);
-                },
-                (_, error) => {
-                  console.error('Error fetching data from SQLite database:', error);
-                  return false;
-                }
-              );
+                tx.executeSql(
+                    'SELECT * FROM hidrant',
+                    [],
+                    (_, result) => {
+                        const rows = result.rows;
+                        const fetchedData = [];
+
+                        for (let i = 0; i < rows.length; i++) {
+                            fetchedData.push(rows.item(i));
+                        }
+
+                        setData(fetchedData);
+                    },
+                    (_, error) => {
+                        console.error('Error fetching data from SQLite database:', error);
+                        return false;
+                    }
+                );
             });
-          }
-    }      
+        }
+    }
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
@@ -81,15 +81,19 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
     //console.log("DATA HIDRANTI", data)
 
 
-    const filteredData = data.filter((x) => {
+    const textFilteredData = data.filter((x) => {
+        return x.title.toLowerCase().includes(filter.toLowerCase());
+    });
+    
+    const isAnyCheckboxSelected = Object.values(filterStatus).some(val => val);
+    
+    const statusFilteredData = isAnyCheckboxSelected ? textFilteredData.filter((x) => {
         const statusLower = x.status.toLowerCase();
         const filterStatusLower = Object.keys(filterStatus).includes(statusLower) ? filterStatus[statusLower] : false;
-        return x.title.toLowerCase().includes(filter.toLowerCase()) && filterStatusLower;
-    });
-
-    const isAnyCheckboxSelected = Object.values(filterStatus).some(val => val);
-
-    const finalData = isAnyCheckboxSelected ? filteredData : data;
+        return filterStatusLower;
+    }) : textFilteredData;
+    
+    const finalData = statusFilteredData;
 
     return (
         <ScrollView style={theme.style.containerFlex}>
@@ -139,7 +143,7 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
             />
 
             <List.Section style={theme.style.containerFlex}>
-                {filteredData && [...filteredData].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index: number) => (
+                {finalData && [...finalData].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index: number) => (
 
                     <List.Item
                         onPress={() => { navigation.navigate('Hidrant', { hidrantId: x.id }); console.log(x) }}
