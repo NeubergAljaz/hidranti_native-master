@@ -65,9 +65,23 @@ export const CameraComponent: React.FC<CameraComponentProps> = ({ hydrantId, onP
       aspect: [4, 3],
       quality: 1,
     });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+  
+    if (!result.canceled && result.assets.length > 0) {
+      let asset = result.assets[0];
+      let formData = new FormData();
+      let newImageUri = "file:///" + asset.uri.split("file:/").join("");
+      let nameParts = asset.uri.split('/');
+      let name = nameParts[nameParts.length - 1];
+      let type = mime.getType(newImageUri);
+  
+      formData.append('image', {
+        uri: newImageUri,
+        type: type,
+        name: name
+      } as any);
+  
+      setImage(asset.uri);
+      onPictureTaken(formData);
     }
   }
 
