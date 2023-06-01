@@ -7,11 +7,13 @@
 */
 
 //var menjaj = "192.168.64.111"
-var menjaj:String = "192.168.64.108"
+var menjaj:String = "192.168.1.105"
 
 export const IP_PORT = `${menjaj}`;
 
 export const BASE_URL = `http://${menjaj}:3001/api`;
+
+export const BASE_URL_USER = `http://${menjaj}:3001/api/user/`;
 
 export const BASE_URL_AUTH = `http://${menjaj}:3001/api/auth/`;
 
