@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, Divider } from '@rneui/themed';
 import api from '../../services/api';
-import { BASE_URL_HIDRANT_SLIKA, } from '../../config';
+import {  BASE_URL_PREGLED_SLIKA } from '../../config';
 import { CustomToast } from '../Toasts/CustomToast';
 import { useSelector } from 'react-redux';
 import { UseConnectivity } from '../../Hooks/UseConnectivityHook';
@@ -13,9 +13,10 @@ interface DialogPregledProps {
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     selectedMarkerId: number | null;
     updatePregled
+
 }
 
-const DialogModalScreenHidrant: React.FC<DialogPregledProps> = ({
+const DialogModalScreenHidrantPregled: React.FC<DialogPregledProps> = ({
     visible,
     setVisible,
     selectedMarkerId,
@@ -34,20 +35,17 @@ const DialogModalScreenHidrant: React.FC<DialogPregledProps> = ({
         try {
             if (isConnected) {
                 try {
-                    await api.post(`${BASE_URL_HIDRANT_SLIKA}/${selectedMarkerId}`, formData, {
+                    await api.post(`${BASE_URL_PREGLED_SLIKA}/${selectedMarkerId}`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
                         },
                     });
-
                     try {
                         updatePregled()
-
                     } catch (error) {
                         console.error('Error, setting new pregled slika:', error);
                         throw error;
                     }
-
                 } catch (error) {
                     console.error('Error while uploading the image:', error);
                     throw error;
@@ -86,4 +84,4 @@ const DialogModalScreenHidrant: React.FC<DialogPregledProps> = ({
 
 }
 
-export default DialogModalScreenHidrant;
+export default DialogModalScreenHidrantPregled;
