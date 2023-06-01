@@ -103,7 +103,7 @@ export default function HidrantiMapScreen() {
   }, [data]);
 
   const fetchData = () => {
-    if (!isConnected) {
+    if (isConnected) {
       // Fetch data from API
       api.get(`${BASE_URL_HIDRANT}`)
         .then(response => {
@@ -159,7 +159,7 @@ export default function HidrantiMapScreen() {
       nadzemni,
     };
 
-    if (!isConnected) {
+    if (isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
         console.log("Map.js --> add hydrant", response.data);
