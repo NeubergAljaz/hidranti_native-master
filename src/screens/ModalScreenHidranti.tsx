@@ -224,7 +224,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
       return (
         <Card key={x.id} style={theme.style.cardStyle}>
           <Card.Cover
-            source={require('../../assets/img/ozadje_temno.webp')}
+            source={theme.mode === 'light' ? require('../../assets/img/ozadje_svetlo.jpg') : require('../../assets/img/ozadje_temno.webp')}
             style={theme.style.coverCardStyle}
           />
           <Card.Content style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10 }}>
