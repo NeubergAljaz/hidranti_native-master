@@ -27,6 +27,7 @@ const signInStyles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 14,
         backgroundColor: '#ecf0f1',
+        fontSize: 18,
       },
       buttonContainer: {
         backgroundColor: '#FC8A17',

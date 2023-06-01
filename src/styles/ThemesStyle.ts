@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 export const lightTheme = StyleSheet.create({
+  backgroundImage: require('../../assets/img/ozadje_belo.jpg'),
+  logoImage: require('../../assets/img/LOGO_PGD_LOVRENC_crna.png'),
   containerMap: {
     flex: 0,
   },
@@ -84,15 +86,15 @@ export const lightTheme = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    text: 'white'
+    text: 'black'
   },
   contentCardStyle: {
     position: 'relative', // Ensure content stays on top of the cover
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the overlay background color and opacity
+    backgroundColor: 'rgba(0, 0, 0, 0)', // Adjust the overlay background color and opacity
     padding: 16,
   },
   cardTextStyle: {
-    color: 'white', // Set the title text color to white
+    color: 'black', // Set the title text color to white
   },
   buttonStyle:{ 
     backgroundColor: '#FC8A17'
@@ -100,6 +102,8 @@ export const lightTheme = StyleSheet.create({
 });
 
 export const darkTheme = StyleSheet.create({
+  backgroundImage: require('../../assets/img/ozadje_crno.jpg'),
+  logoImage: require('../../assets/img/LOGO_PGD_LOVRENC_bela.png'),
   headerStyle: {
     backgroundColor: 'black',
     color: 'white'

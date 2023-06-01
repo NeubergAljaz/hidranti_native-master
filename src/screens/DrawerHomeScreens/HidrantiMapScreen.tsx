@@ -90,6 +90,7 @@ export default function HidrantiMapScreen() {
   useEffect(() => {
     if (data.length === 0) {
       fetchData();
+      console.log("Fetchan data ===0: " + data);
     }
   }, [data]);
 
@@ -99,6 +100,7 @@ export default function HidrantiMapScreen() {
       api.get(`${BASE_URL_HIDRANT}`)
         .then(response => {
           setData(response.data);
+          console.log("Fetchan data: " + data);
         })
         .catch(error => {
           console.error(error);
@@ -113,13 +115,16 @@ export default function HidrantiMapScreen() {
           (_, result) => {
             const rows = result.rows;
             const fetchedData = [];
-
+        
             for (let i = 0; i < rows.length; i++) {
               fetchedData.push(rows.item(i));
             }
-
+        
+            //console.log("Fetched data from SQLite:", fetchedData);
+        
             setData(fetchedData);
-          },
+            //console.log("Updated data:", fetchedData);
+          }, 
           (_, error) => {
             console.error('Error fetching data from SQLite database:', error);
             return false;
@@ -131,6 +136,8 @@ export default function HidrantiMapScreen() {
 
   useEffect(() => {
     fetchData();
+    console.log("ali se to kdaj klice?");
+    console.log(data);
   }, []);
 
   const handleSubmit = async () => {
@@ -175,6 +182,7 @@ export default function HidrantiMapScreen() {
     } else {
       // Save data to SQLite table
       db.transaction((tx) => {
+
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().slice(0, 23).replace('T', ' ');
 
@@ -189,8 +197,8 @@ export default function HidrantiMapScreen() {
             data.nadzemni ? 1 : 0,
             data.lat,
             data.lng,
-            null,
             formattedDate,
+            formattedDate
           ],
           (_, result) => {
             console.log('Data saved to SQLite table:', result);
@@ -279,6 +287,7 @@ export default function HidrantiMapScreen() {
           key={index}
           title={x.title}
           description={x.location}
+          
         >
           <View style={{
             backgroundColor: x.status == "IZPRAVEN" ? ('rgba(152,251,152, 0.6)') : x.status == "NEIZPRAVEN" ? ('rgba(255, 0, 0, 0.3)') : ("rgba(255, 255, 0, 0.6)"),

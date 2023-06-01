@@ -231,7 +231,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
       <ScrollView style={theme.style.containerPadding}>
         <Card style={theme.style.cardStyle}>
           <Card.Cover
-            source={require('../../assets/img/ozadje_temno.webp')}
+            source={theme.mode === 'light' ? require('../../assets/img/ozadje_svetlo.jpg') : require('../../assets/img/ozadje_temno.webp')}
             style={theme.style.coverCardStyle}
           />
           <Card.Content style={theme.style.contentCardStyle}>
@@ -263,7 +263,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
             <ActivityIndicator size="large" color="#FC8A17" style={{ marginTop: 200 }} />
           ) : preglediCards.length === 0 ? (
 
-            <Icon name="squared-cross" size={50} color="black" style={{ marginTop: 200, marginLeft: 140 }} />
+            <Icon name="squared-cross" size={50} color={theme.mode === 'light' ? "black" : "white"} style={{ marginTop: 200, marginLeft: 140 }} />
 
           ) : (
             <>{preglediCards}</>

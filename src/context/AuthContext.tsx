@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
-import {BASE_URL_AUTH, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED} from '../config';
+import {BASE_URL_AUTH, BASE_URL_HIDRANT, BASE_URL_HIDRANT_PREGLED, BASE_URL_USER} from '../config';
 import { createTable, insertData, clearTable} from '../local_storage/SQLite';
 import api from './../services/api';
 
@@ -84,13 +84,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       AsyncStorage.setItem('userInfo', JSON.stringify(userInfoWithAccessToken)); // Store the userInfo object with accessToken
       // Create tables
       createTable();  
-      // Insert user data into the SQLite table
-      await insertData('user', {
-        id: userInfo.user_info.id,
-        username: userInfo.username,
-        drustvoId: 1,
-        role: userInfo.role,
+      //fetching User
+      api.get(`${BASE_URL_USER}${userInfo.user_info.id}`)
+      .then(userResponse => {
+        const userData = userResponse.data; // Assuming the response data is the user object
+        insertData('user', {
+        id: userData.id,
+        username: userData.username,
+        drustvoId: userData.drustvoId,
+        role: userData.role,
       });
+      })
+      .catch(userError => {
+        console.error('Error fetching user data from API:', userError);
+      }); 
+      // Insert user data into the SQLite table
+     
       // Fetch data from API
       api.get(`${BASE_URL_HIDRANT}`)
       .then(response => {
@@ -123,7 +132,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         });
          // Fetch pregledi data from API
          api.get(`${BASE_URL_HIDRANT_PREGLED}`)
-      .then(preglediResponse => {
+        .then(preglediResponse => {
         const preglediData = preglediResponse.data; // Assuming the response data is an array of pregledi objects
 
         // Save the fetched pregledi data to the SQLite table

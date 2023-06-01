@@ -111,7 +111,7 @@ export const insertData = (tableName, data) => {
         values,
         (_, result) => {
           console.log(`Insert into ${tableName} successful`);
-          console.log(result); // Log the result object if needed
+          //console.log(result); // Log the result object if needed
           const insertedId = result.insertId || data.id; // Use insertId if available, otherwise use the provided ID
           resolve(insertedId);
         },
