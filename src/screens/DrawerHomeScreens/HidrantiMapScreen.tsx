@@ -56,11 +56,19 @@ export default function HidrantiMapScreen() {
 
   //date formatting
   const formatDate = (dateString: string): string => {
-    const dateObj = new Date(dateString);
-    const day = dateObj.getDate().toString().padStart(2, '0');
-    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-    const year = dateObj.getFullYear().toString();
-    return `${day}. ${month}. ${year}`;
+    if (dateString.includes('Z')) {
+      const dateObj = new Date(dateString);
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+      const year = dateObj.getFullYear().toString();
+      return `${day}. ${month}. ${year}`;
+    } else {
+      const parts = dateString.split(/[- :]/); // Split the date string by '-', ':', and ' ' characters
+      const year = parts[0];
+      const month = parts[1];
+      const day = parts[2];
+      return `${day}. ${month}. ${year}`;
+    }
   };
 
   const toggleOverlay = () => {
@@ -95,7 +103,7 @@ export default function HidrantiMapScreen() {
   }, [data]);
 
   const fetchData = () => {
-    if (isConnected) {
+    if (!isConnected) {
       // Fetch data from API
       api.get(`${BASE_URL_HIDRANT}`)
         .then(response => {
@@ -107,7 +115,7 @@ export default function HidrantiMapScreen() {
         });
     } else {
       // Fetch data from SQLite database
-      //console.log("fetching from SQLite")
+      console.log("fetching from SQLite")
       db.transaction(tx => {
         tx.executeSql(
           'SELECT * FROM hidrant',
@@ -123,7 +131,7 @@ export default function HidrantiMapScreen() {
             //console.log("Fetched data from SQLite:", fetchedData);
         
             setData(fetchedData);
-            //console.log("Updated data:", fetchedData);
+            console.log("Updated data:", data);
           }, 
           (_, error) => {
             console.error('Error fetching data from SQLite database:', error);
@@ -136,7 +144,6 @@ export default function HidrantiMapScreen() {
 
   useEffect(() => {
     fetchData();
-    console.log("ali se to kdaj klice?");
     console.log(data);
   }, []);
 
@@ -152,7 +159,7 @@ export default function HidrantiMapScreen() {
       nadzemni,
     };
 
-    if (isConnected) {
+    if (!isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
         console.log("Map.js --> add hydrant", response.data);
@@ -193,7 +200,7 @@ export default function HidrantiMapScreen() {
             data.title,
             data.location,
             data.description,
-            data.status,
+            "NEPREGLEDAN",
             data.nadzemni ? 1 : 0,
             data.lat,
             data.lng,
