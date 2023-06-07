@@ -44,7 +44,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
       if (isConnected) {
         try {
           const response = await api.post(`${BASE_URL_HIDRANT_PREGLED}/${selectedMarkerId}`, data);
-          console.log("Data submitted successfully!", data);
+          //console.log("Data submitted successfully!", data);
           try {
             if (step === 1) {
               await api.post(`${BASE_URL_PREGLED_SLIKA}/${response.data.id}`, formData, {
@@ -80,7 +80,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
                 'UPDATE hidrant SET status = ? WHERE id = ?',
                 [status, selectedMarkerId],
                 (_, updateResult) => {
-                  console.log('Status updated for hydrant:', updateResult);
+                  //console.log('Status updated for hydrant:', updateResult);
                 },
                 (_, error) => {
                   console.error('Error updating hydrant status:', error);
@@ -93,7 +93,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
               setVisible(false);
               setStep(0)
               onSubmit();
-              console.log('Data saved to SQLite database successfully!', result);
+              //console.log('Data saved to SQLite database successfully!', result);
               // Retrieve the inserted data
               tx.executeSql(
                 'SELECT * FROM pregled WHERE id = ?',
@@ -101,7 +101,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
                 (_, queryResult) => {
                   if (queryResult.rows.length > 0) {
                     const insertedData = queryResult.rows.item(0);
-                    console.log('Inserted data:', insertedData);
+                    //console.log('Inserted data:', insertedData);
                   }
                 }
               );
@@ -126,7 +126,7 @@ const DialogPregled: React.FC<DialogPregledProps> = ({
 
   const handleButtonPress = (value: number) => {
     setSelectedIndex(value);
-    console.log(`Selected button: ${buttons[value]}`);
+    //console.log(`Selected button: ${buttons[value]}`);
     setStatus(buttons[value])
   };
 

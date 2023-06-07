@@ -251,7 +251,7 @@ export default function ModalScreenHidranti({ route, navigation }: ModalScreenHi
         </Card>);
     })
   }, [dataPregledi, selectedPregled]);
-  console.log(dataPregledi)
+  //console.log(dataPregledi)
   return (
     <>
       <ImageView

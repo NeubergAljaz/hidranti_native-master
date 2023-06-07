@@ -52,7 +52,7 @@ export default function HidrantiMapScreen() {
   const isLocationEnabled = UseLocationPermission();
   const isConnected = UseConnectivity();
   const db = SQLite.openDatabase('pregled_hidrantov.db');
-  //console.log(isLocationEnabled, "location")
+  ////console.log(isLocationEnabled, "location")
 
   //date formatting
   const formatDate = (dateString: string): string => {
@@ -98,7 +98,7 @@ export default function HidrantiMapScreen() {
   useEffect(() => {
     if (data.length === 0) {
       fetchData();
-      console.log("Fetchan data ===0: " + data);
+      //console.log("Fetchan data ===0: " + data);
     }
   }, [data]);
 
@@ -108,14 +108,14 @@ export default function HidrantiMapScreen() {
       api.get(`${BASE_URL_HIDRANT}`)
         .then(response => {
           setData(response.data);
-          console.log("Fetchan data: " + data);
+          //console.log("Fetchan data: " + data);
         })
         .catch(error => {
           console.error(error);
         });
     } else {
       // Fetch data from SQLite database
-      console.log("fetching from SQLite")
+      //console.log("fetching from SQLite")
       db.transaction(tx => {
         tx.executeSql(
           'SELECT * FROM hidrant',
@@ -128,10 +128,10 @@ export default function HidrantiMapScreen() {
               fetchedData.push(rows.item(i));
             }
         
-            //console.log("Fetched data from SQLite:", fetchedData);
+            ////console.log("Fetched data from SQLite:", fetchedData);
         
             setData(fetchedData);
-            console.log("Updated data:", data);
+            //console.log("Updated data:", data);
           }, 
           (_, error) => {
             console.error('Error fetching data from SQLite database:', error);
@@ -144,7 +144,7 @@ export default function HidrantiMapScreen() {
 
   useEffect(() => {
     fetchData();
-    console.log(data);
+    //console.log(data);
   }, []);
 
   const handleSubmit = async () => {
@@ -162,7 +162,7 @@ export default function HidrantiMapScreen() {
     if (isConnected) {
       try {
         const response = await api.post(BASE_URL_HIDRANT, data);
-        console.log("Map.js --> add hydrant", response.data);
+        //console.log("Map.js --> add hydrant", response.data);
         try {
           if (step === 1) {
             await api.post(`${BASE_URL_HIDRANT_SLIKA}/${response.data.id}`, formData, {
@@ -208,7 +208,7 @@ export default function HidrantiMapScreen() {
             formattedDate
           ],
           (_, result) => {
-            console.log('Data saved to SQLite table:', result);
+            //console.log('Data saved to SQLite table:', result);
             setTitle("");
             setDescription("");
             setLocation("");
@@ -220,7 +220,7 @@ export default function HidrantiMapScreen() {
                 'SELECT * FROM hidrant WHERE id = ?',
                 [result.insertId],
                 (_, resultSet) => {
-                  console.log('Inserted data:', resultSet.rows.item(0));
+                  //console.log('Inserted data:', resultSet.rows.item(0));
                 },
                 (_, error) => {
                   console.error('Error retrieving inserted data:', error);

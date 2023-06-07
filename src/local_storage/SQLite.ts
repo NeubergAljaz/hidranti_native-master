@@ -24,10 +24,10 @@ export const createTable = () => {
       )`,
       [],
       (_, result) => {
-        console.log('Table "hidrant" created successfully');
+        //console.log('Table "hidrant" created successfully');
       },
       (_, error) => {
-        console.log('Error creating table "hidrant":', error);
+        //console.log('Error creating table "hidrant":', error);
         return false; // Return false to indicate an error occurred
       }
     );
@@ -44,10 +44,10 @@ export const createTable = () => {
       )`,
       [],
       (_, result) => {
-        console.log('Table "user" created successfully');
+        //console.log('Table "user" created successfully');
       },
       (_, error) => {
-        console.log('Error creating table "user":', error);
+        //console.log('Error creating table "user":', error);
         return false; // Return false to indicate an error occurred
       }
     );
@@ -65,10 +65,10 @@ export const createTable = () => {
       )`,
       [],
       (_, result) => {
-        console.log('Table "drustvo" created successfully');
+        //console.log('Table "drustvo" created successfully');
       },
       (_, error) => {
-        console.log('Error creating table "drustvo":', error);
+        //console.log('Error creating table "drustvo":', error);
         return false; // Return false to indicate an error occurred
       }
     );
@@ -88,10 +88,10 @@ export const createTable = () => {
       )`,
       [],
       (_, result) => {
-        console.log('Table "pregled" created successfully');
+        //console.log('Table "pregled" created successfully');
       },
       (_, error) => {
-        console.log('Error creating table "pregled":', error);
+        //console.log('Error creating table "pregled":', error);
         return false; // Return false to indicate an error occurred
       }
     );
@@ -110,13 +110,13 @@ export const insertData = (tableName, data) => {
         query,
         values,
         (_, result) => {
-          console.log(`Insert into ${tableName} successful`);
-          //console.log(result); // Log the result object if needed
+          //console.log(`Insert into ${tableName} successful`);
+          ////console.log(result); // Log the result object if needed
           const insertedId = result.insertId || data.id; // Use insertId if available, otherwise use the provided ID
           resolve(insertedId);
         },
         (_, error) => {
-          console.log(`Error inserting into ${tableName}:`, error);
+          //console.log(`Error inserting into ${tableName}:`, error);
           reject(error);
           return false;
         }
@@ -131,11 +131,11 @@ export const clearTable = async (tableName: string): Promise<void> => {
         `DELETE FROM ${tableName}`,
         [],
         (_, result) => {
-          console.log(`Table "${tableName}" cleared successfully`);
+          //console.log(`Table "${tableName}" cleared successfully`);
           resolve();
         },
         (_, error) => {
-          console.log(`Error clearing table "${tableName}":`, error);
+          //console.log(`Error clearing table "${tableName}":`, error);
           return false;
         }
       );

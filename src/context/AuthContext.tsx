@@ -59,12 +59,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         const userInfo = res.data.user;
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        //console.log("USER!!", userInfo)
+        ////console.log("USER!!", userInfo)
         setIsLoading(false);
-        //console.log(userInfo);
+        ////console.log(userInfo);
       })
       .catch(e => {
-        console.log(`register error ${e}`);
+        //console.log(`register error ${e}`);
         setIsLoading(false);
       });
   };
@@ -124,7 +124,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     
           insertData('hidrant', data)
             .then((insertedId) => {
-              console.log(`Hidrant data inserted into SQLite table with ID: ${insertedId}`);
+              //console.log(`Hidrant data inserted into SQLite table with ID: ${insertedId}`);
             })
             .catch(error => {
               console.error('Error inserting hidrant data into SQLite table:', error);
@@ -149,7 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
           insertData('pregled', data)
             .then((insertedId) => {
-              console.log(`Pregled data inserted into SQLite table with ID: ${insertedId}`);
+              //console.log(`Pregled data inserted into SQLite table with ID: ${insertedId}`);
             })
             .catch(error => {
               console.error('Error inserting pregled data into SQLite table:', error);
@@ -165,11 +165,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   });
   
       setIsLoading(false);
-      //console.log("Sem se vpisal");
-      //console.log(userInfo.user.accessToken);
+      ////console.log("Sem se vpisal");
+      ////console.log(userInfo.user.accessToken);
       return true;
     } catch (error) {
-      console.log(`login error: ${error}`);
+      //console.log(`login error: ${error}`);
       setIsLoading(false);
       alert('Napačno uporabniško ime ali geslo!');
       return false;
@@ -191,7 +191,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       setUserInfo(null);
       SetAccessToken(null);
     } catch (e) {
-      console.log(`logout error: ${e}`);
+      //console.log(`logout error: ${e}`);
     } finally {
       setIsLoading(false);
     }
@@ -225,7 +225,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       setSplashLoading(false);
     } catch (e) {
       setSplashLoading(false);
-      console.log(`is logged in error ${e}`);
+      //console.log(`is logged in error ${e}`);
     }
   };
 

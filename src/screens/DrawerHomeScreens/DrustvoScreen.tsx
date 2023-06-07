@@ -31,7 +31,7 @@ export default function DrustvoScreen()  {
         }
         api.post(`${BASE_URL_DRUSTVO}`, data)
             .then(response => {
-                console.log(response.data);
+                //console.log(response.data);
             })
             .catch(error => {
                 console.error(error);

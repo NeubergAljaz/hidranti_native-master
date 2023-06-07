@@ -49,7 +49,7 @@ const handleThemeChange = async () => {
     await AsyncStorage.setItem('themeMode', newThemeMode);
     await AsyncStorage.setItem('isSwitchOn', JSON.stringify(newIsSwitchOn));
   } catch (error) {
-    console.log('Error storing switch state:', error);
+    //console.log('Error storing switch state:', error);
   }
 
   // Update the switch state immediately
@@ -74,7 +74,7 @@ React.useEffect(() => {
         setIsSwitchOn(parsedSwitchState);
       }
     } catch (error) {
-      console.log('Error retrieving switch state:', error);
+      //console.log('Error retrieving switch state:', error);
     }
   };
 

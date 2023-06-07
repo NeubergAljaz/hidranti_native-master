@@ -37,7 +37,7 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
                 });
         } else {
             // Fetch data from SQLite database
-            console.log("fetching from SQLite")
+            //console.log("fetching from SQLite")
             db.transaction(tx => {
                 tx.executeSql(
                     'SELECT * FROM hidrant',
@@ -78,7 +78,7 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
 
         return unsubscribe;
     }, [navigation]);
-    //console.log("DATA HIDRANTI", data)
+    ////console.log("DATA HIDRANTI", data)
 
 
     const textFilteredData = data.filter((x) => {
@@ -146,7 +146,7 @@ export default function HidrantiScreen({ navigation }: { navigation: any }) {
                 {finalData && [...finalData].sort((a, b) => a.title.localeCompare(b.title)).map((x: any, index: number) => (
 
                     <List.Item
-                        onPress={() => { navigation.navigate('Hidrant', { hidrantId: x.id }); console.log(x) }}
+                        onPress={() => { navigation.navigate('Hidrant', { hidrantId: x.id }); /*console.log(x)*/ }}
                         style={{
                             borderColor: 'rgb(119,136,153)', marginBottom: 5, marginLeft: 10, marginRight: 10,
                             borderWidth: 1, borderRadius: 10
